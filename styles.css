@@ -437,6 +437,7 @@ html.js:not(.is-simple-scroll) .project__pin {
   display: block;
   width: 100%;
   height: auto;
+  max-width: 100%;
   margin: 0;
   padding: 0;
   border: 0;
@@ -444,6 +445,33 @@ html.js:not(.is-simple-scroll) .project__pin {
   vertical-align: top;
   object-fit: contain;
   background: transparent;
+}
+
+/*
+  Size the figure from aspect-ratio and let the video fill it.
+  After lock/unlock, iOS often treats HTML width/height as CSS pixels
+  and shrinks the video — absolute fill avoids that.
+*/
+.media:has(> video) {
+  aspect-ratio: 3 / 4;
+}
+
+.media.full:has(> video) {
+  aspect-ratio: 3 / 2;
+}
+
+.media.full:has(> video[width="1920"]) {
+  aspect-ratio: 16 / 9;
+}
+
+.media:has(> video) > video {
+  position: absolute;
+  inset: 0;
+  width: 100% !important;
+  height: 100% !important;
+  max-width: none;
+  object-fit: cover;
+  object-position: center;
 }
 
 .media video {

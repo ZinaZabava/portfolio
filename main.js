@@ -402,6 +402,19 @@
     });
   }
 
+  // Remeasure whenever media resolves — reserved width/height keep layout
+  // stable, but we still refresh after decode for exact sizes.
+  const media = Array.from(document.querySelectorAll(".project img, .project video"));
+  let measureScheduled = false;
+  const scheduleMeasure = () => {
+    if (measureScheduled) return;
+    measureScheduled = true;
+    requestAnimationFrame(() => {
+      measureScheduled = false;
+      measure();
+    });
+  };
+
   // First gesture unlocks autoplay on iOS Safari
   const unlockVideos = () => {
     videos.forEach((video) => {
@@ -420,11 +433,38 @@
   });
   document.addEventListener("click", unlockVideos, { once: true });
 
+  // After lock/unlock iOS often leaves videos at broken intrinsic sizes —
+  // force a layout pass and resume playback.
+  const repairVideos = () => {
+    videos.forEach((video) => {
+      video.style.width = "";
+      video.style.height = "";
+      video.style.maxWidth = "";
+      // Toggle to kick WebKit layout
+      video.style.display = "none";
+      void video.offsetHeight;
+      video.style.display = "";
+      ensurePlay(video);
+    });
+    scheduleMeasure();
+  };
+
   document.addEventListener("visibilitychange", () => {
     if (!document.hidden) {
-      videos.forEach((video) => ensurePlay(video));
+      requestAnimationFrame(repairVideos);
     }
   });
+
+  window.addEventListener("pageshow", (event) => {
+    if (event.persisted) repairVideos();
+    else requestAnimationFrame(repairVideos);
+  });
+
+  if (window.visualViewport) {
+    window.visualViewport.addEventListener("resize", () => {
+      scheduleMeasure();
+    });
+  }
 
   window.addEventListener(
     "scroll",
@@ -435,19 +475,6 @@
     { passive: true }
   );
   window.addEventListener("resize", measure);
-
-  // Remeasure whenever media resolves — reserved width/height keep layout
-  // stable, but we still refresh after decode for exact sizes.
-  const media = Array.from(document.querySelectorAll(".project img, .project video"));
-  let measureScheduled = false;
-  const scheduleMeasure = () => {
-    if (measureScheduled) return;
-    measureScheduled = true;
-    requestAnimationFrame(() => {
-      measureScheduled = false;
-      measure();
-    });
-  };
 
   const markReady = (el) => {
     el.classList.add("is-ready");

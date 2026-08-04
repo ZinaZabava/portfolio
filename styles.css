@@ -25,7 +25,7 @@
   --about-width: 360px;
   --topbar-height: 0px;
   --gap: 0px;
-  --index-gap: 15px;
+  --index-gap: 18px;
   --text: #ffffff;
   --text-muted: rgba(255, 255, 255, 0.72);
   --accent: #d2f096;
@@ -161,8 +161,7 @@ button {
 .about__bio {
   display: flex;
   flex-direction: column;
-  /* Figma: role at y=89, name height 59 → 30px between boxes */
-  gap: 30px;
+  gap: 18px;
   width: 100%;
   flex: 0 0 auto;
   min-width: 0;
@@ -203,8 +202,7 @@ button {
 .about__index {
   display: flex;
   flex-direction: column;
-  /* Figma: list at y=59, label height 29 → 30px */
-  gap: 30px;
+  gap: 18px;
   width: 100%;
   /* Keep natural height so space-between matches Figma equal gaps */
   flex: 0 0 auto;

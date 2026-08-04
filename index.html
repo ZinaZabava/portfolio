@@ -12,6 +12,7 @@
       if (/\/portfolio$/i.test(path)) dir = path + "/";
       if (!dir) dir = "/";
       document.write('<base href="' + dir + '">');
+      document.documentElement.className += (document.documentElement.className ? " " : "") + "js";
     })();
   </script>
   <link rel="stylesheet" href="https://use.typekit.net/cte3nym.css" />

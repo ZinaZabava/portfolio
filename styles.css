@@ -705,22 +705,26 @@ html.js:not(.is-simple-scroll) .media video.is-ready {
     gap: var(--index-gap);
   }
 
+  .about__index {
+    gap: 24px;
+  }
+
   .index-list {
     padding-left: 16px;
-    gap: var(--index-gap);
+    gap: 12px;
   }
 
   .index-list a {
-    font-size: 20px;
-    line-height: 1.4;
+    font-size: 15px;
+    line-height: 1.35;
   }
 
   /* Intro block at the start of the page (no project index) */
   .mobile-about {
     display: flex;
     flex-direction: column;
-    /* Same vertical rhythm as project intros (title → copy → tags) */
-    gap: var(--intro-gap);
+    /* Role → CV/contacts: 3× the previous intro-gap rhythm */
+    gap: calc(var(--intro-gap) * 3);
     margin-top: var(--topbar-height);
     padding: 72px 20px 80px;
     background: var(--about-bg);

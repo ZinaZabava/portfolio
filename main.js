@@ -215,6 +215,85 @@
     });
   }
 
+  function goToTop() {
+    closeMenu();
+    window.scrollTo({
+      top: 0,
+      behavior: reducedMotion ? "auto" : "smooth",
+    });
+  }
+
+  const aboutHome = document.getElementById("about-home");
+  if (aboutHome) {
+    aboutHome.addEventListener("click", (event) => {
+      event.preventDefault();
+      goToTop();
+    });
+  }
+
+  // Mobile: extra scroll past the end returns to the top of the page
+  let overscrollPull = 0;
+  let touchLastY = 0;
+  let touchTracking = false;
+
+  function isPageBottom() {
+    const maxScroll = Math.max(
+      0,
+      document.documentElement.scrollHeight - window.innerHeight
+    );
+    return window.scrollY >= maxScroll - 4;
+  }
+
+  window.addEventListener(
+    "wheel",
+    (event) => {
+      if (!narrowMq.matches) return;
+      if (isPageBottom() && event.deltaY > 0) {
+        overscrollPull += event.deltaY;
+        if (overscrollPull > 100) {
+          overscrollPull = 0;
+          goToTop();
+        }
+      } else if (event.deltaY < 0) {
+        overscrollPull = 0;
+      }
+    },
+    { passive: true }
+  );
+
+  window.addEventListener(
+    "touchstart",
+    (event) => {
+      if (!narrowMq.matches || !event.touches[0]) return;
+      touchLastY = event.touches[0].clientY;
+      touchTracking = isPageBottom();
+      overscrollPull = 0;
+    },
+    { passive: true }
+  );
+
+  window.addEventListener(
+    "touchmove",
+    (event) => {
+      if (!narrowMq.matches || !touchTracking || !event.touches[0]) return;
+      const y = event.touches[0].clientY;
+      const dy = touchLastY - y; // finger up → would scroll down
+      if (isPageBottom() && dy > 0) overscrollPull += dy;
+      touchLastY = y;
+    },
+    { passive: true }
+  );
+
+  window.addEventListener(
+    "touchend",
+    () => {
+      if (narrowMq.matches && overscrollPull > 70) goToTop();
+      overscrollPull = 0;
+      touchTracking = false;
+    },
+    { passive: true }
+  );
+
   indexLinks.forEach((link) => {
     link.addEventListener("click", (event) => {
       event.preventDefault();

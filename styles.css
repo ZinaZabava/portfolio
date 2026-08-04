@@ -169,6 +169,11 @@ button {
   max-width: 100%;
 }
 
+.about__home {
+  color: inherit;
+  text-decoration: none;
+}
+
 .about__role {
   margin: 0;
   font-family: var(--font-mono);

@@ -25,7 +25,7 @@
   --about-width: 360px;
   --topbar-height: 0px;
   --gap: 0px;
-  --index-gap: 14px;
+  --index-gap: 10px;
   --text: #ffffff;
   --text-muted: rgba(255, 255, 255, 0.72);
   --accent: #d2f096;
@@ -161,7 +161,7 @@ button {
 .about__bio {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 10px;
   width: 100%;
   flex: 0 0 auto;
   min-width: 0;
@@ -202,7 +202,7 @@ button {
 .about__index {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 10px;
   width: 100%;
   /* Keep natural height so space-between matches Figma equal gaps */
   flex: 0 0 auto;

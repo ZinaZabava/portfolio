@@ -689,6 +689,11 @@ html.js:not(.is-simple-scroll) .media video.is-ready {
     padding: calc(var(--topbar-height) + 16px) 22px 36px;
   }
 
+  .about__bio {
+    /* Match mobile page-intro name → role spacing */
+    gap: 12px;
+  }
+
   .about__name {
     font-size: clamp(24px, 11.5cqi, 32px);
     white-space: nowrap;

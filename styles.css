@@ -264,16 +264,18 @@ button {
 
 .about__contacts a {
   color: var(--text);
+  text-decoration: none;
   transition: opacity 160ms ease;
 }
 
-.about__cv {
+a.about__cv {
   text-decoration: underline;
-  text-underline-position: from-font;
-  text-decoration-skip-ink: none;
+  text-underline-offset: 0.15em;
+  text-decoration-thickness: 1px;
 }
 
-.about__contacts a:hover {
+.about__contacts a:hover,
+.mobile-about__contacts a:hover {
   opacity: 0.65;
 }
 
@@ -769,6 +771,12 @@ html.js:not(.is-simple-scroll) .media video.is-ready {
     color: var(--text);
     text-decoration: none;
     transition: opacity 160ms ease;
+  }
+
+  .mobile-about__contacts a.about__cv {
+    text-decoration: underline;
+    text-underline-offset: 0.15em;
+    text-decoration-thickness: 1px;
   }
 
   .mobile-about__contacts a:hover {

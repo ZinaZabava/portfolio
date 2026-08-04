@@ -1,4 +1,6 @@
 (() => {
+  document.documentElement.classList.add("js");
+
   const projects = Array.from(document.querySelectorAll(".project"));
   const indexLinks = Array.from(document.querySelectorAll(".index-list a"));
   const topbarProject = document.getElementById("topbar-project");

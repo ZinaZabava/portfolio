@@ -4,6 +4,16 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Zinaida Rykova — Portfolio</title>
+  <script>
+    /* Resolve CSS/JS/media correctly on GitHub Pages project URLs (/portfolio). */
+    (function () {
+      var path = location.pathname;
+      var dir = /\/$/.test(path) ? path : path.replace(/\/[^/]*$/, "/");
+      if (/\/portfolio$/i.test(path)) dir = path + "/";
+      if (!dir) dir = "/";
+      document.write('<base href="' + dir + '">');
+    })();
+  </script>
   <link rel="stylesheet" href="https://use.typekit.net/cte3nym.css" />
   <link rel="stylesheet" href="styles.css" />
 </head>

@@ -244,12 +244,6 @@ button {
   transition: opacity 160ms ease;
 }
 
-.about__cv {
-  text-decoration: underline;
-  text-underline-position: from-font;
-  text-decoration-skip-ink: none;
-}
-
 .about__contacts a:hover {
   opacity: 0.65;
 }
@@ -278,13 +272,19 @@ button {
 }
 
 .project__pin {
+  position: relative;
+  height: auto;
+  overflow: visible;
+  background: var(--project-bg, #000);
+}
+
+/* Sticky cover-scroll only when JS can drive the track */
+html.js .project__pin {
   position: sticky;
   top: var(--topbar-height);
   height: calc(100vh - var(--topbar-height));
   height: calc(100dvh - var(--topbar-height));
   overflow: hidden;
-  background: var(--project-bg, #000);
-  /* Keep each project layer opaque so the next can cover it */
   transform: translateZ(0);
 }
 
@@ -421,12 +421,17 @@ button {
   vertical-align: top;
   object-fit: contain;
   background: transparent;
+}
+
+/* Fade-in only when JS is enhancing; never hide media if JS fails to load */
+html.js .media img,
+html.js .media video {
   opacity: 0;
   transition: opacity 0.35s ease;
 }
 
-.media img.is-ready:not(.stack-overlay),
-.media video.is-ready {
+html.js .media img.is-ready:not(.stack-overlay),
+html.js .media video.is-ready {
   opacity: 1;
 }
 

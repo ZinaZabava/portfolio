@@ -39,6 +39,7 @@
   --intro-pad-x: 180px;
   --intro-gap: 59px;
   --mono-weight: 300; /* Forma DJR Mono Light */
+  --mono-size: 18px; /* match project tags (Commercial, Academic, …) */
 }
 
 *,
@@ -58,7 +59,7 @@ body {
   color: var(--text);
   font-family: var(--font-mono);
   font-weight: var(--mono-weight);
-  font-size: 24px;
+  font-size: var(--mono-size);
   line-height: normal;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
@@ -191,9 +192,8 @@ button {
   margin: 0;
   font-family: var(--font-mono);
   font-weight: var(--mono-weight);
-  /* Figma mono labels: height 29; "Projects:" ≈ 130px wide at 24px */
-  font-size: 24px;
-  line-height: 29px;
+  font-size: var(--mono-size);
+  line-height: normal;
   letter-spacing: 0;
   text-transform: uppercase;
   color: var(--text);
@@ -215,8 +215,8 @@ button {
   margin: 0;
   font-family: var(--font-mono);
   font-weight: var(--mono-weight);
-  font-size: 24px;
-  line-height: 29px;
+  font-size: var(--mono-size);
+  line-height: normal;
   letter-spacing: 0;
   text-transform: uppercase;
   color: var(--text);
@@ -256,8 +256,8 @@ button {
   gap: var(--index-gap);
   font-family: var(--font-mono);
   font-weight: var(--mono-weight);
-  font-size: 24px;
-  line-height: 29px;
+  font-size: var(--mono-size);
+  line-height: normal;
   flex: 0 0 auto;
   min-width: 0;
 }
@@ -396,7 +396,7 @@ html.js:not(.is-simple-scroll) .project__pin {
   max-width: 100%;
   font-family: var(--font-mono);
   font-weight: var(--mono-weight);
-  font-size: 18px;
+  font-size: var(--mono-size);
   line-height: normal;
   letter-spacing: 0;
   text-transform: uppercase;
@@ -549,10 +549,6 @@ html.js:not(.is-simple-scroll) .media video.is-ready {
   .project__copy {
     font-size: 18px;
     line-height: 1.5;
-  }
-
-  .project__tags {
-    font-size: 14px;
   }
 }
 

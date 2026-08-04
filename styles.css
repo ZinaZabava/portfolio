@@ -6,7 +6,7 @@
     url("assets/fonts/PPEditorialNew-Light.otf") format("opentype");
   font-weight: 200 300;
   font-style: normal;
-  font-display: swap;
+  font-display: block;
 }
 
 @font-face {
@@ -17,7 +17,7 @@
     url("assets/fonts/FATRene-Regular.otf") format("opentype");
   font-weight: 400;
   font-style: normal;
-  font-display: swap;
+  font-display: block;
 }
 
 :root {
@@ -51,6 +51,7 @@ html {
   scroll-behavior: auto;
 }
 
+/* Avoid FOUT: keep page blank until fonts settle, then fade in */
 body {
   margin: 0;
   background: var(--about-bg);
@@ -62,6 +63,18 @@ body {
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   overflow-x: hidden;
+  opacity: 0;
+}
+
+html.fonts-loaded body {
+  opacity: 1;
+  transition: opacity 0.18s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html.fonts-loaded body {
+    transition: none;
+  }
 }
 
 img,

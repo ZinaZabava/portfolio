@@ -24,8 +24,41 @@
       } catch (e) {}
     })();
   </script>
+  <link rel="preconnect" href="https://use.typekit.net" />
+  <link rel="preconnect" href="https://p.typekit.net" crossorigin />
+  <link
+    rel="preload"
+    href="assets/fonts/PPEditorialNew-Light.woff2"
+    as="font"
+    type="font/woff2"
+    crossorigin
+  />
+  <link
+    rel="preload"
+    href="assets/fonts/Rene-Regular.woff2"
+    as="font"
+    type="font/woff2"
+    crossorigin
+  />
   <link rel="stylesheet" href="https://use.typekit.net/cte3nym.css" />
   <link rel="stylesheet" href="styles.css" />
+  <script>
+    /* Reveal once webfonts are ready (or after a short timeout). */
+    (function () {
+      var done = false;
+      function ready() {
+        if (done) return;
+        done = true;
+        document.documentElement.classList.add("fonts-loaded");
+      }
+      if (document.fonts && document.fonts.ready) {
+        document.fonts.ready.then(ready);
+      } else {
+        ready();
+      }
+      setTimeout(ready, 1200);
+    })();
+  </script>
 </head>
 <body>
   <div class="page" id="top">

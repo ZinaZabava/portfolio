@@ -112,6 +112,11 @@ button {
   display: none;
 }
 
+/* Mobile page intro — hidden on desktop */
+.mobile-about {
+  display: none;
+}
+
 /* ——— About (fixed, window height) — Figma 360×1024 ——— */
 .about {
   position: fixed;
@@ -627,7 +632,7 @@ html.js:not(.is-simple-scroll) .media video.is-ready {
 
   .about__inner {
     min-height: 100%;
-    padding: 28px 22px 36px;
+    padding: calc(var(--topbar-height) + 16px) 22px 36px;
   }
 
   .about__name {
@@ -654,6 +659,69 @@ html.js:not(.is-simple-scroll) .media video.is-ready {
   .index-list a {
     font-size: 20px;
     line-height: 1.4;
+  }
+
+  /* Intro block at the start of the page (no project index) */
+  .mobile-about {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 48px;
+    min-height: calc(100svh - var(--topbar-height));
+    min-height: calc(100dvh - var(--topbar-height));
+    margin-top: var(--topbar-height);
+    padding: 28px 20px 36px;
+    background: var(--about-bg);
+    color: var(--text);
+    box-sizing: border-box;
+  }
+
+  .mobile-about__bio {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .mobile-about__name {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 200;
+    font-size: clamp(32px, 10vw, 46px);
+    line-height: 1.15;
+    letter-spacing: 0;
+    text-transform: capitalize;
+    color: var(--text);
+  }
+
+  .mobile-about__role {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-weight: var(--mono-weight);
+    font-size: 16px;
+    line-height: 1.3;
+    letter-spacing: 0;
+    text-transform: uppercase;
+    color: var(--text);
+  }
+
+  .mobile-about__contacts {
+    display: flex;
+    flex-direction: column;
+    gap: var(--index-gap);
+    font-family: var(--font-mono);
+    font-weight: var(--mono-weight);
+    font-size: 16px;
+    line-height: 1.3;
+  }
+
+  .mobile-about__contacts a {
+    color: var(--text);
+    text-decoration: none;
+    transition: opacity 160ms ease;
+  }
+
+  .mobile-about__contacts a:hover {
+    opacity: 0.65;
   }
 
   .projects-window {

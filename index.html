@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Zinaida Rykova — Portfolio</title>
+  <link rel="stylesheet" href="https://use.typekit.net/cte3nym.css" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="page">
+    <header class="topbar" id="topbar">
+      <div class="topbar__left">
+        <p class="topbar__name">Zinaida Rykova</p>
+        <p class="topbar__project" id="topbar-project">Special-Style</p>
+      </div>
+      <button
+        class="topbar__burger"
+        id="burger"
+        type="button"
+        aria-label="Open menu"
+        aria-controls="about"
+        aria-expanded="false"
+      >
+        <span class="topbar__burger-line" aria-hidden="true"></span>
+        <span class="topbar__burger-line" aria-hidden="true"></span>
+      </button>
+    </header>
+
+    <div class="about-backdrop" id="about-backdrop" hidden></div>
+
+    <aside class="about" id="about">
+      <div class="about__inner">
+        <header class="about__bio">
+          <h1 class="about__name">Zinaida Rykova</h1>
+          <p class="about__role">Graphic designer</p>
+        </header>
+
+        <nav class="about__index" aria-label="Projects">
+          <p class="about__index-label">Projects:</p>
+          <ul class="index-list" id="index-list">
+            <li>
+              <a href="#project-special-style" data-project="special-style" data-label="Special-Style">Special-Style</a>
+            </li>
+            <li>
+              <a href="#project-whispers-in-my-ear" data-project="whispers-in-my-ear" data-label="Whispers in My Ear">Whispers in My Ear</a>
+            </li>
+            <li>
+              <a href="#project-bio-based" data-project="bio-based" data-label="Bio-based Alternative for Ceramics">Bio-based Alternative for Ceramics</a>
+            </li>
+            <li>
+              <a href="#project-un-bar-meneghino" data-project="un-bar-meneghino" data-label="(un) Bar Meneghino">(un) Bar Meneghino</a>
+            </li>
+            <li>
+              <a href="#project-hosta" data-project="hosta" data-label="Hosta">Hosta</a>
+            </li>
+            <li>
+              <a href="#project-spark" data-project="spark" data-label="Spark">Spark</a>
+            </li>
+          </ul>
+        </nav>
+
+        <footer class="about__contacts">
+          <a href="#" class="about__cv">CV</a>
+          <a href="mailto:3inarykova@gmail.com">3inarykova@gmail.com</a>
+          <a href="tel:+393922987619">+393922987619</a>
+        </footer>
+      </div>
+      <div class="about__rule" aria-hidden="true"></div>
+    </aside>
+
+    <main class="projects-window" id="projects-window">
+      <section
+        class="project"
+        id="project-special-style"
+        data-project="special-style"
+        data-label="Special-Style"
+        style="--project-bg: #000000; --z: 1"
+      >
+        <div class="project__pin">
+          <div class="project__track">
+            <header class="project__intro">
+              <h2 class="project__title">Special-Style</h2>
+              <div class="project__copy">
+                <p>
+                  Special-Style is an award-winning interior design studio with 20&nbsp;years of experience. The studio works on every stage of a project: from the first moodboards and technical drawings to 3D visuals, furniture selection and construction supervision. The studio's visual identity comes from the world of technical drawings: the logo references a symbol typically used to mark walls on construction plans, while the pattern resembles a schematic grid. Layouts and typography were inspired by influential interior magazines and were adapted to remain harmonious in both Latin and Cyrillic.
+                </p>
+              </div>
+              <div class="project__tags">
+                <span>Visual Identity</span>
+                <span>Commercial</span>
+              </div>
+            </header>
+            <div class="project__media">
+              <figure class="media half">
+                <video width="540" height="720"
+                  src="assets/media/special-style%201.webm"
+                  muted
+                  loop
+                  playsinline
+                  autoplay
+                  preload="auto"
+                ></video>
+              </figure>
+              <figure class="media half">
+                <img width="540" height="720" src="assets/media/special-style%202.webp" alt="Special-Style stationery detail" loading="eager" />
+              </figure>
+              <figure class="media full">
+                <img width="1080" height="720" src="assets/media/special-style%203.webp" alt="Special-Style book spread" loading="eager" />
+              </figure>
+              <figure class="media full">
+                <img width="1080" height="720" src="assets/media/special-style%204.webp" alt="Special-Style application" loading="eager" />
+              </figure>
+              <figure class="media full">
+                <img width="1080" height="720" src="assets/media/special-style%205.webp" alt="Special-Style print" loading="eager" />
+              </figure>
+              <figure class="media half">
+                <img width="540" height="720" src="assets/media/special-style%206.webp" alt="Special-Style detail 6" loading="eager" />
+              </figure>
+              <figure class="media half">
+                <img width="540" height="720" src="assets/media/special-style%207.webp" alt="Special-Style detail 7" loading="eager" />
+              </figure>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section
+        class="project"
+        id="project-whispers-in-my-ear"
+        data-project="whispers-in-my-ear"
+        data-label="Whispers in My Ear"
+        style="--project-bg: #000000; --z: 2"
+      >
+        <div class="project__pin">
+          <div class="project__track">
+            <header class="project__intro">
+              <h2 class="project__title">Whispers in My Ear</h2>
+              <div class="project__copy">
+                <p>
+                  Whispers in My Ear is a group show organised by Osnova Gallery in Valencia, which commissioned the design of the printed materials for the exhibition. The goal was to follow the logic of the white cube gallery space and remain neutral, so the design would not compete for attention with the artists' works.
+                </p>
+              </div>
+              <div class="project__tags">
+                <span>Exhibition Materials</span>
+                <span>Commercial</span>
+              </div>
+            </header>
+            <div class="project__media">
+              <figure class="media half">
+                <img width="540" height="721" src="assets/media/whispers%20in%20my%20ear%201.webp" alt="Whispers in My Ear page 1" loading="eager" />
+              </figure>
+              <figure class="media half">
+                <img width="540" height="721" src="assets/media/whispers%20in%20my%20ear%202.webp" alt="Whispers in My Ear page 2" loading="eager" />
+              </figure>
+              <figure class="media full">
+                <img width="1080" height="721" src="assets/media/whispers%20in%20my%20ear%203.webp" alt="Whispers in My Ear spread" loading="eager" />
+              </figure>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section
+        class="project"
+        id="project-bio-based"
+        data-project="bio-based"
+        data-label="Bio-based Alternative for Ceramics"
+        style="--project-bg: #000000; --z: 3"
+      >
+        <div class="project__pin">
+          <div class="project__track">
+            <header class="project__intro">
+              <h2 class="project__title">Bio-based Alternative for Ceramics</h2>
+              <div class="project__copy">
+                <p>
+                  This book presents an experimental thesis investigating shell-based sustainable alternatives to ceramics. The design had to hold both the theoretical and the experimental halves of the research comfortably within one volume. The layout is built to meet the demands of academic text, accommodating footnotes, citations and referencing. The overall system stays deliberately neutral, carrying a faint scientific tone that reflects the material investigation at its core.
+                </p>
+              </div>
+              <div class="project__tags">
+                <span>Book Design</span>
+                <span>Academic</span>
+              </div>
+            </header>
+            <div class="project__media">
+              <figure class="media half">
+                <img width="540" height="675" src="assets/media/bio-based%201.webp" alt="Bio-based cover 1" loading="eager" />
+              </figure>
+              <figure class="media half">
+                <img width="540" height="675" src="assets/media/bio-based%202.webp" alt="Bio-based cover 2" loading="eager" />
+              </figure>
+              <figure class="media full media--stack" data-opacity-scroll>
+                <img width="1080" height="675"
+                  class="stack-base"
+                  src="assets/media/bio-based%203.1.webp"
+                  alt="Bio-based editorial spread"
+                  loading="eager"
+                />
+                <img width="1080" height="675"
+                  class="stack-overlay"
+                  src="assets/media/bio-based%203.2.webp"
+                  alt="Bio-based layout wireframe overlay"
+                  loading="eager"
+                />
+              </figure>
+              <figure class="media full">
+                <img width="1080" height="600" src="assets/media/bio-based%204.webp" alt="Bio-based process" loading="eager" />
+              </figure>
+              <figure class="media full">
+                <video width="1920" height="1080"
+                  class="video-loop"
+                  src="assets/media/bio-based%205.webm"
+                  muted
+                  loop
+                  playsinline
+                  autoplay
+                  preload="auto"
+                ></video>
+              </figure>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section
+        class="project"
+        id="project-un-bar-meneghino"
+        data-project="un-bar-meneghino"
+        data-label="(un) Bar Meneghino"
+        style="--project-bg: #000000; --z: 4"
+      >
+        <div class="project__pin">
+          <div class="project__track">
+            <header class="project__intro">
+              <h2 class="project__title">(un) Bar Meneghino</h2>
+              <div class="project__copy">
+                <p>
+                  Bar Meneghino is a self-initiated research project that explores a visual language shared by the bars across Milan. Through repeated fieldwork and photographic documentation, it collects the recurring fragments that together compose the recognisable identity of the Italian bar. The format of the zine resembles a menu, while the caption on the cover references the look of a bar's signboard.
+                </p>
+              </div>
+              <div class="project__tags">
+                <span>Zine</span>
+                <span>Self-initiated</span>
+              </div>
+            </header>
+            <div class="project__media">
+              <figure class="media half">
+                <img width="540" height="720" src="assets/media/un%20bar%20meneghino%201.webp" alt="un Bar Meneghino 1" loading="eager" />
+              </figure>
+              <figure class="media half">
+                <img width="540" height="720" src="assets/media/un%20bar%20meneghino%202.gif" alt="un Bar Meneghino 2" loading="eager" />
+              </figure>
+              <figure class="media full">
+                <img width="1080" height="720" src="assets/media/un%20bar%20meneghino%203.webp" alt="un Bar Meneghino 3" loading="eager" />
+              </figure>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section
+        class="project"
+        id="project-hosta"
+        data-project="hosta"
+        data-label="Hosta"
+        style="--project-bg: #000000; --z: 5"
+      >
+        <div class="project__pin">
+          <div class="project__track">
+            <header class="project__intro">
+              <h2 class="project__title">Hosta</h2>
+              <div class="project__copy">
+                <p>
+                  Hosta is a cosmetics brand built on science and simplicity, offering effective, safe formulations with clean, balanced compositions. Initiated within a typography course at Bang Bang Education, the identity is deliberately type-led. It pairs the exactitude of laboratory precision with a softness that speaks to the gentleness of the formulations. The visual system communicates that the brand's attention to the ingredients and composition is a sign of care.
+                </p>
+              </div>
+              <div class="project__tags">
+                <span>Visual Identity</span>
+                <span>Academic</span>
+              </div>
+            </header>
+            <div class="project__media">
+              <figure class="media half">
+                <video width="540" height="720"
+                  src="assets/media/hosta%201.webm"
+                  muted
+                  loop
+                  playsinline
+                  autoplay
+                  preload="auto"
+                ></video>
+              </figure>
+              <figure class="media half">
+                <img width="540" height="720" src="assets/media/hosta%202.webp" alt="Hosta 2" loading="eager" />
+              </figure>
+              <figure class="media full">
+                <img width="1080" height="720" src="assets/media/hosta%203.webp" alt="Hosta 3" loading="eager" />
+              </figure>
+              <figure class="media half">
+                <img width="540" height="720" src="assets/media/hosta%204.webp" alt="Hosta 4" loading="eager" />
+              </figure>
+              <figure class="media half">
+                <img width="540" height="720" src="assets/media/hosta%205.webp" alt="Hosta 5" loading="eager" />
+              </figure>
+              <figure class="media full">
+                <img width="1080" height="720" src="assets/media/hosta%206.webp" alt="Hosta 6" loading="eager" />
+              </figure>
+              <figure class="media half">
+                <img width="540" height="720" src="assets/media/hosta%207.webp" alt="Hosta 7" loading="eager" />
+              </figure>
+              <figure class="media half">
+                <img width="540" height="720" src="assets/media/hosta%208.webp" alt="Hosta 8" loading="eager" />
+              </figure>
+              <figure class="media full media--video-end">
+                <video width="1080" height="720"
+                  src="assets/media/hosta%209.webm"
+                  muted
+                  loop
+                  playsinline
+                  autoplay
+                  preload="auto"
+                ></video>
+              </figure>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section
+        class="project"
+        id="project-spark"
+        data-project="spark"
+        data-label="Spark"
+        style="--project-bg: #000000; --z: 6"
+      >
+        <div class="project__pin">
+          <div class="project__track">
+            <header class="project__intro">
+              <h2 class="project__title">Spark</h2>
+              <div class="project__copy">
+                <p>
+                  Spark is a non-alcoholic carbonated drink created to give people a place at the bar without alcohol: an invitation to explore unexpected flavour combinations while sharing the same social ritual. To belong in that setting, Spark shifts away from the vivid visual language typical of lemonade branding and adopts a darker, stricter tone of voice. Spark is not sweet; it is tasteful.
+                </p>
+              </div>
+              <div class="project__tags">
+                <span>Visual Identity</span>
+                <span>Academic</span>
+              </div>
+            </header>
+            <div class="project__media">
+              <figure class="media full">
+                <img width="1080" height="720" src="assets/media/spark%201.webp" alt="Spark 1" loading="eager" />
+              </figure>
+              <figure class="media half">
+                <img width="540" height="720" src="assets/media/spark%202.webp" alt="Spark 2" loading="eager" />
+              </figure>
+              <figure class="media half">
+                <video width="540" height="720"
+                  src="assets/media/spark%203.webm"
+                  muted
+                  loop
+                  playsinline
+                  autoplay
+                  preload="auto"
+                ></video>
+              </figure>
+              <figure class="media full">
+                <img width="1080" height="1390" src="assets/media/spark%204.webp" alt="Spark 4" loading="eager" />
+              </figure>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="main.js"></script>
+</body>
+</html>

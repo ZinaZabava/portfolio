@@ -1,0 +1,712 @@
+@font-face {
+  font-family: "PP Editorial New";
+  src:
+    url("assets/fonts/PPEditorialNew-Light.woff2") format("woff2"),
+    url("assets/fonts/PPEditorialNew-Light.woff") format("woff"),
+    url("assets/fonts/PPEditorialNew-Light.otf") format("opentype");
+  font-weight: 200 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Rene";
+  src:
+    url("assets/fonts/Rene-Regular.woff2") format("woff2"),
+    url("assets/fonts/Rene-Regular.woff") format("woff"),
+    url("assets/fonts/FATRene-Regular.otf") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  /* Figma Desktop 1440: About 360 fixed / Projects flex */
+  --about-width: 360px;
+  --topbar-height: 0px;
+  --gap: 0px;
+  --index-gap: 15px;
+  --text: #ffffff;
+  --text-muted: rgba(255, 255, 255, 0.72);
+  --accent: #d2f096;
+  --about-bg: #000000;
+  --font-mono: "forma-djr-mono", ui-monospace, monospace;
+  --font-display: "PP Editorial New", Georgia, serif;
+  --font-index: "Rene", "PP Editorial New", Georgia, serif;
+  /* Project copy stays Figma width on wide screens — does not shrink as viewport grows */
+  --copy-width: 720px;
+  --intro-pad-y: 118px;
+  --intro-pad-x: 180px;
+  --intro-gap: 59px;
+  --mono-weight: 300; /* Forma DJR Mono Light */
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: auto;
+}
+
+body {
+  margin: 0;
+  background: var(--about-bg);
+  color: var(--text);
+  font-family: var(--font-mono);
+  font-weight: var(--mono-weight);
+  font-size: 24px;
+  line-height: normal;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+}
+
+img,
+video {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin: 0;
+  border: 0;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+figure {
+  margin: 0;
+}
+
+button {
+  appearance: none;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  padding: 0;
+  cursor: pointer;
+}
+
+.page {
+  position: relative;
+  min-height: 100vh;
+}
+
+/* ——— Narrow top bar (hidden on desktop) ——— */
+.topbar {
+  display: none;
+}
+
+.about-backdrop {
+  display: none;
+}
+
+/* ——— About (fixed, window height) — Figma 360×1024 ——— */
+.about {
+  position: fixed;
+  inset: 0 auto 0 0;
+  width: var(--about-width);
+  height: 100vh;
+  height: 100dvh;
+  background: var(--about-bg);
+  color: var(--text);
+  z-index: 100;
+  overflow: hidden;
+  container-type: inline-size;
+  container-name: about;
+}
+
+.about__inner {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  min-height: 0;
+  padding: 36px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.about__bio {
+  display: flex;
+  flex-direction: column;
+  /* Figma: role at y=89, name height 59 → 30px between boxes */
+  gap: 30px;
+  width: 100%;
+  flex: 0 0 auto;
+  min-width: 0;
+}
+
+.about__name {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 200;
+  /* Figma: 288×59 */
+  font-size: 46px;
+  line-height: 59px;
+  letter-spacing: 0;
+  text-transform: capitalize;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  max-width: 100%;
+}
+
+.about__role {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-weight: var(--mono-weight);
+  /* Figma mono labels: height 29; "Projects:" ≈ 130px wide at 24px */
+  font-size: 24px;
+  line-height: 29px;
+  letter-spacing: 0;
+  text-transform: uppercase;
+  color: var(--text);
+  white-space: nowrap;
+}
+
+.about__index {
+  display: flex;
+  flex-direction: column;
+  /* Figma: list at y=59, label height 29 → 30px */
+  gap: 30px;
+  width: 100%;
+  /* Keep natural height so space-between matches Figma equal gaps */
+  flex: 0 0 auto;
+  min-width: 0;
+}
+
+.about__index-label {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-weight: var(--mono-weight);
+  font-size: 24px;
+  line-height: 29px;
+  letter-spacing: 0;
+  text-transform: uppercase;
+  color: var(--text);
+}
+
+.index-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--index-gap);
+  padding-left: 30px;
+  margin: 0;
+}
+
+.index-list a {
+  display: block;
+  max-width: 100%;
+  font-family: var(--font-index);
+  font-weight: 400;
+  /* Figma list items: height 33, tracking -0.12em */
+  font-size: 22px;
+  line-height: 33px;
+  letter-spacing: -0.12em;
+  color: #fff;
+  transition: color 180ms ease;
+  overflow-wrap: break-word;
+}
+
+.index-list a:hover,
+.index-list a.is-active {
+  color: var(--accent);
+}
+
+.about__contacts {
+  display: flex;
+  flex-direction: column;
+  /* Same rhythm as project list (per reference) */
+  gap: var(--index-gap);
+  font-family: var(--font-mono);
+  font-weight: var(--mono-weight);
+  font-size: 24px;
+  line-height: 29px;
+  flex: 0 0 auto;
+  min-width: 0;
+}
+
+.about__contacts a {
+  color: var(--text);
+  transition: opacity 160ms ease;
+}
+
+.about__cv {
+  text-decoration: underline;
+  text-underline-position: from-font;
+  text-decoration-skip-ink: none;
+}
+
+.about__contacts a:hover {
+  opacity: 0.65;
+}
+
+.about__rule {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 1px;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.35);
+  pointer-events: none;
+}
+
+/* ——— Projects window — stacked cover scroll ——— */
+.projects-window {
+  margin-left: var(--about-width);
+  position: relative;
+  width: calc(100% - var(--about-width));
+  isolation: isolate;
+}
+
+.project {
+  position: relative;
+  z-index: var(--z, 1);
+}
+
+.project__pin {
+  position: sticky;
+  top: var(--topbar-height);
+  height: calc(100vh - var(--topbar-height));
+  height: calc(100dvh - var(--topbar-height));
+  overflow: hidden;
+  background: var(--project-bg, #000);
+  /* Keep each project layer opaque so the next can cover it */
+  transform: translateZ(0);
+}
+
+.project__track {
+  will-change: transform;
+  backface-visibility: hidden;
+}
+
+.project__intro {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--intro-gap);
+  min-height: calc(100vh - var(--topbar-height));
+  min-height: calc(100dvh - var(--topbar-height));
+  padding-top: var(--intro-pad-y);
+  padding-bottom: var(--intro-pad-y);
+  /* Keep 720px copy; only tighten side padding when the projects column is narrower than Figma */
+  padding-left: max(24px, min(var(--intro-pad-x), calc((100% - var(--copy-width)) / 2)));
+  padding-right: max(24px, min(var(--intro-pad-x), calc((100% - var(--copy-width)) / 2)));
+  background: #000;
+  color: #fff;
+}
+
+@media (max-height: 900px) {
+  :root {
+    --intro-pad-y: 64px;
+    --intro-gap: 36px;
+  }
+}
+
+@media (max-height: 720px) {
+  :root {
+    --intro-pad-y: 40px;
+    --intro-gap: 24px;
+  }
+}
+
+.project__title {
+  margin: 0;
+  max-width: 100%;
+  text-align: center;
+  font-family: var(--font-display);
+  font-weight: 200;
+  font-size: 30.36px;
+  line-height: normal;
+  letter-spacing: 0;
+  color: #fff;
+}
+
+.project__copy {
+  margin: 0;
+  width: min(var(--copy-width), 100%);
+  max-width: 100%;
+  font-family: var(--font-index);
+  font-weight: 400;
+  font-size: 22px;
+  line-height: 1.5;
+  letter-spacing: -0.12em;
+  color: var(--text-muted);
+  text-align: justify;
+}
+
+.project__copy p {
+  margin: 0;
+}
+
+.project__copy p + p {
+  margin-top: 1em;
+}
+
+.project__tags {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: baseline;
+  width: min(var(--copy-width), 100%);
+  max-width: 100%;
+  font-family: var(--font-mono);
+  font-weight: var(--mono-weight);
+  font-size: 18px;
+  line-height: normal;
+  letter-spacing: 0;
+  text-transform: uppercase;
+  color: #fff;
+  gap: 16px;
+}
+
+.project__tags span:last-child {
+  text-align: right;
+}
+
+/* Grid kills subpixel flex gaps (Whispers lines) */
+.project__media {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  column-gap: 0;
+  row-gap: 0;
+  width: 100%;
+  background: #000;
+  font-size: 0;
+  line-height: 0;
+}
+
+.media {
+  position: relative;
+  overflow: hidden;
+  /* Placeholder slot while media loads — keeps scroll height stable */
+  background: #1a1a1a;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.media.full {
+  grid-column: 1 / -1;
+  width: 100%;
+}
+
+.media.half {
+  width: 100%;
+}
+
+.media img,
+.media video {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  vertical-align: top;
+  object-fit: contain;
+  background: transparent;
+  opacity: 0;
+  transition: opacity 0.35s ease;
+}
+
+.media img.is-ready:not(.stack-overlay),
+.media video.is-ready {
+  opacity: 1;
+}
+
+.media--video-end {
+  /* last media: natural size; scroll padding is handled in JS */
+  min-height: 0;
+}
+
+/* bio-based stacked opacity pair — assets are 1080×675 */
+.media--stack {
+  aspect-ratio: 1080 / 675;
+  background: #daf7a6;
+}
+
+.media--stack .stack-base,
+.media--stack .stack-overlay {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.media--stack .stack-overlay {
+  opacity: 0;
+  will-change: opacity;
+}
+
+/* ——— Mid widths: keep About at Figma 360; only project column adapts ——— */
+@media (max-width: 1024px) and (min-width: 901px) {
+  :root {
+    --intro-pad-y: 80px;
+    --intro-gap: 40px;
+  }
+
+  .project__title {
+    font-size: 26px;
+  }
+
+  .project__copy {
+    font-size: 18px;
+    line-height: 1.5;
+  }
+
+  .project__tags {
+    font-size: 14px;
+  }
+}
+
+/* ——— Narrow: burger menu + top bar ——— */
+@media (max-width: 900px) {
+  :root {
+    --about-width: 0px;
+    --topbar-height: 72px;
+    --intro-pad-y: 56px;
+    --intro-pad-x: 20px;
+    --intro-gap: 32px;
+    --copy-width: 100%;
+  }
+
+  .topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 300;
+    height: var(--topbar-height);
+    padding: 10px 16px;
+    background: rgba(0, 0, 0, 0.94);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .topbar__left {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 0;
+    min-width: 0;
+    padding-right: 12px;
+  }
+
+  .topbar__name,
+  .topbar__project {
+    margin: 0;
+    font-size: 18px;
+    line-height: 1.2;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .topbar__name {
+    font-family: var(--font-display);
+    font-weight: 200;
+    color: #fff;
+  }
+
+  .topbar__project {
+    font-family: var(--font-index);
+    font-weight: 400;
+    color: var(--accent);
+    letter-spacing: -0.08em;
+  }
+
+  .topbar__burger {
+    flex: 0 0 auto;
+    width: 44px;
+    height: 44px;
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    margin: 0;
+    align-self: center;
+  }
+
+  .topbar__burger-line {
+    display: block;
+    width: 22px;
+    height: 1.5px;
+    background: #fff;
+    transition: transform 200ms ease, opacity 200ms ease;
+  }
+
+  body.menu-open .topbar__burger-line:first-child {
+    transform: translateY(4.25px) rotate(45deg);
+  }
+
+  body.menu-open .topbar__burger-line:last-child {
+    transform: translateY(-4.25px) rotate(-45deg);
+  }
+
+  .about-backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 350;
+    background: rgba(0, 0, 0, 0.55);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 220ms ease;
+  }
+
+  body.menu-open .about-backdrop {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .about {
+    position: fixed;
+    inset: 0 0 0 auto;
+    width: min(360px, 88vw);
+    height: 100vh;
+    height: 100dvh;
+    z-index: 400;
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
+    transform: translateX(105%);
+    transition: transform 280ms ease;
+    box-shadow: none;
+  }
+
+  body.menu-open .about {
+    transform: translateX(0);
+  }
+
+  .about__rule {
+    display: none;
+  }
+
+  .about__inner {
+    min-height: 100%;
+    padding: 28px 22px 36px;
+  }
+
+  .about__name {
+    font-size: clamp(24px, 11.5cqi, 32px);
+    white-space: nowrap;
+  }
+
+  .about__role,
+  .about__index-label,
+  .about__contacts {
+    font-size: 16px;
+    font-weight: var(--mono-weight);
+  }
+
+  .about__contacts {
+    gap: var(--index-gap);
+  }
+
+  .index-list {
+    padding-left: 16px;
+    gap: var(--index-gap);
+  }
+
+  .index-list a {
+    font-size: 20px;
+    line-height: 1.4;
+  }
+
+  .projects-window {
+    margin-left: 0;
+    width: 100%;
+    padding-top: 0;
+  }
+
+  .project__intro {
+    align-items: flex-start;
+    padding-top: calc(var(--intro-pad-y) + 8px);
+  }
+
+  .project__title {
+    text-align: left;
+    font-size: 28px;
+  }
+
+  .project__copy {
+    text-align: left;
+  }
+
+  .project__tags {
+    width: 100%;
+  }
+
+  body.menu-open {
+    overflow: hidden;
+  }
+}
+
+@media (max-width: 560px) {
+  .project__media {
+    grid-template-columns: 1fr;
+  }
+
+  .media.half,
+  .media.full {
+    grid-column: 1 / -1;
+  }
+
+  .about__inner {
+    padding: 24px 16px 28px;
+  }
+
+  .project__intro {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .topbar__name,
+  .topbar__project {
+    font-size: 16px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .project__track {
+    transform: none !important;
+  }
+
+  .media img,
+  .media video {
+    opacity: 1;
+    transition: none;
+  }
+
+  .media--stack .stack-overlay {
+    opacity: 1 !important;
+  }
+
+  .about,
+  .about-backdrop,
+  .topbar__burger-line {
+    transition: none !important;
+  }
+}

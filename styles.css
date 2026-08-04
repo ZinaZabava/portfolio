@@ -202,7 +202,7 @@ button {
 .about__index {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 24px;
   width: 100%;
   /* Keep natural height so space-between matches Figma equal gaps */
   flex: 0 0 auto;

@@ -150,22 +150,26 @@
         item.track.style.transform = "";
       }
 
-      // Quicker opacity: finish fade soon after the stack enters view
+      // Bio-based 3.1 → 3.2 opacity fade
       if (item.overlay && item.stack) {
-        const stackHeight = Math.max(
-          1,
-          item.stackHeight || item.stack.offsetHeight
-        );
         if (pinned) {
+          const stackHeight = Math.max(
+            1,
+            item.stackHeight || item.stack.offsetHeight
+          );
           const start = item.stackTop - vh * 0.08;
           const end = item.stackTop + Math.min(vh * 0.28, stackHeight * 0.22);
           const t = end <= start ? 1 : (scrolled - start) / (end - start);
           item.overlay.style.opacity = String(Math.min(1, Math.max(0, t)));
         } else {
-          // Mobile: fade based on how much of the stack is in view
+          // Mobile (simple scroll): fade as the stack moves up through the viewport
           const stackRect = item.stack.getBoundingClientRect();
-          const visible = Math.min(stackRect.bottom, vh + offset) - Math.max(stackRect.top, offset);
-          const t = visible / Math.max(1, stackRect.height * 0.55);
+          const viewBottom = window.innerHeight;
+          const viewTop = offset;
+          // 0 when stack top enters near bottom; 1 once top is well into view
+          const start = viewBottom - 40;
+          const end = viewTop + Math.min(160, window.innerHeight * 0.22);
+          const t = (start - stackRect.top) / Math.max(1, start - end);
           item.overlay.style.opacity = String(Math.min(1, Math.max(0, t)));
         }
       }
@@ -237,29 +241,44 @@
   const videosOnScreen = new Set();
 
   const ensurePlay = (video) => {
-    if (document.hidden || !videosOnScreen.has(video)) return;
-    if (video.ended || (Number.isFinite(video.duration) && video.duration > 0 && video.currentTime >= video.duration - 0.08)) {
+    if (document.hidden) return;
+    if (!videosOnScreen.has(video)) return;
+    video.muted = true;
+    video.defaultMuted = true;
+    if (
+      video.ended ||
+      (Number.isFinite(video.duration) &&
+        video.duration > 0 &&
+        video.currentTime >= video.duration - 0.08)
+    ) {
       try {
         video.currentTime = 0;
       } catch (_) {
         /* ignore seek errors before metadata */
       }
     }
-    if (video.paused) {
-      video.play().catch(() => {});
+    const playAttempt = video.play();
+    if (playAttempt && typeof playAttempt.catch === "function") {
+      playAttempt.catch(() => {});
     }
   };
 
-  videos.forEach((video) => {
+  const armVideo = (video) => {
     video.loop = true;
     video.muted = true;
     video.defaultMuted = true;
+    video.autoplay = true;
     video.playsInline = true;
+    video.controls = false;
+    video.disablePictureInPicture = true;
     video.setAttribute("muted", "");
+    video.setAttribute("autoplay", "");
     video.setAttribute("playsinline", "");
+    video.setAttribute("webkit-playsinline", "");
+    video.setAttribute("disablepictureinpicture", "");
+    video.removeAttribute("controls");
     video.preload = "auto";
 
-    // Hard-loop fallback for browsers that stall on `loop`
     video.addEventListener("ended", () => {
       try {
         video.currentTime = 0;
@@ -267,20 +286,25 @@
       ensurePlay(video);
     });
 
+    // iOS often pauses muted inline videos; nudge them back if still on screen
     video.addEventListener("pause", () => {
-      // Resume if the browser paused an on-screen clip (common with sticky scroll)
-      ensurePlay(video);
+      if (videosOnScreen.has(video) && !document.hidden) {
+        requestAnimationFrame(() => ensurePlay(video));
+      }
     });
 
     video.addEventListener("loadeddata", () => ensurePlay(video));
-  });
+    video.addEventListener("canplay", () => ensurePlay(video));
+  };
+
+  videos.forEach(armVideo);
 
   if ("IntersectionObserver" in window) {
     const io = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           const video = entry.target;
-          if (entry.isIntersecting) {
+          if (entry.isIntersecting && entry.intersectionRatio > 0) {
             videosOnScreen.add(video);
             ensurePlay(video);
           } else {
@@ -289,7 +313,7 @@
           }
         });
       },
-      { threshold: [0, 0.01, 0.15], rootMargin: "40px 0px" }
+      { threshold: [0, 0.05, 0.25], rootMargin: "80px 0px" }
     );
     videos.forEach((video) => io.observe(video));
   } else {
@@ -298,6 +322,24 @@
       ensurePlay(video);
     });
   }
+
+  // First gesture unlocks autoplay on iOS Safari
+  const unlockVideos = () => {
+    videos.forEach((video) => {
+      video.muted = true;
+      if (videosOnScreen.has(video) || !("IntersectionObserver" in window)) {
+        ensurePlay(video);
+      } else {
+        // Prime decode even if off-screen
+        video.play().then(() => video.pause()).catch(() => {});
+      }
+    });
+  };
+  document.addEventListener("touchstart", unlockVideos, {
+    once: true,
+    passive: true,
+  });
+  document.addEventListener("click", unlockVideos, { once: true });
 
   document.addEventListener("visibilitychange", () => {
     if (!document.hidden) {

@@ -423,6 +423,21 @@ html.js:not(.is-simple-scroll) .project__pin {
   background: transparent;
 }
 
+.media video {
+  pointer-events: none;
+}
+
+/* Hide iOS/WebKit big play button overlay */
+.media video::-webkit-media-controls-start-playback-button,
+.media video::-webkit-media-controls {
+  display: none !important;
+  -webkit-appearance: none;
+  opacity: 0 !important;
+  pointer-events: none;
+  width: 0;
+  height: 0;
+}
+
 /* Fade-in only when JS is enhancing on pinned (desktop) scroll.
    On mobile, keep media fully visible immediately. */
 html.js:not(.is-simple-scroll) .media img,
@@ -739,10 +754,7 @@ html.js:not(.is-simple-scroll) .media video.is-ready {
     transition: none;
   }
 
-  .media--stack .stack-overlay {
-    opacity: 1 !important;
-  }
-
+  /* Keep scroll-driven bio-based fade; don’t force overlay visible */
   .about,
   .about-backdrop,
   .topbar__burger-line {

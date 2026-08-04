@@ -131,7 +131,6 @@
   }
 
   function update() {
-    let activeId = state[0]?.id;
     const vh = viewportHeight();
     const topbar = parseFloat(
       getComputedStyle(document.documentElement).getPropertyValue(
@@ -140,8 +139,13 @@
     );
     const offset = Number.isFinite(topbar) ? topbar : 0;
     const pinned = usePinnedScroll();
+    // Focus line just below the top bar / upper viewport — active project is
+    // the last one whose top has crossed this line (never jumps back to first).
+    const focusY = offset + Math.min(96, window.innerHeight * 0.18);
 
-    state.forEach((item, index) => {
+    let activeId = null;
+
+    state.forEach((item) => {
       const { scrolled, rect } = progressFor(item);
 
       if (pinned) {
@@ -166,7 +170,6 @@
           const stackRect = item.stack.getBoundingClientRect();
           const viewBottom = window.innerHeight;
           const viewTop = offset;
-          // 0 when stack top enters near bottom; 1 once top is well into view
           const start = viewBottom - 40;
           const end = viewTop + Math.min(160, window.innerHeight * 0.22);
           const t = (start - stackRect.top) / Math.max(1, start - end);
@@ -174,24 +177,29 @@
         }
       }
 
-      const pinTop = offset;
-      const covers =
-        rect.top <= pinTop + 8 && rect.bottom > pinTop + vh * 0.35;
-      if (covers) {
-        activeId = item.id;
-      }
-
-      if (index === state.length - 1 && rect.bottom <= offset + vh) {
+      if (rect.top <= focusY) {
         activeId = item.id;
       }
     });
+
+    // Before the first project reaches the focus line, highlight nothing yet
+    // (avoids Special-Style flashing between projects / on the About block).
+    if (!activeId) {
+      const first = state[0];
+      if (first) {
+        const firstRect = first.section.getBoundingClientRect();
+        if (firstRect.top < window.innerHeight && firstRect.bottom > offset) {
+          activeId = first.id;
+        }
+      }
+    }
 
     indexLinks.forEach((link) => {
       link.classList.toggle("is-active", link.dataset.project === activeId);
     });
 
     if (topbarProject) {
-      topbarProject.textContent = labels[activeId] || "";
+      topbarProject.textContent = activeId ? labels[activeId] || "" : "";
     }
   }
 

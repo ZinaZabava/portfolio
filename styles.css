@@ -278,8 +278,8 @@ button {
   background: var(--project-bg, #000);
 }
 
-/* Sticky cover-scroll only when JS can drive the track */
-html.js .project__pin {
+/* Sticky cover-scroll only when JS can drive the track (desktop/tablet) */
+html.js:not(.is-simple-scroll) .project__pin {
   position: sticky;
   top: var(--topbar-height);
   height: calc(100vh - var(--topbar-height));
@@ -423,15 +423,16 @@ html.js .project__pin {
   background: transparent;
 }
 
-/* Fade-in only when JS is enhancing; never hide media if JS fails to load */
-html.js .media img,
-html.js .media video {
+/* Fade-in only when JS is enhancing on pinned (desktop) scroll.
+   On mobile, keep media fully visible immediately. */
+html.js:not(.is-simple-scroll) .media img,
+html.js:not(.is-simple-scroll) .media video {
   opacity: 0;
   transition: opacity 0.35s ease;
 }
 
-html.js .media img.is-ready:not(.stack-overlay),
-html.js .media video.is-ready {
+html.js:not(.is-simple-scroll) .media img.is-ready:not(.stack-overlay),
+html.js:not(.is-simple-scroll) .media video.is-ready {
   opacity: 1;
 }
 
@@ -646,9 +647,30 @@ html.js .media video.is-ready {
     padding-top: 0;
   }
 
+  /* Mobile: normal flow so every image is reachable by scrolling.
+     The sticky pin + overflow:hidden was clipping media below each intro. */
+  html.js .project__pin {
+    position: relative;
+    top: auto;
+    height: auto;
+    overflow: visible;
+    transform: none;
+  }
+
+  .project__track {
+    transform: none !important;
+    will-change: auto;
+  }
+
+  .project {
+    height: auto !important;
+  }
+
   .project__intro {
     align-items: flex-start;
     padding-top: calc(var(--intro-pad-y) + 8px);
+    /* Don’t force a full-screen text block before media on phones */
+    min-height: 0;
   }
 
   .project__title {
@@ -695,8 +717,20 @@ html.js .media video.is-ready {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  html.js .project__pin {
+    position: relative;
+    top: auto;
+    height: auto;
+    overflow: visible;
+    transform: none;
+  }
+
   .project__track {
     transform: none !important;
+  }
+
+  .project {
+    height: auto !important;
   }
 
   .media img,

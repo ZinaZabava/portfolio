@@ -5,14 +5,23 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Zinaida Rykova — Portfolio</title>
   <script>
-    /* Resolve CSS/JS/media correctly on GitHub Pages project URLs (/portfolio). */
+    /* Resolve CSS/JS/media correctly on subdirectory hosts; mark scroll mode early. */
     (function () {
       var path = location.pathname;
       var dir = /\/$/.test(path) ? path : path.replace(/\/[^/]*$/, "/");
       if (/\/portfolio$/i.test(path)) dir = path + "/";
       if (!dir) dir = "/";
       document.write('<base href="' + dir + '">');
-      document.documentElement.className += (document.documentElement.className ? " " : "") + "js";
+      var html = document.documentElement;
+      html.className += (html.className ? " " : "") + "js";
+      try {
+        if (
+          window.matchMedia("(max-width: 900px)").matches ||
+          window.matchMedia("(prefers-reduced-motion: reduce)").matches
+        ) {
+          html.className += " is-simple-scroll";
+        }
+      } catch (e) {}
     })();
   </script>
   <link rel="stylesheet" href="https://use.typekit.net/cte3nym.css" />

@@ -12,6 +12,19 @@
   ).matches;
   const narrowMq = window.matchMedia("(max-width: 900px)");
 
+  function usePinnedScroll() {
+    return !reducedMotion && !narrowMq.matches;
+  }
+
+  function syncScrollMode() {
+    document.documentElement.classList.toggle(
+      "is-simple-scroll",
+      !usePinnedScroll()
+    );
+  }
+
+  syncScrollMode();
+
   const labels = Object.fromEntries(
     projects.map((section) => [
       section.dataset.project,
@@ -71,17 +84,26 @@
   }
 
   function measure() {
+    syncScrollMode();
     const vh = viewportHeight();
 
     state.forEach((item) => {
-      item.track.style.transform = "translate3d(0,0,0)";
+      item.track.style.transform = "";
       item.track.style.paddingBottom = "0px";
+
+      if (!usePinnedScroll()) {
+        // Mobile / reduced-motion: natural document height, all media visible
+        item.section.style.height = "";
+        item.scrollRange = 0;
+        if (item.stack) {
+          item.stackTop = item.stack.offsetTop;
+          item.stackHeight = item.stack.offsetHeight;
+        }
+        return;
+      }
 
       const contentHeight = item.track.scrollHeight;
       item.scrollRange = Math.max(0, contentHeight - vh);
-
-      // One continuous scroll: section height matches content travel only.
-      // Next project covers as soon as this one's media has scrolled through.
       item.section.style.height = `${vh + item.scrollRange + 1}px`;
 
       if (item.stack) {
@@ -101,7 +123,6 @@
       )
     );
     const offset = Number.isFinite(topbar) ? topbar : 0;
-    // Account for sticky top offset under the narrow top bar
     const scrolled = Math.min(
       Math.max(-(rect.top - offset), 0),
       item.scrollRange || 0
@@ -118,12 +139,15 @@
       )
     );
     const offset = Number.isFinite(topbar) ? topbar : 0;
+    const pinned = usePinnedScroll();
 
     state.forEach((item, index) => {
       const { scrolled, rect } = progressFor(item);
 
-      if (!reducedMotion) {
+      if (pinned) {
         item.track.style.transform = `translate3d(0, ${-scrolled}px, 0)`;
+      } else {
+        item.track.style.transform = "";
       }
 
       // Quicker opacity: finish fade soon after the stack enters view
@@ -132,13 +156,20 @@
           1,
           item.stackHeight || item.stack.offsetHeight
         );
-        const start = item.stackTop - vh * 0.08;
-        const end = item.stackTop + Math.min(vh * 0.28, stackHeight * 0.22);
-        const t = end <= start ? 1 : (scrolled - start) / (end - start);
-        item.overlay.style.opacity = String(Math.min(1, Math.max(0, t)));
+        if (pinned) {
+          const start = item.stackTop - vh * 0.08;
+          const end = item.stackTop + Math.min(vh * 0.28, stackHeight * 0.22);
+          const t = end <= start ? 1 : (scrolled - start) / (end - start);
+          item.overlay.style.opacity = String(Math.min(1, Math.max(0, t)));
+        } else {
+          // Mobile: fade based on how much of the stack is in view
+          const stackRect = item.stack.getBoundingClientRect();
+          const visible = Math.min(stackRect.bottom, vh + offset) - Math.max(stackRect.top, offset);
+          const t = visible / Math.max(1, stackRect.height * 0.55);
+          item.overlay.style.opacity = String(Math.min(1, Math.max(0, t)));
+        }
       }
 
-      // Active = topmost project whose pin currently owns the viewport
       const pinTop = offset;
       const covers =
         rect.top <= pinTop + 8 && rect.bottom > pinTop + vh * 0.35;

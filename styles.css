@@ -160,13 +160,13 @@ html.js .loader {
   width: max-content;
 }
 
-/* Matches the index list exactly */
+/* Same face and tracking as the index, at twice the size */
 .loader__text,
 .loader__ink {
   font-family: var(--font-index);
   font-weight: 400;
-  font-size: 22px;
-  line-height: 33px;
+  font-size: 44px;
+  line-height: 66px;
   letter-spacing: -0.12em;
   white-space: nowrap;
   color: var(--about-bg);

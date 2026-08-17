@@ -63,7 +63,10 @@ body {
   line-height: normal;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+  /* clip does not make body a scroll container, so Safari can still pin the
+     project frames. hidden would compute overflow-y to auto and break that. */
   overflow-x: hidden;
+  overflow-x: clip;
   opacity: 0;
 }
 
@@ -83,7 +86,10 @@ html.fonts-loaded body {
    for the font swap, so without this the loader would flash in. */
 html.is-loading {
   background: var(--accent);
-  overflow: hidden;
+  /* clip stops the page moving under the loader without becoming the sticky
+     containing block. hidden on html is what made Safari pin each project to
+     one black viewport frame and hide the images underneath. */
+  overflow: clip;
 }
 
 /* Without JS there is nothing to dismiss the loader, so never show it */

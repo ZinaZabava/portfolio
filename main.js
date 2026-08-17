@@ -77,8 +77,15 @@
   function finish() {
     loader.remove();
     root.classList.remove("is-loading");
-    // Project heights were measured behind the loader; re-run now it is gone
-    window.dispatchEvent(new Event("resize"));
+    // Safari will not recompute sticky + track heights in the same turn as
+    // removing overflow on html. Wait for layout, then ask the scroller to
+    // measure again so images are not left clipped inside the black frames.
+    void root.offsetHeight;
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        window.dispatchEvent(new Event("resize"));
+      });
+    });
   }
 
   let dismissed = false;
@@ -212,6 +219,10 @@
   }
 
   function measure() {
+    // Heights taken while html was overflow-clipped are viewport-tall in
+    // Safari, which is what hides each project's images under its intro.
+    if (document.documentElement.classList.contains("is-loading")) return;
+
     syncScrollMode();
     const vh = viewportHeight();
 

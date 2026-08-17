@@ -17,6 +17,7 @@
       /* Safety net: if the loader script never runs, don't trap the page */
       setTimeout(function () {
         html.classList.remove("is-loading");
+        window.dispatchEvent(new Event("resize"));
       }, 6000);
       try {
         if (

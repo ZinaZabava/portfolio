@@ -164,11 +164,12 @@ html.js .loader {
   position: relative;
   margin: 0;
   width: max-content;
-  max-width: min(12em, calc(100vw - 48px));
+  max-width: calc(100vw - 48px);
+  text-align: center;
+  text-wrap: balance;
 }
 
-/* Same face and tracking as the index, at twice the size.
-   nowrap is dropped so a phone can wrap; 12em still holds one line on desktop. */
+/* Same face and tracking as the index, at twice the size */
 .loader__text,
 .loader__ink {
   font-family: var(--font-index);
@@ -181,6 +182,16 @@ html.js .loader {
   color: var(--about-bg);
 }
 
+/* Desktop has the width for a single line; phones wrap */
+@media (min-width: 901px) {
+  .loader__text,
+  .loader__ink {
+    max-width: none;
+    white-space: nowrap;
+    text-wrap: unset;
+  }
+}
+
 /* Once the strips carry the type, the measuring copy is redundant */
 .loader.is-built .loader__text {
   visibility: hidden;
@@ -191,12 +202,11 @@ html.js .loader.is-dismissing {
   background: transparent;
 }
 
-/* The dots pull back from overlapping to nothing: the corners between them
-   open up first, then they round off and shrink. Each strip's delay is set in
-   JS so the break-up travels bottom to top. */
+/* The dots pull back from overlapping to nothing. --r is driven from JS so
+   iOS Safari (which often will not interpolate a custom property in CSS)
+   still gets the same bottom-to-top wave as desktop. */
 .loader.is-dismissing .loader__row {
   --r: 0%;
-  transition: --r 0.62s cubic-bezier(0.4, 0, 0.75, 0.35) var(--d, 0ms);
 }
 
 .loader.is-instant {

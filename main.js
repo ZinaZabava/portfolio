@@ -14,13 +14,14 @@
     "(prefers-reduced-motion: reduce)"
   ).matches;
 
-  // The break-up needs a mask to punch the dots and a registered custom
-  // property to shrink them; without both, fall back to the plain fade
-  const canDot =
-    typeof CSS !== "undefined" &&
-    typeof CSS.registerProperty === "function" &&
-    (CSS.supports("mask-image", "radial-gradient(#000, transparent)") ||
-      CSS.supports("-webkit-mask-image", "radial-gradient(#000, transparent)"));
+  // Masks punch the dots; --r is animated from JS because iOS Safari often
+  // has -webkit-mask but not CSS.registerProperty / custom-property transitions.
+  const canMask =
+    typeof CSS === "undefined" ||
+    typeof CSS.supports !== "function" ||
+    CSS.supports("mask-image", "radial-gradient(#000, transparent)") ||
+    CSS.supports("-webkit-mask-image", "radial-gradient(#000, transparent)") ||
+    CSS.supports("-webkit-mask-image", "url(#a)");
 
   const DOT = 16; // dot pitch, px
   const WAVE = 900; // time the break-up takes to travel bottom to top
@@ -30,9 +31,16 @@
 
   let built = false;
 
+  function viewportSize() {
+    const vv = window.visualViewport;
+    return {
+      vw: Math.round(vv && vv.width ? vv.width : window.innerWidth),
+      vh: Math.round(vv && vv.height ? vv.height : window.innerHeight),
+    };
+  }
+
   function build() {
-    const vw = window.innerWidth;
-    const vh = window.innerHeight;
+    const { vw, vh } = viewportSize();
     const rows = Math.max(1, Math.ceil(vh / DOT));
     // Spread the wave over a fixed span, so the dot pitch sets the grain of
     // the break-up without changing how long it takes
@@ -102,7 +110,33 @@
     }
 
     loader.classList.add("is-dismissing");
-    window.setTimeout(finish, WAVE + PULL_BACK + 120);
+
+    const strips = Array.from(grid.children);
+    const delays = strips.map(
+      (el) => parseFloat(el.style.getPropertyValue("--d")) || 0
+    );
+    const t0 = performance.now();
+    const ease = (t) => 1 - Math.pow(1 - Math.min(1, Math.max(0, t)), 2.4);
+    // Paint the mask from JS: iOS Safari often will not interpolate --r inside
+    // a radial-gradient, which is why the phone was falling back to a fade.
+    const paint = (el, r) => {
+      const img = `radial-gradient(circle closest-side, #000 ${r}%, transparent ${r}%)`;
+      el.style.setProperty("--r", `${r}%`);
+      el.style.webkitMaskImage = img;
+      el.style.maskImage = img;
+    };
+
+    const frame = (now) => {
+      let done = true;
+      for (let i = 0; i < strips.length; i += 1) {
+        const t = (now - t0 - delays[i]) / PULL_BACK;
+        if (t < 1) done = false;
+        paint(strips[i], +(145 * (1 - ease(t))).toFixed(2));
+      }
+      if (done) finish();
+      else requestAnimationFrame(frame);
+    };
+    requestAnimationFrame(frame);
   }
 
   // Wait for the webfonts: body is hidden until they settle, and the slices
@@ -116,7 +150,7 @@
   function start() {
     if (scheduled) return;
     scheduled = true;
-    if (!reducedMotion && canDot) {
+    if (!reducedMotion && canMask) {
       build();
       window.addEventListener("resize", () => {
         if (!dismissed) build();

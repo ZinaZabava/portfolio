@@ -350,8 +350,15 @@ button {
   display: flex;
   flex-direction: column;
   gap: var(--index-gap);
-  padding-left: 0;
   margin: 0;
+  padding: 0;
+  padding-inline-start: 0;
+  list-style: none;
+}
+
+.index-list li {
+  margin: 0;
+  padding: 0;
 }
 
 .index-list a {
@@ -835,7 +842,8 @@ html.js:not(.is-simple-scroll) .media video.is-ready {
   }
 
   .index-list {
-    padding-left: 0;
+    padding: 0;
+    padding-inline-start: 0;
     gap: 12px;
   }
 

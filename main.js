@@ -1,46 +1,85 @@
 /* ===================== Intro loader =====================
-   A full-screen green panel that dissolves into a grid of tiles. Each tile
-   rounds off, then shrinks away; the delays run bottom to top so the page is
-   uncovered from below. */
+   A full-screen green panel that breaks into tiles: each one rounds off, then
+   shrinks away, in a wave from the bottom up. Every tile carries its own slice
+   of the greeting, so the type falls apart with the background rather than
+   fading out ahead of it. */
 (() => {
   const loader = document.getElementById("loader");
   if (!loader) return;
 
   const grid = loader.querySelector(".loader__grid");
+  const text = loader.querySelector(".loader__text");
   const root = document.documentElement;
   const reducedMotion = window.matchMedia(
     "(prefers-reduced-motion: reduce)"
   ).matches;
 
-  const TILE = 64; // target tile edge, px
+  const TILE = 56; // target tile edge, px
   const ROW_STEP = 45; // delay added per row, bottom to top
   const ROUND_LEAD = 180; // time a tile stays round before it shrinks
   const SHRINK = 460;
-  const MIN_VISIBLE = 850; // let the message be read
+  const HOLD = 2000; // time the greeting stays put
   const MAX_WAIT = 4000; // never hold the page longer than this
 
   let rows = 1;
+  let built = false;
 
-  function buildTiles() {
-    const cols = Math.max(1, Math.ceil(window.innerWidth / TILE));
-    rows = Math.max(1, Math.ceil(window.innerHeight / TILE));
+  function build() {
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+    const cols = Math.max(1, Math.ceil(vw / TILE));
+    rows = Math.max(1, Math.ceil(vh / TILE));
+    // Whole-pixel cells keep the type crisp where it crosses a tile edge
+    const tw = Math.ceil(vw / cols);
+    const th = Math.ceil(vh / rows);
+
     grid.style.setProperty("--cols", cols);
     grid.style.setProperty("--rows", rows);
+    grid.style.setProperty("--tw", `${tw}px`);
+    grid.style.setProperty("--th", `${th}px`);
+
+    // Measured from the live element, so the slices inherit its exact metrics
+    const box = text.getBoundingClientRect();
+    const inkLeft = Math.round((vw - box.width) / 2);
+    const inkTop = Math.round((vh - box.height) / 2);
+    const inkRight = inkLeft + Math.ceil(box.width);
+    const inkBottom = inkTop + Math.ceil(box.height);
 
     const frag = document.createDocumentFragment();
     for (let row = 0; row < rows; row += 1) {
       // Jitter within the row keeps the leading edge from reading as a line
       const base = (rows - 1 - row) * ROW_STEP;
+      const top = row * th;
       for (let col = 0; col < cols; col += 1) {
+        const left = col * tw;
         const tile = document.createElement("span");
         const delay = Math.round(base + Math.random() * ROW_STEP * 0.9);
         tile.className = "loader__tile";
         tile.style.setProperty("--d", `${delay}ms`);
         tile.style.setProperty("--d2", `${delay + ROUND_LEAD}ms`);
+
+        const touchesInk =
+          left < inkRight &&
+          left + tw > inkLeft &&
+          top < inkBottom &&
+          top + th > inkTop;
+
+        if (touchesInk) {
+          const ink = document.createElement("span");
+          ink.className = "loader__ink";
+          ink.textContent = text.textContent;
+          ink.style.left = `${inkLeft - left}px`;
+          ink.style.top = `${inkTop - top}px`;
+          tile.appendChild(ink);
+        }
+
         frag.appendChild(tile);
       }
     }
+
     grid.replaceChildren(frag);
+    loader.classList.add("is-tiled");
+    built = true;
   }
 
   function finish() {
@@ -55,41 +94,44 @@
     if (dismissed) return;
     dismissed = true;
 
-    if (reducedMotion) {
+    // Without tiles there is nothing to break up, so just fade
+    if (!built) {
       loader.classList.add("is-instant");
       window.setTimeout(finish, 300);
       return;
     }
 
     loader.classList.add("is-dismissing");
-    window.setTimeout(
-      finish,
-      rows * ROW_STEP + ROUND_LEAD + SHRINK + 120
-    );
+    window.setTimeout(finish, rows * ROW_STEP + ROUND_LEAD + SHRINK + 120);
   }
 
-  if (!reducedMotion) {
-    buildTiles();
-    window.addEventListener("resize", () => {
-      if (!dismissed) buildTiles();
-    });
-  }
-
-  // body is hidden until the webfonts settle, so start counting from there
+  // Wait for the webfonts: body is hidden until they settle, and the slices
+  // are only aligned if the line is measured at its final metrics.
   const fontsReady =
     document.fonts && document.fonts.ready
       ? document.fonts.ready
       : Promise.resolve();
 
   let scheduled = false;
-  function schedule(wait) {
+  function start() {
     if (scheduled) return;
     scheduled = true;
-    window.setTimeout(dismiss, wait);
+    if (!reducedMotion) {
+      build();
+      window.addEventListener("resize", () => {
+        if (!dismissed) build();
+      });
+    }
+    window.setTimeout(dismiss, HOLD);
   }
 
-  fontsReady.then(() => schedule(MIN_VISIBLE));
-  window.setTimeout(() => schedule(0), MAX_WAIT);
+  fontsReady.then(start);
+  window.setTimeout(() => {
+    if (!scheduled) {
+      scheduled = true;
+      dismiss();
+    }
+  }, MAX_WAIT);
 })();
 
 (() => {

@@ -1,8 +1,8 @@
 /* ===================== Intro loader =====================
-   A full-screen green panel that breaks into tiles: each one rounds off, then
-   shrinks away, in a wave from the bottom up. Every tile carries its own slice
-   of the greeting, so the type falls apart with the background rather than
-   fading out ahead of it. */
+   A full-screen green panel that breaks into a dot matrix and pulls back in a
+   wave from the bottom up. The panel is built as one masked strip per row of
+   dots, and the strips carry the greeting, so the type breaks into dots along
+   with the background instead of fading out ahead of it. */
 (() => {
   const loader = document.getElementById("loader");
   if (!loader) return;
@@ -14,12 +14,18 @@
     "(prefers-reduced-motion: reduce)"
   ).matches;
 
-  const TILE = 36; // target tile edge, px
-  const MAX_TILES = 2200; // ceiling on the grid, so big windows stay smooth
+  // The break-up needs a mask to punch the dots and a registered custom
+  // property to shrink them; without both, fall back to the plain fade
+  const canDot =
+    typeof CSS !== "undefined" &&
+    typeof CSS.registerProperty === "function" &&
+    (CSS.supports("mask-image", "radial-gradient(#000, transparent)") ||
+      CSS.supports("-webkit-mask-image", "radial-gradient(#000, transparent)"));
+
+  const DOT = 16; // dot pitch, px
   const WAVE = 900; // time the break-up takes to travel bottom to top
-  const ROUND_LEAD = 180; // time a tile stays round before it shrinks
-  const SHRINK = 460;
-  const HOLD = 2000; // time the greeting stays put
+  const PULL_BACK = 620; // time a row of dots takes to close to nothing
+  const HOLD = 1500; // time the greeting stays put
   const MAX_WAIT = 4000; // never hold the page longer than this
 
   let built = false;
@@ -27,65 +33,44 @@
   function build() {
     const vw = window.innerWidth;
     const vh = window.innerHeight;
-    // On a very large window, grow the tiles rather than animate tens of
-    // thousands of them
-    const edge = Math.max(TILE, Math.sqrt((vw * vh) / MAX_TILES));
-    const cols = Math.max(1, Math.ceil(vw / edge));
-    const rows = Math.max(1, Math.ceil(vh / edge));
-    // Spread the wave over a fixed span, so the tile size sets the grain of
+    const rows = Math.max(1, Math.ceil(vh / DOT));
+    // Spread the wave over a fixed span, so the dot pitch sets the grain of
     // the break-up without changing how long it takes
     const rowStep = WAVE / rows;
-    // Whole-pixel cells keep the type crisp where it crosses a tile edge
-    const tw = Math.ceil(vw / cols);
-    const th = Math.ceil(vh / rows);
 
-    grid.style.setProperty("--cols", cols);
-    grid.style.setProperty("--rows", rows);
-    grid.style.setProperty("--tw", `${tw}px`);
-    grid.style.setProperty("--th", `${th}px`);
+    grid.style.setProperty("--dot", `${DOT}px`);
 
     // Measured from the live element, so the slices inherit its exact metrics
     const box = text.getBoundingClientRect();
     const inkLeft = Math.round((vw - box.width) / 2);
     const inkTop = Math.round((vh - box.height) / 2);
-    const inkRight = inkLeft + Math.ceil(box.width);
     const inkBottom = inkTop + Math.ceil(box.height);
 
     const frag = document.createDocumentFragment();
     for (let row = 0; row < rows; row += 1) {
-      // Jitter within the row keeps the leading edge from reading as a line
-      const base = (rows - 1 - row) * rowStep;
-      const top = row * th;
-      for (let col = 0; col < cols; col += 1) {
-        const left = col * tw;
-        const tile = document.createElement("span");
-        const delay = Math.round(base + Math.random() * rowStep * 0.9);
-        tile.className = "loader__tile";
-        tile.style.setProperty("--d", `${delay}ms`);
-        tile.style.setProperty("--d2", `${delay + ROUND_LEAD}ms`);
+      const top = row * DOT;
+      const strip = document.createElement("span");
+      strip.className = "loader__row";
+      strip.style.setProperty(
+        "--d",
+        `${Math.round((rows - 1 - row) * rowStep)}ms`
+      );
 
-        const touchesInk =
-          left < inkRight &&
-          left + tw > inkLeft &&
-          top < inkBottom &&
-          top + th > inkTop;
-
-        if (touchesInk) {
-          const ink = document.createElement("span");
-          ink.className = "loader__ink";
-          ink.textContent = text.textContent;
-          ink.style.left = `${inkLeft - left}px`;
-          ink.style.top = `${inkTop - top}px`;
-          tile.className += " has-ink";
-          tile.appendChild(ink);
-        }
-
-        frag.appendChild(tile);
+      if (top < inkBottom && top + DOT > inkTop) {
+        const ink = document.createElement("span");
+        ink.className = "loader__ink";
+        ink.textContent = text.textContent;
+        ink.style.left = `${inkLeft}px`;
+        ink.style.top = `${inkTop - top}px`;
+        strip.className += " has-ink";
+        strip.appendChild(ink);
       }
+
+      frag.appendChild(strip);
     }
 
     grid.replaceChildren(frag);
-    loader.classList.add("is-tiled");
+    loader.classList.add("is-built");
     built = true;
   }
 
@@ -101,7 +86,7 @@
     if (dismissed) return;
     dismissed = true;
 
-    // Without tiles there is nothing to break up, so just fade
+    // Without the dot grid there is nothing to break up, so just fade
     if (!built) {
       loader.classList.add("is-instant");
       window.setTimeout(finish, 300);
@@ -109,7 +94,7 @@
     }
 
     loader.classList.add("is-dismissing");
-    window.setTimeout(finish, WAVE + ROUND_LEAD + SHRINK + 120);
+    window.setTimeout(finish, WAVE + PULL_BACK + 120);
   }
 
   // Wait for the webfonts: body is hidden until they settle, and the slices
@@ -123,7 +108,7 @@
   function start() {
     if (scheduled) return;
     scheduled = true;
-    if (!reducedMotion) {
+    if (!reducedMotion && canDot) {
       build();
       window.addEventListener("resize", () => {
         if (!dismissed) build();

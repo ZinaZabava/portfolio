@@ -100,30 +100,55 @@ html.js .loader {
   background: var(--accent);
 }
 
-/* The tiles are the whole surface — green fill and type alike — so breaking
-   them up takes the greeting away with the background. */
+/* Dot radius, as a share of half a cell. Registering it is what lets the dots
+   shrink smoothly. Reaching a cell's corner takes ~141%, so starting just past
+   that leaves the dots overlapping and the panel reads as flat colour. */
+@property --r {
+  syntax: "<percentage>";
+  inherits: false;
+  initial-value: 145%;
+}
+
+/* One masked strip per row of dots rather than an element per dot: at this
+   grain a screen holds thousands of them, and only the strips are in the DOM. */
 .loader__grid {
   position: absolute;
   inset: 0;
-  display: grid;
-  grid-template-columns: repeat(var(--cols, 1), var(--tw, 100%));
-  grid-template-rows: repeat(var(--rows, 1), var(--th, 100%));
   overflow: hidden;
 }
 
-.loader__tile {
+/* The strip carries the whole surface — green fill and type alike — and the
+   mask punches the dots through both, so the greeting breaks up with it. */
+.loader__row {
+  display: block;
+  width: 100%;
+  height: var(--dot, 16px);
   background: var(--accent);
+  --r: 145%;
+  -webkit-mask-image: radial-gradient(
+    circle closest-side,
+    #000 var(--r),
+    transparent var(--r)
+  );
+  mask-image: radial-gradient(
+    circle closest-side,
+    #000 var(--r),
+    transparent var(--r)
+  );
+  -webkit-mask-size: var(--dot, 16px) var(--dot, 16px);
+  mask-size: var(--dot, 16px) var(--dot, 16px);
+  -webkit-mask-repeat: repeat;
+  mask-repeat: repeat;
 }
 
-/* Only the handful of tiles holding type need to clip it; leaving the rest
-   unclipped keeps the dissolve cheap enough to stay smooth */
-.loader__tile.has-ink {
+/* Only the strips holding type need to clip it */
+.loader__row.has-ink {
   position: relative;
   overflow: hidden;
 }
 
-/* Each tile holds the full line, offset so it lands at the same place on
-   screen in every tile; the tile's own clip is what slices it up. */
+/* Each strip holds the full line, offset so it lands at the same place on
+   screen in every strip; the strip's own clip is what slices it up. */
 .loader__ink {
   position: absolute;
   display: block;
@@ -147,26 +172,22 @@ html.js .loader {
   color: var(--about-bg);
 }
 
-/* Once the tiles carry the type, the measuring copy is redundant */
-.loader.is-tiled .loader__text {
+/* Once the strips carry the type, the measuring copy is redundant */
+.loader.is-built .loader__text {
   visibility: hidden;
 }
 
-/* Needs to outrank `html.js .loader`, or the tiles reveal green, not the page */
+/* Needs to outrank `html.js .loader`, or the dots reveal green, not the page */
 html.js .loader.is-dismissing {
   background: transparent;
 }
 
-/* Each tile rounds off first (--d), then shrinks away (--d2). The delays are
-   set per tile in JS so the dissolve travels bottom to top. */
-.loader.is-dismissing .loader__tile {
-  border-radius: 50%;
-  transform: scale(0);
-  opacity: 0;
-  transition:
-    border-radius 0.26s ease var(--d, 0ms),
-    transform 0.46s cubic-bezier(0.36, 0, 0.66, -0.28) var(--d2, 0ms),
-    opacity 0.46s ease var(--d2, 0ms);
+/* The dots pull back from overlapping to nothing: the corners between them
+   open up first, then they round off and shrink. Each strip's delay is set in
+   JS so the break-up travels bottom to top. */
+.loader.is-dismissing .loader__row {
+  --r: 0%;
+  transition: --r 0.62s cubic-bezier(0.4, 0, 0.75, 0.35) var(--d, 0ms);
 }
 
 .loader.is-instant {

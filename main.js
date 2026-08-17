@@ -62,6 +62,7 @@
         ink.textContent = text.textContent;
         ink.style.left = `${inkLeft}px`;
         ink.style.top = `${inkTop - top}px`;
+        ink.style.width = `${Math.ceil(box.width)}px`;
         strip.className += " has-ink";
         strip.appendChild(ink);
       }

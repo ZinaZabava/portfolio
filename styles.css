@@ -38,7 +38,7 @@
   --intro-pad-y: 118px;
   --intro-pad-x: 180px;
   --intro-gap: 59px;
-  --mono-weight: 300; /* Forma DJR Mono Light */
+  --mono-weight: 400; /* Forma DJR Mono Regular */
   --mono-size: 18px; /* match project tags (Commercial, Academic, …) */
 }
 
@@ -164,9 +164,11 @@ html.js .loader {
   position: relative;
   margin: 0;
   width: max-content;
+  max-width: min(12em, calc(100vw - 48px));
 }
 
-/* Same face and tracking as the index, at twice the size */
+/* Same face and tracking as the index, at twice the size.
+   nowrap is dropped so a phone can wrap; 12em still holds one line on desktop. */
 .loader__text,
 .loader__ink {
   font-family: var(--font-index);
@@ -174,7 +176,8 @@ html.js .loader {
   font-size: 44px;
   line-height: 66px;
   letter-spacing: -0.12em;
-  white-space: nowrap;
+  text-align: center;
+  text-wrap: balance;
   color: var(--about-bg);
 }
 

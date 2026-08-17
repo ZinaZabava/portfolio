@@ -14,21 +14,27 @@
     "(prefers-reduced-motion: reduce)"
   ).matches;
 
-  const TILE = 56; // target tile edge, px
-  const ROW_STEP = 45; // delay added per row, bottom to top
+  const TILE = 36; // target tile edge, px
+  const MAX_TILES = 2200; // ceiling on the grid, so big windows stay smooth
+  const WAVE = 900; // time the break-up takes to travel bottom to top
   const ROUND_LEAD = 180; // time a tile stays round before it shrinks
   const SHRINK = 460;
   const HOLD = 2000; // time the greeting stays put
   const MAX_WAIT = 4000; // never hold the page longer than this
 
-  let rows = 1;
   let built = false;
 
   function build() {
     const vw = window.innerWidth;
     const vh = window.innerHeight;
-    const cols = Math.max(1, Math.ceil(vw / TILE));
-    rows = Math.max(1, Math.ceil(vh / TILE));
+    // On a very large window, grow the tiles rather than animate tens of
+    // thousands of them
+    const edge = Math.max(TILE, Math.sqrt((vw * vh) / MAX_TILES));
+    const cols = Math.max(1, Math.ceil(vw / edge));
+    const rows = Math.max(1, Math.ceil(vh / edge));
+    // Spread the wave over a fixed span, so the tile size sets the grain of
+    // the break-up without changing how long it takes
+    const rowStep = WAVE / rows;
     // Whole-pixel cells keep the type crisp where it crosses a tile edge
     const tw = Math.ceil(vw / cols);
     const th = Math.ceil(vh / rows);
@@ -48,12 +54,12 @@
     const frag = document.createDocumentFragment();
     for (let row = 0; row < rows; row += 1) {
       // Jitter within the row keeps the leading edge from reading as a line
-      const base = (rows - 1 - row) * ROW_STEP;
+      const base = (rows - 1 - row) * rowStep;
       const top = row * th;
       for (let col = 0; col < cols; col += 1) {
         const left = col * tw;
         const tile = document.createElement("span");
-        const delay = Math.round(base + Math.random() * ROW_STEP * 0.9);
+        const delay = Math.round(base + Math.random() * rowStep * 0.9);
         tile.className = "loader__tile";
         tile.style.setProperty("--d", `${delay}ms`);
         tile.style.setProperty("--d2", `${delay + ROUND_LEAD}ms`);
@@ -70,6 +76,7 @@
           ink.textContent = text.textContent;
           ink.style.left = `${inkLeft - left}px`;
           ink.style.top = `${inkTop - top}px`;
+          tile.className += " has-ink";
           tile.appendChild(ink);
         }
 
@@ -102,7 +109,7 @@
     }
 
     loader.classList.add("is-dismissing");
-    window.setTimeout(finish, rows * ROW_STEP + ROUND_LEAD + SHRINK + 120);
+    window.setTimeout(finish, WAVE + ROUND_LEAD + SHRINK + 120);
   }
 
   // Wait for the webfonts: body is hidden until they settle, and the slices

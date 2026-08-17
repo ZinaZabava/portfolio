@@ -112,9 +112,14 @@ html.js .loader {
 }
 
 .loader__tile {
+  background: var(--accent);
+}
+
+/* Only the handful of tiles holding type need to clip it; leaving the rest
+   unclipped keeps the dissolve cheap enough to stay smooth */
+.loader__tile.has-ink {
   position: relative;
   overflow: hidden;
-  background: var(--accent);
 }
 
 /* Each tile holds the full line, offset so it lands at the same place on

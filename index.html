@@ -13,7 +13,11 @@
       if (!dir) dir = "/";
       document.write('<base href="' + dir + '">');
       var html = document.documentElement;
-      html.className += (html.className ? " " : "") + "js";
+      html.className += (html.className ? " " : "") + "js is-loading";
+      /* Safety net: if the loader script never runs, don't trap the page */
+      setTimeout(function () {
+        html.classList.remove("is-loading");
+      }, 6000);
       try {
         if (
           window.matchMedia("(max-width: 900px)").matches ||
@@ -62,6 +66,11 @@
   </script>
 </head>
 <body>
+  <div class="loader" id="loader" aria-hidden="true">
+    <div class="loader__grid" id="loader-grid"></div>
+    <p class="loader__text">Welcome to my portfolio</p>
+  </div>
+
   <div class="page" id="top">
     <header class="topbar" id="topbar">
       <div class="topbar__left">

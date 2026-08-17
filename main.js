@@ -1,3 +1,97 @@
+/* ===================== Intro loader =====================
+   A full-screen green panel that dissolves into a grid of tiles. Each tile
+   rounds off, then shrinks away; the delays run bottom to top so the page is
+   uncovered from below. */
+(() => {
+  const loader = document.getElementById("loader");
+  if (!loader) return;
+
+  const grid = loader.querySelector(".loader__grid");
+  const root = document.documentElement;
+  const reducedMotion = window.matchMedia(
+    "(prefers-reduced-motion: reduce)"
+  ).matches;
+
+  const TILE = 64; // target tile edge, px
+  const ROW_STEP = 45; // delay added per row, bottom to top
+  const ROUND_LEAD = 180; // time a tile stays round before it shrinks
+  const SHRINK = 460;
+  const MIN_VISIBLE = 850; // let the message be read
+  const MAX_WAIT = 4000; // never hold the page longer than this
+
+  let rows = 1;
+
+  function buildTiles() {
+    const cols = Math.max(1, Math.ceil(window.innerWidth / TILE));
+    rows = Math.max(1, Math.ceil(window.innerHeight / TILE));
+    grid.style.setProperty("--cols", cols);
+    grid.style.setProperty("--rows", rows);
+
+    const frag = document.createDocumentFragment();
+    for (let row = 0; row < rows; row += 1) {
+      // Jitter within the row keeps the leading edge from reading as a line
+      const base = (rows - 1 - row) * ROW_STEP;
+      for (let col = 0; col < cols; col += 1) {
+        const tile = document.createElement("span");
+        const delay = Math.round(base + Math.random() * ROW_STEP * 0.9);
+        tile.className = "loader__tile";
+        tile.style.setProperty("--d", `${delay}ms`);
+        tile.style.setProperty("--d2", `${delay + ROUND_LEAD}ms`);
+        frag.appendChild(tile);
+      }
+    }
+    grid.replaceChildren(frag);
+  }
+
+  function finish() {
+    loader.remove();
+    root.classList.remove("is-loading");
+    // Project heights were measured behind the loader; re-run now it is gone
+    window.dispatchEvent(new Event("resize"));
+  }
+
+  let dismissed = false;
+  function dismiss() {
+    if (dismissed) return;
+    dismissed = true;
+
+    if (reducedMotion) {
+      loader.classList.add("is-instant");
+      window.setTimeout(finish, 300);
+      return;
+    }
+
+    loader.classList.add("is-dismissing");
+    window.setTimeout(
+      finish,
+      rows * ROW_STEP + ROUND_LEAD + SHRINK + 120
+    );
+  }
+
+  if (!reducedMotion) {
+    buildTiles();
+    window.addEventListener("resize", () => {
+      if (!dismissed) buildTiles();
+    });
+  }
+
+  // body is hidden until the webfonts settle, so start counting from there
+  const fontsReady =
+    document.fonts && document.fonts.ready
+      ? document.fonts.ready
+      : Promise.resolve();
+
+  let scheduled = false;
+  function schedule(wait) {
+    if (scheduled) return;
+    scheduled = true;
+    window.setTimeout(dismiss, wait);
+  }
+
+  fontsReady.then(() => schedule(MIN_VISIBLE));
+  window.setTimeout(() => schedule(0), MAX_WAIT);
+})();
+
 (() => {
   document.documentElement.classList.add("js");
 

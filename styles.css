@@ -977,8 +977,9 @@ html.js:not(.is-simple-scroll) .media video.is-ready {
     min-height: 0;
   }
 
-  /* About already provides the phone→Special-Style gap */
-  .mobile-about + .projects-window > .project:first-child .project__intro {
+  /* About already provides the gap before the first visible project */
+  .mobile-about + .projects-window > .project:first-child:not([hidden]) .project__intro,
+  .mobile-about + .projects-window > .project[hidden] + .project:not([hidden]) .project__intro {
     padding-top: 0;
   }
 

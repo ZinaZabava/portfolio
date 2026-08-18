@@ -171,8 +171,12 @@
 (() => {
   document.documentElement.classList.add("js");
 
-  const projects = Array.from(document.querySelectorAll(".project"));
-  const indexLinks = Array.from(document.querySelectorAll(".index-list a"));
+  const projects = Array.from(
+    document.querySelectorAll(".project:not([hidden])")
+  );
+  const indexLinks = Array.from(
+    document.querySelectorAll(".index-list li:not([hidden]) a")
+  );
   const topbarProject = document.getElementById("topbar-project");
   const burger = document.getElementById("burger");
   const about = document.getElementById("about");
@@ -498,7 +502,9 @@
     measure();
   });
 
-  const videos = Array.from(document.querySelectorAll("video"));
+  const videos = Array.from(
+    document.querySelectorAll(".project:not([hidden]) video")
+  );
   const videosOnScreen = new Set();
 
   const ensurePlay = (video) => {
@@ -586,7 +592,11 @@
 
   // Remeasure whenever media resolves — reserved width/height keep layout
   // stable, but we still refresh after decode for exact sizes.
-  const media = Array.from(document.querySelectorAll(".project img, .project video"));
+  const media = Array.from(
+    document.querySelectorAll(
+      ".project:not([hidden]) img, .project:not([hidden]) video"
+    )
+  );
   let measureScheduled = false;
   const scheduleMeasure = () => {
     if (measureScheduled) return;

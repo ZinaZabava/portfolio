@@ -89,93 +89,13 @@
   </div>
 
   <div class="page" id="top">
-    <header class="topbar" id="topbar">
-      <div class="topbar__left">
-        <p class="topbar__name">Zinaida Rykova</p>
-        <p class="topbar__project" id="topbar-project">Bio-based Alternative for Ceramics</p>
-      </div>
-      <button
-        class="topbar__burger"
-        id="burger"
-        type="button"
-        aria-label="Open menu"
-        aria-controls="about"
-        aria-expanded="false"
-      >
-        <span class="topbar__burger-line" aria-hidden="true"></span>
-        <span class="topbar__burger-line" aria-hidden="true"></span>
-      </button>
+    <header class="stripe" id="stripe">
+      <a href="#top" class="stripe__name" id="stripe-home">Zinaida Rykova</a>
+      <p class="stripe__project">
+        <span class="stripe__label">project:</span>
+        <span class="stripe__current" id="stripe-project">Bio-based Alternative for Ceramics</span>
+      </p>
     </header>
-
-    <div class="about-backdrop" id="about-backdrop" hidden></div>
-
-    <aside class="about" id="about">
-      <div class="about__inner">
-        <header class="about__bio">
-          <h1 class="about__name">
-            <a href="#top" class="about__home" id="about-home">Zinaida Rykova</a>
-          </h1>
-          <p class="about__role">Graphic designer</p>
-        </header>
-
-        <nav class="about__index" aria-label="Projects">
-          <p class="about__index-label">Projects:</p>
-          <ul class="index-list" id="index-list">
-            <li hidden>
-              <a href="#project-special-style" data-project="special-style" data-label="Special-Style">Special-Style</a>
-            </li>
-            <li>
-              <a href="#project-bio-based" data-project="bio-based" data-label="Bio-based Alternative for Ceramics">Bio-based Alternative for Ceramics</a>
-            </li>
-            <li>
-              <a href="#project-whispers-in-my-ear" data-project="whispers-in-my-ear" data-label="Whispers in My Ear">Whispers in My Ear</a>
-            </li>
-            <li>
-              <a href="#project-un-bar-meneghino" data-project="un-bar-meneghino" data-label="(un) Bar Meneghino">(un) Bar Meneghino</a>
-            </li>
-            <li>
-              <a href="#project-hosta" data-project="hosta" data-label="Hosta">Hosta</a>
-            </li>
-            <li>
-              <a href="#project-urban-vibes" data-project="urban-vibes" data-label="Urban Vibes">Urban Vibes</a>
-            </li>
-            <li>
-              <a href="#project-spark" data-project="spark" data-label="Spark">Spark</a>
-            </li>
-          </ul>
-        </nav>
-
-        <footer class="about__contacts">
-          <a
-            class="about__cv"
-            href="assets/CV.pdf?v=170826"
-            target="_blank"
-            rel="noopener noreferrer"
-          >CV</a>
-          <a href="mailto:3inarykova@gmail.com">3inarykova@gmail.com</a>
-          <a href="tel:+393922987619">+393922987619</a>
-        </footer>
-      </div>
-      <div class="about__rule" aria-hidden="true"></div>
-    </aside>
-
-    <!-- Mobile-only page intro: name, role, contacts (index stays in the menu) -->
-    <section class="mobile-about" aria-label="About">
-      <header class="mobile-about__bio">
-        <p class="mobile-about__name">Zinaida Rykova</p>
-        <p class="mobile-about__role">Graphic designer</p>
-      </header>
-      <footer class="mobile-about__contacts">
-        <a
-          class="about__cv"
-          href="assets/CV.pdf?v=170826"
-          target="_blank"
-          rel="noopener noreferrer"
-        >CV</a>
-        <a href="mailto:3inarykova@gmail.com">3inarykova@gmail.com</a>
-        <a href="tel:+393922987619">+393922987619</a>
-      </footer>
-    </section>
 
     <main class="projects-window" id="projects-window">
       <section
@@ -489,6 +409,27 @@
         </div>
       </section>
     </main>
+
+    <footer class="site-footer">
+      <div class="site-footer__group">
+        <a
+          class="site-footer__file"
+          href="assets/CV.pdf?v=170826"
+          target="_blank"
+          rel="noopener noreferrer"
+        >CV</a>
+        <a
+          class="site-footer__file"
+          href="assets/Portfolio.pdf"
+          target="_blank"
+          rel="noopener noreferrer"
+        >Portfolio</a>
+      </div>
+      <div class="site-footer__group">
+        <a href="mailto:3inarykova@gmail.com">3inarykova@gmail.com</a>
+        <a href="tel:+393922987619">+393922987619</a>
+      </div>
+    </footer>
   </div>
 
   <script src="main.js"></script>

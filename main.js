@@ -20,8 +20,8 @@
     "Simple Animations",
     "Exhibition Materials",
   ];
-  const HOLD = 720; // time each phrase stays put
-  const SHIFT = 420; // whip to the next phrase
+  const HOLD = 380; // time each phrase stays put
+  const SHIFT = 280; // whip up to the next phrase
   const FADE = 600; // whole-loader opacity fade
   const MAX_WAIT = 16000;
 
@@ -47,7 +47,7 @@
     window.setTimeout(finish, FADE);
   }
 
-  function shiftTo(next, goingUp) {
+  function shiftTo(next) {
     const current = role.querySelector(".is-in");
     if (!current) {
       role.textContent = "";
@@ -67,12 +67,12 @@
     role.style.height = `${nextHeight}px`;
 
     incoming.classList.remove("is-prep");
-    incoming.classList.add(goingUp ? "is-from-below" : "is-from-above");
+    incoming.classList.add("is-from-below");
     void incoming.offsetWidth;
 
     current.classList.remove("is-in");
-    current.classList.add(goingUp ? "is-to-above" : "is-to-below");
-    incoming.classList.remove("is-from-below", "is-from-above");
+    current.classList.add("is-to-above");
+    incoming.classList.remove("is-from-below");
     incoming.classList.add("is-in");
 
     return wait(SHIFT).then(() => {
@@ -100,7 +100,7 @@
     for (let i = 1; i < PHRASES.length; i += 1) {
       await wait(HOLD);
       if (dismissed) return;
-      await shiftTo(PHRASES[i], i % 2 === 1);
+      await shiftTo(PHRASES[i]);
       if (dismissed) return;
     }
     await wait(HOLD);
@@ -120,13 +120,7 @@
   const projects = Array.from(
     document.querySelectorAll(".project:not([hidden])")
   );
-  const indexLinks = Array.from(
-    document.querySelectorAll(".index-list li:not([hidden]) a")
-  );
-  const topbarProject = document.getElementById("topbar-project");
-  const burger = document.getElementById("burger");
-  const about = document.getElementById("about");
-  const backdrop = document.getElementById("about-backdrop");
+  const stripeProject = document.getElementById("stripe-project");
   const reducedMotion = window.matchMedia(
     "(prefers-reduced-motion: reduce)"
   ).matches;
@@ -178,29 +172,6 @@
     );
     const offset = Number.isFinite(topbar) ? topbar : 0;
     return Math.max(1, window.innerHeight - offset);
-  }
-
-  function closeMenu() {
-    document.body.classList.remove("menu-open");
-    if (burger) {
-      burger.setAttribute("aria-expanded", "false");
-      burger.setAttribute("aria-label", "Open menu");
-    }
-    if (backdrop) backdrop.hidden = true;
-  }
-
-  function openMenu() {
-    document.body.classList.add("menu-open");
-    if (burger) {
-      burger.setAttribute("aria-expanded", "true");
-      burger.setAttribute("aria-label", "Close menu");
-    }
-    if (backdrop) backdrop.hidden = false;
-  }
-
-  function toggleMenu() {
-    if (document.body.classList.contains("menu-open")) closeMenu();
-    else openMenu();
   }
 
   function measure() {
@@ -318,12 +289,8 @@
       }
     }
 
-    indexLinks.forEach((link) => {
-      link.classList.toggle("is-active", link.dataset.project === activeId);
-    });
-
-    if (topbarProject) {
-      topbarProject.textContent = activeId ? labels[activeId] || "" : "";
+    if (stripeProject) {
+      stripeProject.textContent = activeId ? labels[activeId] || "" : "";
     }
   }
 
@@ -337,27 +304,16 @@
     });
   }
 
-  function goToProject(id) {
-    const target = state.find((item) => item.id === id);
-    if (!target) return;
-    const top = window.scrollY + target.section.getBoundingClientRect().top;
-    window.scrollTo({
-      top,
-      behavior: reducedMotion ? "auto" : "smooth",
-    });
-  }
-
   function goToTop() {
-    closeMenu();
     window.scrollTo({
       top: 0,
       behavior: reducedMotion ? "auto" : "smooth",
     });
   }
 
-  const aboutHome = document.getElementById("about-home");
-  if (aboutHome) {
-    aboutHome.addEventListener("click", (event) => {
+  const stripeHome = document.getElementById("stripe-home");
+  if (stripeHome) {
+    stripeHome.addEventListener("click", (event) => {
       event.preventDefault();
       goToTop();
     });
@@ -426,25 +382,7 @@
     { passive: true }
   );
 
-  indexLinks.forEach((link) => {
-    link.addEventListener("click", (event) => {
-      event.preventDefault();
-      goToProject(link.dataset.project);
-      if (narrowMq.matches) closeMenu();
-    });
-  });
-
-  if (burger) {
-    burger.addEventListener("click", toggleMenu);
-  }
-  if (backdrop) {
-    backdrop.addEventListener("click", closeMenu);
-  }
-  document.addEventListener("keydown", (event) => {
-    if (event.key === "Escape") closeMenu();
-  });
   narrowMq.addEventListener("change", () => {
-    if (!narrowMq.matches) closeMenu();
     measure();
   });
 

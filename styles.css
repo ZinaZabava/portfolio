@@ -329,8 +329,7 @@ button {
   width: 100%;
   min-height: 100vh;
   min-height: 100dvh;
-  padding: var(--intro-pad-y)
-    max(24px, min(var(--intro-pad-x), calc((100% - var(--copy-width)) / 2)));
+  padding: var(--intro-pad-y) 36px;
   background: var(--about-bg);
   color: var(--text);
 }
@@ -340,7 +339,7 @@ button {
   flex-direction: column;
   align-items: stretch;
   gap: var(--intro-gap);
-  width: min(var(--copy-width), 100%);
+  width: 100%;
 }
 
 .site-footer__title {
@@ -394,8 +393,9 @@ button {
 }
 
 .about-table th {
-  width: 28%;
-  padding-right: 24px;
+  width: 1%;
+  white-space: nowrap;
+  padding-right: 48px;
   font-family: var(--font-mono);
   font-weight: var(--mono-weight);
   font-size: var(--mono-size);
@@ -802,7 +802,7 @@ html.js:not(.is-simple-scroll) .media video.is-ready {
   }
 
   .about-table th {
-    width: 34%;
+    width: 1%;
     font-size: 14px;
   }
 

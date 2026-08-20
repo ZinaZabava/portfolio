@@ -299,7 +299,7 @@
 
     if (stripeProject) {
       stripeProject.textContent =
-        activeId === "about" ? "about" : activeId ? labels[activeId] || "" : "";
+        activeId === "about" ? "About" : activeId ? labels[activeId] || "" : "";
     }
   }
 

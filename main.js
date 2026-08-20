@@ -121,6 +121,7 @@
     document.querySelectorAll(".project:not([hidden])")
   );
   const stripeProject = document.getElementById("stripe-project");
+  const about = document.getElementById("about");
   const reducedMotion = window.matchMedia(
     "(prefers-reduced-motion: reduce)"
   ).matches;
@@ -289,8 +290,16 @@
       }
     }
 
+    if (about) {
+      const aboutRect = about.getBoundingClientRect();
+      if (aboutRect.top <= focusY) {
+        activeId = "about";
+      }
+    }
+
     if (stripeProject) {
-      stripeProject.textContent = activeId ? labels[activeId] || "" : "";
+      stripeProject.textContent =
+        activeId === "about" ? "about" : activeId ? labels[activeId] || "" : "";
     }
   }
 
@@ -311,9 +320,26 @@
     });
   }
 
-  const stripeHome = document.getElementById("stripe-home");
-  if (stripeHome) {
-    stripeHome.addEventListener("click", (event) => {
+  function goToAbout() {
+    if (!about) return;
+    const top = window.scrollY + about.getBoundingClientRect().top;
+    window.scrollTo({
+      top,
+      behavior: reducedMotion ? "auto" : "smooth",
+    });
+  }
+
+  const stripeAbout = document.getElementById("stripe-about");
+  if (stripeAbout) {
+    stripeAbout.addEventListener("click", (event) => {
+      event.preventDefault();
+      goToAbout();
+    });
+  }
+
+  const footerTop = document.getElementById("footer-top");
+  if (footerTop) {
+    footerTop.addEventListener("click", (event) => {
       event.preventDefault();
       goToTop();
     });

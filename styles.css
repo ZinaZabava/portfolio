@@ -23,7 +23,7 @@
 :root {
   --about-width: 0px;
   --topbar-height: 0px;
-  --stripe-height: 9vh;
+  --stripe-height: 6vh;
   --stripe-green: #d2f096;
   --gap: 0px;
   --index-size: 22px;
@@ -276,8 +276,8 @@ button {
   right: 0;
   z-index: 300;
   height: var(--stripe-height);
-  min-height: 3.25em;
-  padding: 20px 36px 0;
+  min-height: 2.5em;
+  padding: 12px 36px 0;
   color: var(--accent);
   pointer-events: none;
   background: linear-gradient(
@@ -312,38 +312,79 @@ button {
   white-space: nowrap;
   font-family: var(--font-index);
   font-weight: 400;
-  font-size: var(--index-size);
+  font-size: 32px;
   line-height: 1;
   letter-spacing: -0.12em;
   color: inherit;
   text-align: right;
 }
 
-/* ——— Footer: contacts + files ——— */
+/* ——— About (page bottom) ——— */
 .site-footer {
   position: relative;
   z-index: 50;
   display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 16px 48px;
+  align-items: center;
+  justify-content: center;
   width: 100%;
-  margin-inline: 0;
-  padding: 40px 36px 48px;
+  min-height: 100vh;
+  min-height: 100dvh;
+  padding: var(--intro-pad-y)
+    max(24px, min(var(--intro-pad-x), calc((100% - var(--copy-width)) / 2)));
   background: var(--about-bg);
   color: var(--text);
+}
+
+.site-footer__inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--intro-gap);
+  width: min(var(--copy-width), 100%);
+}
+
+.site-footer__name {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 200;
+  font-size: 30.36px;
+  line-height: normal;
+  letter-spacing: 0;
+  text-align: center;
+  color: #fff;
+}
+
+.site-footer__copy {
+  margin: 0;
+  width: 100%;
+  font-family: var(--font-index);
+  font-weight: 400;
+  font-size: 22px;
+  line-height: 1.5;
+  letter-spacing: -0.12em;
+  color: var(--text-muted);
+  text-align: justify;
+}
+
+.site-footer__copy p {
+  margin: 0;
+}
+
+.site-footer__copy a {
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+  text-decoration-thickness: 1px;
+}
+
+.site-footer__contacts {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px 32px;
   font-family: var(--font-mono);
   font-weight: var(--mono-weight);
   font-size: var(--mono-size);
   line-height: var(--index-leading);
-}
-
-.site-footer__group {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: 8px 32px;
 }
 
 .site-footer a {
@@ -360,6 +401,19 @@ button {
   text-decoration: underline;
   text-underline-offset: 0.15em;
   text-decoration-thickness: 1px;
+}
+
+.site-footer__up {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 8px;
+  padding: 8px;
+  color: #fff;
+}
+
+.site-footer__up svg {
+  display: block;
 }
 
 /* ——— Projects window — stacked cover scroll ——— */
@@ -631,7 +685,7 @@ html.js:not(.is-simple-scroll) .media video.is-ready {
   :root {
     --about-width: 0px;
     --topbar-height: 0px;
-    --stripe-height: 11vh;
+    --stripe-height: 7.3vh;
     --intro-pad-y: 56px;
     --intro-pad-x: 20px;
     --intro-gap: 32px;
@@ -640,11 +694,15 @@ html.js:not(.is-simple-scroll) .media video.is-ready {
   }
 
   .stripe {
-    padding: 16px 20px 0;
+    padding: 10px 20px 0;
   }
 
   .stripe__name {
     font-size: 22px;
+  }
+
+  .stripe__current {
+    font-size: 26px;
   }
 
   .projects-window {
@@ -693,22 +751,37 @@ html.js:not(.is-simple-scroll) .media video.is-ready {
   }
 
   .site-footer {
+    align-items: flex-start;
+    min-height: 0;
+    padding: 72px 20px 48px;
+  }
+
+  .site-footer__inner {
+    align-items: flex-start;
+    width: 100%;
+  }
+
+  .site-footer__name {
+    font-size: 28px;
+    text-align: left;
+  }
+
+  .site-footer__copy {
+    font-size: 16px;
+    text-align: left;
+  }
+
+  .site-footer__contacts {
     flex-direction: column;
     align-items: flex-start;
     gap: 10px;
-    padding: 28px 20px 40px;
     font-size: 16px;
-  }
-
-  .site-footer__group {
-    flex-direction: column;
-    gap: 10px;
   }
 }
 
 @media (max-width: 560px) {
   :root {
-    --stripe-height: 12vh;
+    --stripe-height: 8vh;
   }
 
   .project__media {

@@ -793,7 +793,7 @@ html.js:not(.is-simple-scroll) .media video.is-ready {
 
   .site-footer__title {
     font-size: 28px;
-    text-align: center;
+    text-align: left;
   }
 
   .site-footer__copy {

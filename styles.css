@@ -312,7 +312,7 @@ button {
   white-space: nowrap;
   font-family: var(--font-index);
   font-weight: 400;
-  font-size: 32px;
+  font-size: 30px;
   line-height: 1;
   letter-spacing: -0.12em;
   color: inherit;
@@ -702,7 +702,7 @@ html.js:not(.is-simple-scroll) .media video.is-ready {
   }
 
   .stripe__current {
-    font-size: 26px;
+    font-size: 24px;
   }
 
   .projects-window {

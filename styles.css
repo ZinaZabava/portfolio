@@ -23,7 +23,7 @@
 :root {
   --about-width: 0px;
   --topbar-height: 0px;
-  --stripe-height: 18vh;
+  --stripe-height: 9vh;
   --stripe-green: #d2f096;
   --gap: 0px;
   --index-size: 22px;
@@ -263,25 +263,25 @@ button {
   min-height: 100vh;
 }
 
-/* ——— Bottom stripe: name + current project on a green fade ——— */
+/* ——— Top stripe: name + current project on a black fade ——— */
 .stripe {
   display: flex;
   flex-direction: row;
-  align-items: flex-end;
+  align-items: flex-start;
   justify-content: space-between;
   gap: 24px;
   position: fixed;
+  top: 0;
   left: 0;
   right: 0;
-  bottom: 0;
   z-index: 300;
   height: var(--stripe-height);
-  min-height: 7.5em;
-  padding: 0 36px 28px;
+  min-height: 3.25em;
+  padding: 20px 36px 0;
   color: var(--accent);
   pointer-events: none;
   background: linear-gradient(
-    to top,
+    to bottom,
     #000000 0%,
     rgba(0, 0, 0, 0.45) 48%,
     rgba(0, 0, 0, 0) 100%
@@ -330,7 +330,7 @@ button {
   gap: 16px 48px;
   width: 100%;
   margin-inline: 0;
-  padding: 40px 36px calc(var(--stripe-height) + 36px);
+  padding: 40px 36px 48px;
   background: var(--about-bg);
   color: var(--text);
   font-family: var(--font-mono);
@@ -406,8 +406,8 @@ html.js:not(.is-simple-scroll) .project__pin {
   gap: var(--intro-gap);
   min-height: calc(100vh - var(--topbar-height));
   min-height: calc(100dvh - var(--topbar-height));
-  padding-top: var(--intro-pad-y);
-  padding-bottom: max(var(--intro-pad-y), var(--stripe-height));
+  padding-top: max(var(--intro-pad-y), var(--stripe-height));
+  padding-bottom: var(--intro-pad-y);
   /* Keep 720px copy; only tighten side padding when the projects column is narrower than Figma */
   padding-left: max(24px, min(var(--intro-pad-x), calc((100% - var(--copy-width)) / 2)));
   padding-right: max(24px, min(var(--intro-pad-x), calc((100% - var(--copy-width)) / 2)));
@@ -631,7 +631,7 @@ html.js:not(.is-simple-scroll) .media video.is-ready {
   :root {
     --about-width: 0px;
     --topbar-height: 0px;
-    --stripe-height: 22vh;
+    --stripe-height: 11vh;
     --intro-pad-y: 56px;
     --intro-pad-x: 20px;
     --intro-gap: 32px;
@@ -640,7 +640,7 @@ html.js:not(.is-simple-scroll) .media video.is-ready {
   }
 
   .stripe {
-    padding: 0 20px 20px;
+    padding: 16px 20px 0;
   }
 
   .stripe__name {
@@ -674,8 +674,8 @@ html.js:not(.is-simple-scroll) .media video.is-ready {
   .project__intro {
     align-items: flex-start;
     gap: var(--intro-gap);
-    padding-top: 72px;
-    padding-bottom: max(72px, calc(var(--stripe-height) + 16px));
+    padding-top: max(72px, calc(var(--stripe-height) + 16px));
+    padding-bottom: 72px;
     min-height: 0;
   }
 
@@ -696,7 +696,7 @@ html.js:not(.is-simple-scroll) .media video.is-ready {
     flex-direction: column;
     align-items: flex-start;
     gap: 10px;
-    padding: 28px 20px calc(var(--stripe-height) + 28px);
+    padding: 28px 20px 40px;
     font-size: 16px;
   }
 
@@ -708,7 +708,7 @@ html.js:not(.is-simple-scroll) .media video.is-ready {
 
 @media (max-width: 560px) {
   :root {
-    --stripe-height: 24vh;
+    --stripe-height: 12vh;
   }
 
   .project__media {
@@ -721,7 +721,7 @@ html.js:not(.is-simple-scroll) .media video.is-ready {
   }
 
   .stripe {
-    padding: 0 16px 16px;
+    padding: 14px 16px 0;
   }
 
   .project__intro {

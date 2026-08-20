@@ -18,7 +18,7 @@
       setTimeout(function () {
         html.classList.remove("is-loading");
         window.dispatchEvent(new Event("resize"));
-      }, 6000);
+      }, 18000);
       try {
         if (
           window.matchMedia("(max-width: 900px)").matches ||
@@ -68,8 +68,27 @@
 </head>
 <body>
   <div class="loader" id="loader" aria-hidden="true">
-    <div class="loader__grid" id="loader-grid"></div>
-    <p class="loader__text">Welcome to My Portfolio</p>
+    <div class="loader__col">
+      <p class="loader__label">Zinaida Rykova</p>
+    </div>
+    <div class="loader__col loader__col--mark">
+      <video
+        class="loader__mark"
+        id="loader-mark"
+        src="assets/media/ZR_neon_on_black_square.mp4"
+        width="1080"
+        height="1080"
+        muted
+        loop
+        playsinline
+        webkit-playsinline
+        autoplay
+        preload="auto"
+      ></video>
+    </div>
+    <div class="loader__col">
+      <p class="loader__role" id="loader-role">Graphic designer</p>
+    </div>
   </div>
 
   <div class="page" id="top">

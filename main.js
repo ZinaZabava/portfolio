@@ -1,94 +1,41 @@
 /* ===================== Intro loader =====================
-   A full-screen green panel that breaks into a dot matrix and pulls back in a
-   wave from the bottom up. The panel is built as one masked strip per row of
-   dots, and the strips carry the greeting, so the type breaks into dots along
-   with the background instead of fading out ahead of it. */
+   Three equal columns: name, the ZR mark, then a rotating role. After the
+   last phrase, the whole panel fades out. */
 (() => {
   const loader = document.getElementById("loader");
   if (!loader) return;
 
-  const grid = loader.querySelector(".loader__grid");
-  const text = loader.querySelector(".loader__text");
+  const role = document.getElementById("loader-role");
+  const mark = document.getElementById("loader-mark");
   const root = document.documentElement;
   const reducedMotion = window.matchMedia(
     "(prefers-reduced-motion: reduce)"
   ).matches;
 
-  // Masks punch the dots; --r is animated from JS because iOS Safari often
-  // has -webkit-mask but not CSS.registerProperty / custom-property transitions.
-  const canMask =
-    typeof CSS === "undefined" ||
-    typeof CSS.supports !== "function" ||
-    CSS.supports("mask-image", "radial-gradient(#000, transparent)") ||
-    CSS.supports("-webkit-mask-image", "radial-gradient(#000, transparent)") ||
-    CSS.supports("-webkit-mask-image", "url(#a)");
+  const PHRASES = [
+    "Graphic designer",
+    "Visual Identity",
+    "Book Design",
+    "Social Media",
+    "Simple Animations",
+    "Exhibition Materials",
+  ];
+  const HOLD = 1200; // time each phrase stays put
+  const SHIFT = 320; // time a phrase takes to leave / arrive
+  const FADE = 600; // whole-loader opacity fade
+  const MAX_WAIT = 16000;
 
-  const DOT = 16; // dot pitch, px
-  const WAVE = 900; // time the break-up takes to travel bottom to top
-  const PULL_BACK = 620; // time a row of dots takes to close to nothing
-  const HOLD = 1500; // time the greeting stays put
-  const MAX_WAIT = 4000; // never hold the page longer than this
-
-  let built = false;
-
-  function viewportSize() {
-    const vv = window.visualViewport;
-    return {
-      vw: Math.round(vv && vv.width ? vv.width : window.innerWidth),
-      vh: Math.round(vv && vv.height ? vv.height : window.innerHeight),
-    };
-  }
-
-  function build() {
-    const { vw, vh } = viewportSize();
-    const rows = Math.max(1, Math.ceil(vh / DOT));
-    // Spread the wave over a fixed span, so the dot pitch sets the grain of
-    // the break-up without changing how long it takes
-    const rowStep = WAVE / rows;
-
-    grid.style.setProperty("--dot", `${DOT}px`);
-
-    // Measured from the live element, so the slices inherit its exact metrics
-    const box = text.getBoundingClientRect();
-    const inkLeft = Math.round((vw - box.width) / 2);
-    const inkTop = Math.round((vh - box.height) / 2);
-    const inkBottom = inkTop + Math.ceil(box.height);
-
-    const frag = document.createDocumentFragment();
-    for (let row = 0; row < rows; row += 1) {
-      const top = row * DOT;
-      const strip = document.createElement("span");
-      strip.className = "loader__row";
-      strip.style.setProperty(
-        "--d",
-        `${Math.round((rows - 1 - row) * rowStep)}ms`
-      );
-
-      if (top < inkBottom && top + DOT > inkTop) {
-        const ink = document.createElement("span");
-        ink.className = "loader__ink";
-        ink.textContent = text.textContent;
-        ink.style.left = `${inkLeft}px`;
-        ink.style.top = `${inkTop - top}px`;
-        ink.style.width = `${Math.ceil(box.width)}px`;
-        strip.className += " has-ink";
-        strip.appendChild(ink);
-      }
-
-      frag.appendChild(strip);
-    }
-
-    grid.replaceChildren(frag);
-    loader.classList.add("is-built");
-    built = true;
-  }
+  const wait = (ms) => new Promise((resolve) => window.setTimeout(resolve, ms));
 
   function finish() {
+    if (mark) {
+      mark.pause();
+      mark.removeAttribute("src");
+      mark.load();
+    }
     loader.remove();
     root.classList.remove("is-loading");
-    // Safari will not recompute sticky + track heights in the same turn as
-    // removing overflow on html. Wait for layout, then ask the scroller to
-    // measure again so images are not left clipped inside the black frames.
+    // Project heights were measured behind the loader; re-run now it is gone
     void root.offsetHeight;
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
@@ -101,70 +48,70 @@
   function dismiss() {
     if (dismissed) return;
     dismissed = true;
-
-    // Without the dot grid there is nothing to break up, so just fade
-    if (!built) {
-      loader.classList.add("is-instant");
-      window.setTimeout(finish, 300);
-      return;
-    }
-
     loader.classList.add("is-dismissing");
-
-    const strips = Array.from(grid.children);
-    const delays = strips.map(
-      (el) => parseFloat(el.style.getPropertyValue("--d")) || 0
-    );
-    const t0 = performance.now();
-    const ease = (t) => 1 - Math.pow(1 - Math.min(1, Math.max(0, t)), 2.4);
-    // Paint the mask from JS: iOS Safari often will not interpolate --r inside
-    // a radial-gradient, which is why the phone was falling back to a fade.
-    const paint = (el, r) => {
-      const img = `radial-gradient(circle closest-side, #000 ${r}%, transparent ${r}%)`;
-      el.style.setProperty("--r", `${r}%`);
-      el.style.webkitMaskImage = img;
-      el.style.maskImage = img;
-    };
-
-    const frame = (now) => {
-      let done = true;
-      for (let i = 0; i < strips.length; i += 1) {
-        const t = (now - t0 - delays[i]) / PULL_BACK;
-        if (t < 1) done = false;
-        paint(strips[i], +(145 * (1 - ease(t))).toFixed(2));
-      }
-      if (done) finish();
-      else requestAnimationFrame(frame);
-    };
-    requestAnimationFrame(frame);
+    window.setTimeout(finish, FADE);
   }
 
-  // Wait for the webfonts: body is hidden until they settle, and the slices
-  // are only aligned if the line is measured at its final metrics.
+  function shiftTo(next) {
+    return new Promise((resolve) => {
+      role.classList.add("is-leaving");
+      window.setTimeout(() => {
+        role.textContent = next;
+        role.classList.remove("is-leaving");
+        role.classList.add("is-entering");
+        void role.offsetWidth;
+        role.classList.remove("is-entering");
+        window.setTimeout(resolve, SHIFT);
+      }, SHIFT);
+    });
+  }
+
+  function armVideo() {
+    if (!mark) return;
+    mark.muted = true;
+    mark.defaultMuted = true;
+    mark.loop = true;
+    mark.playsInline = true;
+    mark.setAttribute("muted", "");
+    mark.setAttribute("playsinline", "");
+    mark.setAttribute("webkit-playsinline", "");
+    const playAttempt = mark.play();
+    if (playAttempt && typeof playAttempt.catch === "function") {
+      playAttempt.catch(() => {});
+    }
+  }
+
   const fontsReady =
     document.fonts && document.fonts.ready
       ? document.fonts.ready
       : Promise.resolve();
 
   let scheduled = false;
-  function start() {
+  async function start() {
     if (scheduled) return;
     scheduled = true;
-    if (!reducedMotion && canMask) {
-      build();
-      window.addEventListener("resize", () => {
-        if (!dismissed) build();
-      });
+    armVideo();
+
+    if (reducedMotion) {
+      await wait(HOLD);
+      dismiss();
+      return;
     }
-    window.setTimeout(dismiss, HOLD);
+
+    for (let i = 1; i < PHRASES.length; i += 1) {
+      await wait(HOLD);
+      if (dismissed) return;
+      await shiftTo(PHRASES[i]);
+      if (dismissed) return;
+    }
+    await wait(HOLD);
+    if (!dismissed) dismiss();
   }
 
   fontsReady.then(start);
   window.setTimeout(() => {
-    if (!scheduled) {
-      scheduled = true;
-      dismiss();
-    }
+    if (!scheduled) start();
+    else if (!dismissed) dismiss();
   }, MAX_WAIT);
 })();
 

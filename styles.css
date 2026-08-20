@@ -87,10 +87,9 @@ html.fonts-loaded body {
 }
 
 /* ===================== Intro loader ===================== */
-/* Paint the canvas green on the very first frame: body starts at opacity 0
-   for the font swap, so without this the loader would flash in. */
+/* Black from the first paint: body starts at opacity 0 for the font swap. */
 html.is-loading {
-  background: var(--accent);
+  background: var(--about-bg);
   /* clip stops the page moving under the loader without becoming the sticky
      containing block. hidden on html is what made Safari pin each project to
      one black viewport frame and hide the images underneath. */
@@ -107,116 +106,73 @@ html.js .loader {
   inset: 0;
   z-index: 999;
   display: grid;
-  place-items: center;
-  background: var(--accent);
+  grid-template-columns: 1fr 1fr 1fr;
+  align-items: center;
+  background: var(--about-bg);
+  color: var(--text);
 }
 
-/* Dot radius, as a share of half a cell. Registering it is what lets the dots
-   shrink smoothly. Reaching a cell's corner takes ~141%, so starting just past
-   that leaves the dots overlapping and the panel reads as flat colour. */
-@property --r {
-  syntax: "<percentage>";
-  inherits: false;
-  initial-value: 145%;
+.loader__col {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  padding: 0 16px;
 }
 
-/* One masked strip per row of dots rather than an element per dot: at this
-   grain a screen holds thousands of them, and only the strips are in the DOM. */
-.loader__grid {
-  position: absolute;
-  inset: 0;
-  overflow: hidden;
-}
-
-/* The strip carries the whole surface — green fill and type alike — and the
-   mask punches the dots through both, so the greeting breaks up with it. */
-.loader__row {
-  display: block;
-  width: 100%;
-  height: var(--dot, 16px);
-  background: var(--accent);
-  --r: 145%;
-  -webkit-mask-image: radial-gradient(
-    circle closest-side,
-    #000 var(--r),
-    transparent var(--r)
-  );
-  mask-image: radial-gradient(
-    circle closest-side,
-    #000 var(--r),
-    transparent var(--r)
-  );
-  -webkit-mask-size: var(--dot, 16px) var(--dot, 16px);
-  mask-size: var(--dot, 16px) var(--dot, 16px);
-  -webkit-mask-repeat: repeat;
-  mask-repeat: repeat;
-}
-
-/* Only the strips holding type need to clip it */
-.loader__row.has-ink {
-  position: relative;
-  overflow: hidden;
-}
-
-/* Each strip holds the full line, offset so it lands at the same place on
-   screen in every strip; the strip's own clip is what slices it up. */
-.loader__ink {
-  position: absolute;
-  display: block;
-}
-
-.loader__text {
-  position: relative;
+.loader__label,
+.loader__role {
   margin: 0;
-  width: max-content;
-  max-width: calc(100vw - 48px);
+  max-width: 100%;
+  font-family: var(--font-mono);
+  font-weight: var(--mono-weight);
+  font-size: var(--mono-size);
+  line-height: var(--index-leading);
+  letter-spacing: 0;
   text-align: center;
+  text-transform: uppercase;
   text-wrap: balance;
+  color: var(--text);
 }
 
-/* Same face and tracking as the index, at twice the size */
-.loader__text,
-.loader__ink {
-  font-family: var(--font-index);
-  font-weight: 400;
-  font-size: 44px;
-  line-height: 66px;
-  letter-spacing: -0.12em;
-  text-align: center;
-  text-wrap: balance;
-  color: var(--about-bg);
+.loader__role {
+  transition:
+    opacity 0.32s ease,
+    transform 0.32s ease;
 }
 
-/* Desktop has the width for a single line; phones wrap */
-@media (min-width: 901px) {
-  .loader__text,
-  .loader__ink {
-    max-width: none;
-    white-space: nowrap;
-    text-wrap: unset;
-  }
-}
-
-/* Once the strips carry the type, the measuring copy is redundant */
-.loader.is-built .loader__text {
-  visibility: hidden;
-}
-
-/* Needs to outrank `html.js .loader`, or the dots reveal green, not the page */
-html.js .loader.is-dismissing {
-  background: transparent;
-}
-
-/* The dots pull back from overlapping to nothing. --r is driven from JS so
-   iOS Safari (which often will not interpolate a custom property in CSS)
-   still gets the same bottom-to-top wave as desktop. */
-.loader.is-dismissing .loader__row {
-  --r: 0%;
-}
-
-.loader.is-instant {
+.loader__role.is-leaving {
   opacity: 0;
-  transition: opacity 0.3s ease;
+  transform: translateY(-0.45em);
+}
+
+.loader__role.is-entering {
+  opacity: 0;
+  transform: translateY(0.45em);
+  transition: none;
+}
+
+.loader__mark {
+  display: block;
+  width: min(100%, 72vh);
+  height: auto;
+  max-height: 72vh;
+  margin: 0;
+  object-fit: contain;
+  background: var(--about-bg);
+  pointer-events: none;
+}
+
+.loader__mark::-webkit-media-controls-start-playback-button,
+.loader__mark::-webkit-media-controls {
+  display: none !important;
+  -webkit-appearance: none;
+  opacity: 0 !important;
+}
+
+html.js .loader.is-dismissing {
+  opacity: 0;
+  transition: opacity 0.6s ease;
 }
 
 img,

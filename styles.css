@@ -431,12 +431,14 @@ button {
 }
 
 .site-footer__up {
+  position: absolute;
+  right: 36px;
+  bottom: 36px;
   display: flex;
   align-items: center;
-  justify-content: flex-start;
-  align-self: flex-start;
-  margin-top: 8px;
-  padding: 8px 0;
+  justify-content: center;
+  margin: 0;
+  padding: 8px;
   color: #fff;
 }
 
@@ -807,6 +809,11 @@ html.js:not(.is-simple-scroll) .media video.is-ready {
   .about-table td {
     font-size: 16px;
   }
+
+  .site-footer__up {
+    right: 20px;
+    bottom: 24px;
+  }
 }
 
 @media (max-width: 560px) {
@@ -835,6 +842,11 @@ html.js:not(.is-simple-scroll) .media video.is-ready {
   .site-footer {
     padding-left: 16px;
     padding-right: 16px;
+  }
+
+  .site-footer__up {
+    right: 16px;
+    bottom: 20px;
   }
 }
 

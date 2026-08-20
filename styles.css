@@ -21,7 +21,7 @@
 }
 
 :root {
-  --about-width: 0px;
+  --about-width: 360px;
   --topbar-height: 56px;
   --stripe-green: #bcc47e;
   --gap: 0px;
@@ -326,7 +326,9 @@ button {
   align-items: baseline;
   justify-content: space-between;
   gap: 16px 48px;
-  padding: 40px 36px 48px;
+  width: calc(100% - var(--about-width));
+  margin-inline: auto;
+  padding: 40px 0 48px;
   background: var(--about-bg);
   color: var(--text);
   font-family: var(--font-mono);
@@ -360,10 +362,10 @@ button {
 
 /* ——— Projects window — stacked cover scroll ——— */
 .projects-window {
-  margin-left: 0;
+  margin-inline: auto;
   padding-top: var(--topbar-height);
   position: relative;
-  width: 100%;
+  width: calc(100% - var(--about-width));
   isolation: isolate;
 }
 
@@ -625,6 +627,7 @@ html.js:not(.is-simple-scroll) .media video.is-ready {
 /* ——— Narrow ——— */
 @media (max-width: 900px) {
   :root {
+    --about-width: 0px;
     --topbar-height: 64px;
     --intro-pad-y: 56px;
     --intro-pad-x: 20px;
@@ -647,7 +650,7 @@ html.js:not(.is-simple-scroll) .media video.is-ready {
   }
 
   .projects-window {
-    margin-left: 0;
+    margin-inline: 0;
     width: 100%;
   }
 

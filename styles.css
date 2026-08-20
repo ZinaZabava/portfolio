@@ -22,8 +22,9 @@
 
 :root {
   --about-width: 360px;
-  --topbar-height: 56px;
-  --stripe-green: #bcc47e;
+  --topbar-height: 0px;
+  --stripe-height: 18vh;
+  --stripe-green: #d2f096;
   --gap: 0px;
   --index-size: 22px;
   --index-leading: 1.5;
@@ -262,59 +263,52 @@ button {
   min-height: 100vh;
 }
 
-/* ——— Header stripe ——— */
+/* ——— Bottom stripe: name + current project on a green fade ——— */
 .stripe {
-  display: grid;
-  grid-template-columns: max-content max-content minmax(0, 1fr);
-  align-items: center;
-  column-gap: 1.1em;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: flex-end;
+  gap: 0.15em;
   position: fixed;
-  top: 0;
   left: 0;
   right: 0;
+  bottom: 0;
   z-index: 300;
-  height: var(--topbar-height);
-  padding: 0 36px;
-  color: #fff;
-  background-color: #000;
-  background-image: url("assets/stripe-gradient.png");
-  background-size: 100% 100%;
-  background-repeat: no-repeat;
-  background-position: center;
+  height: var(--stripe-height);
+  min-height: 7.5em;
+  padding: 0 calc(var(--about-width) / 2) 28px;
+  color: #000;
+  pointer-events: none;
+  background: linear-gradient(
+    to top,
+    #d2f096 0%,
+    rgba(210, 240, 150, 0.45) 48%,
+    rgba(210, 240, 150, 0) 100%
+  );
 }
 
-.stripe__name {
+.stripe__name,
+.stripe__current {
   margin: 0;
-  font-family: var(--font-display);
-  font-weight: 200;
-  font-size: 28px;
-  line-height: 1;
-  letter-spacing: 0;
-  text-transform: capitalize;
-  color: inherit;
-  white-space: nowrap;
-}
-
-.stripe__label {
+  max-width: 100%;
   font-family: var(--font-mono);
   font-weight: var(--mono-weight);
   font-size: var(--mono-size);
-  line-height: 1;
+  line-height: var(--index-leading);
   letter-spacing: 0;
-  text-transform: uppercase;
+  color: inherit;
+  text-align: right;
   white-space: nowrap;
 }
 
+.stripe__name {
+  pointer-events: auto;
+}
+
 .stripe__current {
-  min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
-  white-space: nowrap;
-  font-family: var(--font-index);
-  font-weight: 400;
-  font-size: var(--index-size);
-  line-height: 1;
-  letter-spacing: -0.12em;
 }
 
 /* ——— Footer: contacts + files ——— */
@@ -328,7 +322,7 @@ button {
   gap: 16px 48px;
   width: calc(100% - var(--about-width));
   margin-inline: auto;
-  padding: 40px 0 48px;
+  padding: 40px 0 calc(var(--stripe-height) + 36px);
   background: var(--about-bg);
   color: var(--text);
   font-family: var(--font-mono);
@@ -405,7 +399,7 @@ html.js:not(.is-simple-scroll) .project__pin {
   min-height: calc(100vh - var(--topbar-height));
   min-height: calc(100dvh - var(--topbar-height));
   padding-top: var(--intro-pad-y);
-  padding-bottom: var(--intro-pad-y);
+  padding-bottom: max(var(--intro-pad-y), var(--stripe-height));
   /* Keep 720px copy; only tighten side padding when the projects column is narrower than Figma */
   padding-left: max(24px, min(var(--intro-pad-x), calc((100% - var(--copy-width)) / 2)));
   padding-right: max(24px, min(var(--intro-pad-x), calc((100% - var(--copy-width)) / 2)));
@@ -628,7 +622,8 @@ html.js:not(.is-simple-scroll) .media video.is-ready {
 @media (max-width: 900px) {
   :root {
     --about-width: 0px;
-    --topbar-height: 64px;
+    --topbar-height: 0px;
+    --stripe-height: 22vh;
     --intro-pad-y: 56px;
     --intro-pad-x: 20px;
     --intro-gap: 32px;
@@ -637,16 +632,7 @@ html.js:not(.is-simple-scroll) .media video.is-ready {
   }
 
   .stripe {
-    column-gap: 0.7em;
-    padding: 0 16px;
-  }
-
-  .stripe__name {
-    font-size: 22px;
-  }
-
-  .stripe__label {
-    font-size: 14px;
+    padding: 0 20px 20px;
   }
 
   .projects-window {
@@ -677,7 +663,7 @@ html.js:not(.is-simple-scroll) .media video.is-ready {
     align-items: flex-start;
     gap: var(--intro-gap);
     padding-top: 72px;
-    padding-bottom: 72px;
+    padding-bottom: max(72px, calc(var(--stripe-height) + 16px));
     min-height: 0;
   }
 
@@ -698,7 +684,7 @@ html.js:not(.is-simple-scroll) .media video.is-ready {
     flex-direction: column;
     align-items: flex-start;
     gap: 10px;
-    padding: 28px 20px 40px;
+    padding: 28px 20px calc(var(--stripe-height) + 28px);
     font-size: 16px;
   }
 
@@ -710,7 +696,7 @@ html.js:not(.is-simple-scroll) .media video.is-ready {
 
 @media (max-width: 560px) {
   :root {
-    --topbar-height: 72px;
+    --stripe-height: 24vh;
   }
 
   .project__media {
@@ -723,21 +709,7 @@ html.js:not(.is-simple-scroll) .media video.is-ready {
   }
 
   .stripe {
-    grid-template-columns: max-content minmax(0, 1fr);
-    grid-template-rows: auto auto;
-    row-gap: 4px;
-    column-gap: 0.7em;
-    padding: 8px 16px;
-  }
-
-  .stripe__name {
-    grid-column: 1 / -1;
-    font-size: 20px;
-  }
-
-  .stripe__label,
-  .stripe__current {
-    font-size: 14px;
+    padding: 0 16px 16px;
   }
 
   .project__intro {

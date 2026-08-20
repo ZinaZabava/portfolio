@@ -20,8 +20,8 @@
     "Simple Animations",
     "Exhibition Materials",
   ];
-  const HOLD = 380; // time each phrase stays put
-  const SHIFT = 280; // whip up to the next phrase
+  const HOLD = 420; // time each phrase stays put
+  const SHIFT = 200; // slide up to the next phrase
   const FADE = 600; // whole-loader opacity fade
   const MAX_WAIT = 16000;
 

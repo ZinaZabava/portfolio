@@ -23,7 +23,7 @@
 :root {
   --about-width: 0px;
   --topbar-height: 56px;
-  --stripe-green: #d2f096;
+  --stripe-green: #bcc47e;
   --gap: 0px;
   --index-size: 22px;
   --index-leading: 1.5;
@@ -151,8 +151,8 @@ html.js .loader {
   text-wrap: balance;
   will-change: transform, opacity;
   transition:
-    transform 0.28s cubic-bezier(0.12, 1.55, 0.22, 1),
-    opacity 0.12s linear;
+    transform 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 0.2s linear;
 }
 
 .loader__role-line.is-prep {
@@ -168,8 +168,8 @@ html.js .loader {
   left: 0;
   right: 0;
   top: 0;
-  opacity: 0;
-  transform: translate3d(0, 185%, 0) skewY(18deg);
+  opacity: 1;
+  transform: translate3d(0, 100%, 0);
   transition: none;
 }
 
@@ -185,7 +185,7 @@ html.js .loader {
   right: 0;
   top: 0;
   opacity: 0;
-  transform: translate3d(0, -185%, 0) skewY(-16deg);
+  transform: translate3d(0, -100%, 0);
 }
 
 .loader__mark {
@@ -262,12 +262,12 @@ button {
   min-height: 100vh;
 }
 
-/* ——— Green header stripe ——— */
+/* ——— Header stripe ——— */
 .stripe {
-  display: flex;
+  display: grid;
+  grid-template-columns: max-content max-content minmax(0, 1fr);
   align-items: center;
-  justify-content: space-between;
-  gap: 24px;
+  column-gap: 1.1em;
   position: fixed;
   top: 0;
   left: 0;
@@ -275,25 +275,15 @@ button {
   z-index: 300;
   height: var(--topbar-height);
   padding: 0 36px;
-  color: #000;
-  background:
-    linear-gradient(
-      180deg,
-      rgba(255, 255, 255, 0.28) 0%,
-      rgba(255, 255, 255, 0) 45%,
-      rgba(0, 0, 0, 0.1) 100%
-    ),
-    linear-gradient(
-      105deg,
-      #b6de4a 0%,
-      var(--stripe-green) 42%,
-      #eaffc4 100%
-    );
-  box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.08);
+  color: #fff;
+  background-color: #000;
+  background-image: url("assets/stripe-gradient.png");
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  background-position: center;
 }
 
 .stripe__name {
-  flex: 0 0 auto;
   margin: 0;
   font-family: var(--font-display);
   font-weight: 200;
@@ -305,24 +295,14 @@ button {
   white-space: nowrap;
 }
 
-.stripe__project {
-  display: flex;
-  align-items: baseline;
-  justify-content: flex-end;
-  gap: 0.55em;
-  min-width: 0;
-  margin: 0;
-  color: inherit;
-}
-
 .stripe__label {
-  flex: 0 0 auto;
   font-family: var(--font-mono);
   font-weight: var(--mono-weight);
   font-size: var(--mono-size);
   line-height: 1;
   letter-spacing: 0;
   text-transform: uppercase;
+  white-space: nowrap;
 }
 
 .stripe__current {
@@ -654,9 +634,8 @@ html.js:not(.is-simple-scroll) .media video.is-ready {
   }
 
   .stripe {
-    align-items: center;
-    gap: 12px;
-    padding: 8px 16px;
+    column-gap: 0.7em;
+    padding: 0 16px;
   }
 
   .stripe__name {
@@ -741,20 +720,16 @@ html.js:not(.is-simple-scroll) .media video.is-ready {
   }
 
   .stripe {
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: center;
-    gap: 4px;
-    padding: 10px 16px;
+    grid-template-columns: max-content minmax(0, 1fr);
+    grid-template-rows: auto auto;
+    row-gap: 4px;
+    column-gap: 0.7em;
+    padding: 8px 16px;
   }
 
   .stripe__name {
+    grid-column: 1 / -1;
     font-size: 20px;
-  }
-
-  .stripe__project {
-    justify-content: flex-start;
-    width: 100%;
   }
 
   .stripe__label,

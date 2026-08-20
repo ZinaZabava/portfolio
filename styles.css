@@ -21,7 +21,7 @@
 }
 
 :root {
-  --about-width: 360px;
+  --about-width: 0px;
   --topbar-height: 0px;
   --stripe-height: 18vh;
   --stripe-green: #d2f096;
@@ -266,10 +266,10 @@ button {
 /* ——— Bottom stripe: name + current project on a green fade ——— */
 .stripe {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: flex-end;
-  justify-content: flex-end;
-  gap: 0.15em;
+  justify-content: space-between;
+  gap: 24px;
   position: fixed;
   left: 0;
   right: 0;
@@ -277,7 +277,7 @@ button {
   z-index: 300;
   height: var(--stripe-height);
   min-height: 7.5em;
-  padding: 0 calc(var(--about-width) / 2) 28px;
+  padding: 0 36px 28px;
   color: #000;
   pointer-events: none;
   background: linear-gradient(
@@ -288,27 +288,35 @@ button {
   );
 }
 
-.stripe__name,
-.stripe__current {
+.stripe__name {
+  flex: 0 0 auto;
   margin: 0;
-  max-width: 100%;
-  font-family: var(--font-mono);
-  font-weight: var(--mono-weight);
-  font-size: var(--mono-size);
-  line-height: var(--index-leading);
+  pointer-events: auto;
+  font-family: var(--font-display);
+  font-weight: 200;
+  font-size: 28px;
+  line-height: 1;
   letter-spacing: 0;
+  text-transform: capitalize;
   color: inherit;
-  text-align: right;
+  text-align: left;
   white-space: nowrap;
 }
 
-.stripe__name {
-  pointer-events: auto;
-}
-
 .stripe__current {
+  flex: 1 1 auto;
+  min-width: 0;
+  margin: 0;
   overflow: hidden;
   text-overflow: ellipsis;
+  white-space: nowrap;
+  font-family: var(--font-index);
+  font-weight: 400;
+  font-size: var(--index-size);
+  line-height: 1;
+  letter-spacing: -0.12em;
+  color: inherit;
+  text-align: right;
 }
 
 /* ——— Footer: contacts + files ——— */
@@ -320,9 +328,9 @@ button {
   align-items: baseline;
   justify-content: space-between;
   gap: 16px 48px;
-  width: calc(100% - var(--about-width));
-  margin-inline: auto;
-  padding: 40px 0 calc(var(--stripe-height) + 36px);
+  width: 100%;
+  margin-inline: 0;
+  padding: 40px 36px calc(var(--stripe-height) + 36px);
   background: var(--about-bg);
   color: var(--text);
   font-family: var(--font-mono);
@@ -359,7 +367,7 @@ button {
   margin-inline: auto;
   padding-top: var(--topbar-height);
   position: relative;
-  width: calc(100% - var(--about-width));
+  width: 100%;
   isolation: isolate;
 }
 
@@ -633,6 +641,10 @@ html.js:not(.is-simple-scroll) .media video.is-ready {
 
   .stripe {
     padding: 0 20px 20px;
+  }
+
+  .stripe__name {
+    font-size: 22px;
   }
 
   .projects-window {

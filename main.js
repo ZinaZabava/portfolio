@@ -98,7 +98,7 @@
     }
 
     for (let i = 1; i < PHRASES.length; i += 1) {
-      await wait(i === 1 ? HOLD + 1000 : HOLD);
+      await wait(i === 1 ? HOLD + 1500 : HOLD);
       if (dismissed) return;
       await shiftTo(PHRASES[i]);
       if (dismissed) return;

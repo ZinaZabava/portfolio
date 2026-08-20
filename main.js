@@ -6,7 +6,6 @@
   if (!loader) return;
 
   const role = document.getElementById("loader-role");
-  const mark = document.getElementById("loader-mark");
   const root = document.documentElement;
   const reducedMotion = window.matchMedia(
     "(prefers-reduced-motion: reduce)"
@@ -16,23 +15,19 @@
     "Graphic designer",
     "Visual Identity",
     "Book Design",
+    "Printed Matter",
     "Social Media",
     "Simple Animations",
     "Exhibition Materials",
   ];
-  const HOLD = 1200; // time each phrase stays put
-  const SHIFT = 320; // time a phrase takes to leave / arrive
+  const HOLD = 720; // time each phrase stays put
+  const SHIFT = 420; // whip to the next phrase
   const FADE = 600; // whole-loader opacity fade
   const MAX_WAIT = 16000;
 
   const wait = (ms) => new Promise((resolve) => window.setTimeout(resolve, ms));
 
   function finish() {
-    if (mark) {
-      mark.pause();
-      mark.removeAttribute("src");
-      mark.load();
-    }
     loader.remove();
     root.classList.remove("is-loading");
     // Project heights were measured behind the loader; re-run now it is gone
@@ -52,33 +47,38 @@
     window.setTimeout(finish, FADE);
   }
 
-  function shiftTo(next) {
-    return new Promise((resolve) => {
-      role.classList.add("is-leaving");
-      window.setTimeout(() => {
-        role.textContent = next;
-        role.classList.remove("is-leaving");
-        role.classList.add("is-entering");
-        void role.offsetWidth;
-        role.classList.remove("is-entering");
-        window.setTimeout(resolve, SHIFT);
-      }, SHIFT);
-    });
-  }
-
-  function armVideo() {
-    if (!mark) return;
-    mark.muted = true;
-    mark.defaultMuted = true;
-    mark.loop = true;
-    mark.playsInline = true;
-    mark.setAttribute("muted", "");
-    mark.setAttribute("playsinline", "");
-    mark.setAttribute("webkit-playsinline", "");
-    const playAttempt = mark.play();
-    if (playAttempt && typeof playAttempt.catch === "function") {
-      playAttempt.catch(() => {});
+  function shiftTo(next, goingUp) {
+    const current = role.querySelector(".is-in");
+    if (!current) {
+      role.textContent = "";
+      const line = document.createElement("span");
+      line.className = "loader__role-line is-in";
+      line.textContent = next;
+      role.appendChild(line);
+      return wait(0);
     }
+
+    const incoming = document.createElement("span");
+    incoming.className = "loader__role-line is-prep";
+    incoming.textContent = next;
+    role.appendChild(incoming);
+
+    const nextHeight = Math.max(current.offsetHeight, incoming.offsetHeight);
+    role.style.height = `${nextHeight}px`;
+
+    incoming.classList.remove("is-prep");
+    incoming.classList.add(goingUp ? "is-from-below" : "is-from-above");
+    void incoming.offsetWidth;
+
+    current.classList.remove("is-in");
+    current.classList.add(goingUp ? "is-to-above" : "is-to-below");
+    incoming.classList.remove("is-from-below", "is-from-above");
+    incoming.classList.add("is-in");
+
+    return wait(SHIFT).then(() => {
+      current.remove();
+      role.style.height = "";
+    });
   }
 
   const fontsReady =
@@ -90,7 +90,6 @@
   async function start() {
     if (scheduled) return;
     scheduled = true;
-    armVideo();
 
     if (reducedMotion) {
       await wait(HOLD);
@@ -101,7 +100,7 @@
     for (let i = 1; i < PHRASES.length; i += 1) {
       await wait(HOLD);
       if (dismissed) return;
-      await shiftTo(PHRASES[i]);
+      await shiftTo(PHRASES[i], i % 2 === 1);
       if (dismissed) return;
     }
     await wait(HOLD);

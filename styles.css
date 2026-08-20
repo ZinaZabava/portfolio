@@ -136,20 +136,75 @@ html.js .loader {
 }
 
 .loader__role {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  min-height: 1.5em;
+}
+
+.loader__role-line {
+  display: block;
+  width: 100%;
+  margin: 0;
+  text-align: center;
+  text-transform: uppercase;
+  text-wrap: balance;
+  will-change: transform, opacity;
   transition:
-    opacity 0.32s ease,
-    transform 0.32s ease;
+    transform 0.42s cubic-bezier(0.16, 1, 0.32, 1),
+    opacity 0.22s ease;
 }
 
-.loader__role.is-leaving {
-  opacity: 0;
-  transform: translateY(-0.45em);
+.loader__role-line.is-prep {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  visibility: hidden;
 }
 
-.loader__role.is-entering {
+.loader__role-line.is-from-below {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
   opacity: 0;
-  transform: translateY(0.45em);
+  transform: translate3d(0, 140%, 0) skewY(8deg);
   transition: none;
+}
+
+.loader__role-line.is-from-above {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  opacity: 0;
+  transform: translate3d(0, -140%, 0) skewY(-8deg);
+  transition: none;
+}
+
+.loader__role-line.is-in {
+  position: relative;
+  opacity: 1;
+  transform: none;
+}
+
+.loader__role-line.is-to-above {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  opacity: 0;
+  transform: translate3d(0, -140%, 0) skewY(-10deg);
+}
+
+.loader__role-line.is-to-below {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  opacity: 0;
+  transform: translate3d(0, 140%, 0) skewY(10deg);
 }
 
 .loader__mark {
@@ -161,13 +216,6 @@ html.js .loader {
   object-fit: contain;
   background: var(--about-bg);
   pointer-events: none;
-}
-
-.loader__mark::-webkit-media-controls-start-playback-button,
-.loader__mark::-webkit-media-controls {
-  display: none !important;
-  -webkit-appearance: none;
-  opacity: 0 !important;
 }
 
 html.js .loader.is-dismissing {

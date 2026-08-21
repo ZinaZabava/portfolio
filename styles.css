@@ -266,10 +266,8 @@ button {
 /* ——— Top stripe: name + current project on a black fade ——— */
 .stripe {
   display: flex;
-  flex-direction: row;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 24px;
+  flex-direction: column;
+  justify-content: flex-start;
   position: fixed;
   top: 0;
   left: 0;
@@ -288,11 +286,19 @@ button {
   );
 }
 
-.stripe__name {
+.stripe__row {
   display: flex;
-  align-items: flex-end;
+  flex-direction: row;
+  align-items: baseline;
+  align-items: last baseline;
+  justify-content: space-between;
+  gap: 24px;
+  width: 100%;
+  min-width: 0;
+}
+
+.stripe__name {
   flex: 0 0 auto;
-  height: 28px;
   margin: 0;
   pointer-events: auto;
   font-family: var(--font-display);
@@ -308,10 +314,10 @@ button {
 
 .stripe__current {
   display: flex;
-  align-items: flex-end;
+  align-items: baseline;
+  align-items: last baseline;
   justify-content: flex-end;
   flex: 1 1 auto;
-  height: 28px;
   min-width: 0;
   margin: 0;
   overflow: hidden;
@@ -752,11 +758,6 @@ html.js:not(.is-simple-scroll) .media video.is-ready {
 
   .stripe__name {
     font-size: 22px;
-    height: 22px;
-  }
-
-  .stripe__current {
-    height: 22px;
   }
 
   .stripe__current-text {

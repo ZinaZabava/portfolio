@@ -736,12 +736,12 @@ html.js:not(.is-simple-scroll) .media video.is-ready {
 
   .stripe__name {
     font-size: 22px;
-    height: 23px;
+    height: 22px;
   }
 
   .stripe__current {
-    font-size: 23px;
-    height: 23px;
+    font-size: 22px;
+    height: 22px;
   }
 
   .projects-window {

@@ -429,7 +429,7 @@ button {
   font-size: 22px;
   line-height: var(--index-leading);
   letter-spacing: -0.12em;
-  color: #fff;
+  color: var(--text-muted);
 }
 
 .site-footer a {

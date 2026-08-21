@@ -573,14 +573,15 @@ html.js:not(.is-simple-scroll) .project__pin {
   text-align: right;
 }
 
-/* Grid kills subpixel flex gaps (Whispers lines) */
+/* Grid: no 1px seams (Whispers white pages made the black gaps obvious) */
 .project__media {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   gap: 0;
   column-gap: 0;
   row-gap: 0;
   width: 100%;
+  overflow: hidden;
   background: #000;
   font-size: 0;
   line-height: 0;
@@ -590,7 +591,7 @@ html.js:not(.is-simple-scroll) .project__pin {
   position: relative;
   overflow: hidden;
   /* Placeholder slot while media loads — keeps scroll height stable */
-  background: #1a1a1a;
+  background: #000;
   margin: 0;
   padding: 0;
   border: 0;
@@ -602,7 +603,17 @@ html.js:not(.is-simple-scroll) .project__pin {
 }
 
 .media.half {
+  min-width: 0;
   width: 100%;
+}
+
+.media.half + .media.half {
+  margin-left: -1px;
+}
+
+.media.half + .media.full,
+.media.full + .media {
+  margin-top: -1px;
 }
 
 .media img,
@@ -837,6 +848,11 @@ html.js:not(.is-simple-scroll) .media video.is-ready {
   .media.half,
   .media.full {
     grid-column: 1 / -1;
+  }
+
+  .media.half + .media.half {
+    margin-left: 0;
+    margin-top: -1px;
   }
 
   .stripe {

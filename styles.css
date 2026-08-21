@@ -315,6 +315,12 @@ button {
   min-width: 0;
   margin: 0;
   overflow: hidden;
+}
+
+.stripe__current-text {
+  min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   font-family: var(--font-index);
@@ -323,7 +329,6 @@ button {
   line-height: 1;
   letter-spacing: -0.12em;
   color: inherit;
-  text-align: right;
 }
 
 /* ——— About (page bottom) ——— */
@@ -751,8 +756,11 @@ html.js:not(.is-simple-scroll) .media video.is-ready {
   }
 
   .stripe__current {
-    font-size: 22px;
     height: 22px;
+  }
+
+  .stripe__current-text {
+    font-size: 22px;
   }
 
   .projects-window {

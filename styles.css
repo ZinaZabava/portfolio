@@ -270,21 +270,21 @@ button {
 .page-glow__orb {
   position: absolute;
   left: 50%;
-  bottom: -12%;
-  width: min(160vw, 1800px);
-  height: min(78vh, 920px);
-  transform: translateX(-50%);
+  bottom: 0;
+  width: min(92vw, 1080px);
+  height: min(42vh, 420px);
+  transform: translate(-50%, 62%);
   background: var(--accent);
   border-radius: 50%;
   filter: blur(400px);
-  opacity: 0.9;
+  opacity: 0.88;
 }
 
 @media (max-width: 900px) {
   .page-glow__orb {
-    width: 160vw;
-    height: 56vh;
-    bottom: -18%;
+    width: 100vw;
+    height: 36vh;
+    transform: translate(-50%, 58%);
     filter: blur(120px);
   }
 }

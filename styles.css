@@ -614,14 +614,12 @@ html.js:not(.is-simple-scroll) .project__pin {
   text-align: right;
 }
 
-/* Grid: no 1px seams (Whispers white pages made the black gaps obvious) */
+/* Frames: vertical = 1× wide, horizontal = 2× wide, same row height. Images clip. */
 .project__media {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  align-items: start;
+  align-items: stretch;
   gap: 0;
-  column-gap: 0;
-  row-gap: 0;
   width: min(var(--media-width), 100%);
   margin-inline: auto;
   overflow: hidden;
@@ -633,81 +631,64 @@ html.js:not(.is-simple-scroll) .project__pin {
 .media {
   position: relative;
   overflow: hidden;
-  background: transparent;
   margin: 0;
   padding: 0;
   border: 0;
+  background: transparent;
+}
+
+.media.half {
+  grid-column: span 1;
+  min-width: 0;
+  aspect-ratio: 3 / 4;
 }
 
 .media.full {
   grid-column: 1 / -1;
-  width: 100%;
-}
-
-.media.half {
-  min-width: 0;
-  width: 100%;
-}
-
-.media img,
-.media video {
-  display: block;
-  width: 100%;
-  height: auto;
-  max-width: none;
-  margin: 0;
-  padding: 0;
-  border: 0;
-  outline: 0;
-  vertical-align: top;
-  object-fit: cover;
-  background: transparent;
-}
-
-/* Cover the column join without changing layout width (that made one half taller). */
-.media.half:has(+ .media.half) {
-  z-index: 1;
-  transform: scaleX(1.004);
-  transform-origin: left center;
-}
-
-/* Pull a whole row up together so a pair cannot sit on different baselines. */
-.media.full + .media,
-.media.full + .media.half + .media.half,
-.media.half + .media.half + .media,
-.media.half + .media.half + .media.half + .media.half {
-  margin-top: -1px;
-}
-
-/*
-  Size the figure from aspect-ratio and let the video fill it.
-  After lock/unlock, iOS often treats HTML width/height as CSS pixels
-  and shrinks the video — absolute fill avoids that.
-*/
-.media:has(> video) {
-  aspect-ratio: 3 / 4;
-}
-
-.media.full:has(> video) {
   aspect-ratio: 3 / 2;
+}
+
+.project[data-project="bio-based"] .media.half {
+  aspect-ratio: 4 / 5;
+}
+
+.project[data-project="bio-based"] .media.full:not(.media--stack):not([hidden]) {
+  aspect-ratio: 3240 / 1800;
+}
+
+.project[data-project="urban-vibes"] .media.full {
+  aspect-ratio: 4 / 5;
+}
+
+.project[data-project="spark"] .media.full:last-child {
+  aspect-ratio: 2160 / 2779;
 }
 
 .media.full:has(> video[width="1920"]) {
   aspect-ratio: 16 / 9;
 }
 
-.media:has(> video) > video {
+.media img,
+.media video {
   position: absolute;
-  inset: 0;
-  width: 100% !important;
-  height: 100% !important;
+  inset: -1px;
+  display: block;
+  width: calc(100% + 2px);
+  height: calc(100% + 2px);
   max-width: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  outline: 0;
   object-fit: cover;
   object-position: center;
+  background: transparent;
 }
 
 .media video {
   pointer-events: none;
+  width: calc(100% + 2px) !important;
+  height: calc(100% + 2px) !important;
 }
 
 /* Hide iOS/WebKit big play button overlay */
@@ -739,19 +720,10 @@ html.js:not(.is-simple-scroll) .media video.is-ready {
   min-height: 0;
 }
 
-/* bio-based stacked opacity pair — assets are 1080×675 */
-.media--stack {
-  aspect-ratio: 1080 / 675;
+/* bio-based stacked opacity pair — assets are 2160×1350 */
+.media.full.media--stack {
+  aspect-ratio: 2160 / 1350;
   background: #daf7a6;
-}
-
-.media--stack .stack-base,
-.media--stack .stack-overlay {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
 }
 
 .media--stack .stack-overlay {
@@ -894,14 +866,6 @@ html.js:not(.is-simple-scroll) .media video.is-ready {
   .media.half,
   .media.full {
     grid-column: 1 / -1;
-  }
-
-  .media.half:has(+ .media.half) {
-    transform: none;
-  }
-
-  .media + .media {
-    margin-top: -1px;
   }
 
   .stripe {

@@ -267,24 +267,19 @@ button {
   overflow: hidden;
 }
 
-.page-glow__orb {
+.page-glow__shape {
   position: absolute;
   left: 50%;
   bottom: 0;
-  width: min(92vw, 1080px);
-  height: min(42vh, 420px);
-  transform: translate(-50%, 62%);
-  background: var(--accent);
-  border-radius: 50%;
+  width: 100vw;
+  height: auto;
+  transform: translateX(-50%);
   filter: blur(400px);
-  opacity: 0.88;
 }
 
 @media (max-width: 900px) {
-  .page-glow__orb {
-    width: 100vw;
-    height: 36vh;
-    transform: translate(-50%, 58%);
+  .page-glow__shape {
+    width: 140vw;
     filter: blur(120px);
   }
 }
@@ -382,7 +377,7 @@ button {
   min-height: 100dvh;
   padding: var(--intro-pad-y)
     max(24px, min(var(--intro-pad-x), calc((100% - var(--copy-width)) / 2)));
-  background: var(--about-bg);
+  background: transparent;
   color: var(--text);
 }
 
@@ -621,13 +616,14 @@ html.js:not(.is-simple-scroll) .project__pin {
 .project__media {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: start;
   gap: 0;
   column-gap: 0;
   row-gap: 0;
   width: min(var(--media-width), 100%);
   margin-inline: auto;
   overflow: hidden;
-  background: #000;
+  background: transparent;
   font-size: 0;
   line-height: 0;
 }
@@ -635,8 +631,7 @@ html.js:not(.is-simple-scroll) .project__pin {
 .media {
   position: relative;
   overflow: hidden;
-  /* Placeholder slot while media loads — keeps scroll height stable */
-  background: #000;
+  background: transparent;
   margin: 0;
   padding: 0;
   border: 0;
@@ -652,30 +647,21 @@ html.js:not(.is-simple-scroll) .project__pin {
   width: 100%;
 }
 
-.media.half + .media.half {
-  /* Overlap the center seam without shrinking the pair vs full-width rows */
-  margin-left: -1px;
-  width: calc(100% + 1px);
-}
-
-.media.half + .media.full,
-.media.full + .media {
-  margin-top: -1px;
-}
-
 .media img,
 .media video {
   display: block;
   width: 100%;
   height: auto;
-  max-width: 100%;
+  max-width: none;
   margin: 0;
   padding: 0;
   border: 0;
   outline: 0;
   vertical-align: top;
-  object-fit: contain;
+  object-fit: cover;
   background: transparent;
+  transform: scale(1.004);
+  transform-origin: center;
 }
 
 /*
@@ -703,6 +689,8 @@ html.js:not(.is-simple-scroll) .project__pin {
   max-width: none;
   object-fit: cover;
   object-position: center;
+  transform: scale(1.004);
+  transform-origin: center;
 }
 
 .media video {
@@ -893,11 +881,6 @@ html.js:not(.is-simple-scroll) .media video.is-ready {
   .media.half,
   .media.full {
     grid-column: 1 / -1;
-  }
-
-  .media.half + .media.half {
-    margin-left: 0;
-    margin-top: -1px;
   }
 
   .stripe {

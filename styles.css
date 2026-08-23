@@ -273,15 +273,15 @@ button {
   bottom: 0;
   width: 260vw;
   height: auto;
-  /* Bigger solid, parked below the window so only the upward shine is visible. */
-  transform: translate(-50%, calc(100% + 40px));
+  /* Center of the solid sits on the bottom edge — vivid green there, blur above. */
+  transform: translate(-50%, 50%);
   filter: blur(300px);
 }
 
 @media (max-width: 900px) {
   .page-glow__shape {
     width: 280vw;
-    transform: translate(-50%, calc(100% + 80px));
+    transform: translate(-50%, 50%);
     filter: blur(120px);
   }
 }

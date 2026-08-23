@@ -620,7 +620,9 @@ html.js:not(.is-simple-scroll) .project__pin {
 }
 
 .media.half + .media.half {
+  /* Overlap the center seam without shrinking the pair vs full-width rows */
   margin-left: -1px;
+  width: calc(100% + 1px);
 }
 
 .media.half + .media.full,

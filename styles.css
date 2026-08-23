@@ -41,7 +41,7 @@
   --font-index: "Rene", "PP Editorial New", Georgia, serif;
   /* Project copy stays Figma width on wide screens — does not shrink as viewport grows */
   --copy-width: 720px;
-  --media-width: 1200px;
+  --media-width: 1000px;
   --intro-pad-y: 118px;
   --intro-pad-x: 180px;
   --intro-gap: 59px;

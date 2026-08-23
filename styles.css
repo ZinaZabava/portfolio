@@ -271,16 +271,18 @@ button {
   position: absolute;
   left: 50%;
   bottom: 0;
-  width: 260vw;
-  height: auto;
-  /* Center of the solid sits on the bottom edge — vivid green there, blur above. */
+  width: 200vw;
+  height: 60vh;
+  object-fit: fill;
+  /* Center on the bottom edge; top of the oval stays inside the bottom third. */
   transform: translate(-50%, 50%);
   filter: blur(300px);
 }
 
 @media (max-width: 900px) {
   .page-glow__shape {
-    width: 280vw;
+    width: 220vw;
+    height: 60vh;
     transform: translate(-50%, 50%);
     filter: blur(120px);
   }

@@ -274,8 +274,8 @@ button {
   width: 260vw;
   height: auto;
   /* Bigger solid, parked below the window so only the upward shine is visible. */
-  transform: translate(-50%, calc(100% + 140px));
-  filter: blur(400px);
+  transform: translate(-50%, calc(100% + 40px));
+  filter: blur(300px);
 }
 
 @media (max-width: 900px) {

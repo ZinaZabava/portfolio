@@ -278,6 +278,27 @@
       }
     });
 
+    if (pinned) {
+      state.forEach((item, i) => {
+        if (!item.pin) return;
+        const next = state[i + 1];
+        const nextTop = next
+          ? next.section.getBoundingClientRect().top
+          : about
+            ? about.getBoundingClientRect().top
+            : Infinity;
+        const cover = Math.min(
+          1,
+          Math.max(0, (vh - (nextTop - offset)) / vh)
+        );
+        item.pin.style.opacity = String(1 - cover);
+      });
+    } else {
+      state.forEach((item) => {
+        if (item.pin) item.pin.style.opacity = "";
+      });
+    }
+
     // Before the first project reaches the focus line, highlight nothing yet
     // (avoids Special-Style flashing between projects / on the About block).
     if (!activeId) {

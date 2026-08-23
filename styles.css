@@ -259,9 +259,41 @@ button {
   cursor: pointer;
 }
 
+.page-glow {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.page-glow__orb {
+  position: absolute;
+  left: 50%;
+  bottom: -12%;
+  width: min(160vw, 1800px);
+  height: min(78vh, 920px);
+  transform: translateX(-50%);
+  background: var(--accent);
+  border-radius: 50%;
+  filter: blur(400px);
+  opacity: 0.9;
+}
+
+@media (max-width: 900px) {
+  .page-glow__orb {
+    width: 160vw;
+    height: 56vh;
+    bottom: -18%;
+    filter: blur(120px);
+  }
+}
+
 .page {
   position: relative;
+  z-index: 1;
   min-height: 100vh;
+  background: transparent;
 }
 
 /* ——— Top stripe: name + current project on a black fade ——— */
@@ -483,7 +515,7 @@ button {
   position: relative;
   height: auto;
   overflow: visible;
-  background: var(--project-bg, #000);
+  background: transparent;
 }
 
 /* Sticky cover-scroll only when JS can drive the track (desktop/tablet) */
@@ -514,7 +546,7 @@ html.js:not(.is-simple-scroll) .project__pin {
   /* Keep 720px copy; only tighten side padding when the projects column is narrower than Figma */
   padding-left: max(24px, min(var(--intro-pad-x), calc((100% - var(--copy-width)) / 2)));
   padding-right: max(24px, min(var(--intro-pad-x), calc((100% - var(--copy-width)) / 2)));
-  background: #000;
+  background: transparent;
   color: #fff;
 }
 

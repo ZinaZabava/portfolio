@@ -264,22 +264,24 @@ button {
   inset: 0;
   z-index: 0;
   pointer-events: none;
-  overflow: hidden;
+  overflow: visible;
 }
 
 .page-glow__shape {
   position: absolute;
   left: 50%;
   bottom: 0;
-  width: 100vw;
+  width: 260vw;
   height: auto;
-  transform: translateX(-50%);
+  /* Bigger solid, parked below the window so only the upward shine is visible. */
+  transform: translate(-50%, calc(100% + 140px));
   filter: blur(400px);
 }
 
 @media (max-width: 900px) {
   .page-glow__shape {
-    width: 140vw;
+    width: 280vw;
+    transform: translate(-50%, calc(100% + 80px));
     filter: blur(120px);
   }
 }
@@ -660,8 +662,21 @@ html.js:not(.is-simple-scroll) .project__pin {
   vertical-align: top;
   object-fit: cover;
   background: transparent;
-  transform: scale(1.004);
-  transform-origin: center;
+}
+
+/* Cover the column join without changing layout width (that made one half taller). */
+.media.half:has(+ .media.half) {
+  z-index: 1;
+  transform: scaleX(1.004);
+  transform-origin: left center;
+}
+
+/* Pull a whole row up together so a pair cannot sit on different baselines. */
+.media.full + .media,
+.media.full + .media.half + .media.half,
+.media.half + .media.half + .media,
+.media.half + .media.half + .media.half + .media.half {
+  margin-top: -1px;
 }
 
 /*
@@ -689,8 +704,6 @@ html.js:not(.is-simple-scroll) .project__pin {
   max-width: none;
   object-fit: cover;
   object-position: center;
-  transform: scale(1.004);
-  transform-origin: center;
 }
 
 .media video {
@@ -881,6 +894,14 @@ html.js:not(.is-simple-scroll) .media video.is-ready {
   .media.half,
   .media.full {
     grid-column: 1 / -1;
+  }
+
+  .media.half:has(+ .media.half) {
+    transform: none;
+  }
+
+  .media + .media {
+    margin-top: -1px;
   }
 
   .stripe {

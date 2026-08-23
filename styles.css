@@ -888,6 +888,19 @@ html.js:not(.is-simple-scroll) .media video.is-ready {
   }
 }
 
+/* Ragged Edge-style pinch at the bottom of the viewport. Off on phones. */
+.page-curve-svg {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}
+
+html.has-curve:not(.is-simple-scroll) .project__pin,
+html.has-curve:not(.is-simple-scroll) .site-footer {
+  filter: url("#page-curve");
+}
+
 @media (prefers-reduced-motion: reduce) {
   html.js .project__pin {
     position: relative;

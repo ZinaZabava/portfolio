@@ -480,6 +480,19 @@
     </footer>
   </div>
 
-  <script src="main.js"></script>
+  <svg class="page-curve-svg" aria-hidden="true" focusable="false">
+    <filter id="page-curve" color-interpolation-filters="sRGB" x="-4%" y="0" width="108%" height="108%">
+      <feImage result="map" preserveAspectRatio="none"></feImage>
+      <feDisplacementMap
+        in="SourceGraphic"
+        in2="map"
+        xChannelSelector="R"
+        yChannelSelector="G"
+        scale="0"
+      ></feDisplacementMap>
+    </filter>
+  </svg>
+
+  <script src="main.js?v=230826c"></script>
 </body>
 </html>

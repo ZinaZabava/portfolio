@@ -612,3 +612,91 @@
     document.fonts.ready.then(scheduleMeasure);
   }
 })();
+
+/* ===================== Bottom pinch (Ragged Edge curve) =====================
+   Same UV warp they use: squeeze toward the center, strongest at the bottom
+   of the viewport. SVG displacement so we do not pull in Three.js. */
+(() => {
+  const root = document.documentElement;
+  const filter = document.querySelector("#page-curve");
+  const feImage = filter && filter.querySelector("feImage");
+  const feMap = filter && filter.querySelector("feDisplacementMap");
+  if (!filter || !feImage || !feMap) return;
+
+  const DISTANCE = 34;
+  const STRENGTH = 1;
+  const MAP_W = 256;
+  const MAP_H = 256;
+
+  const canvas = document.createElement("canvas");
+  canvas.width = MAP_W;
+  canvas.height = MAP_H;
+  const ctx = canvas.getContext("2d", { willReadFrequently: true });
+  if (!ctx) return;
+
+  const targets = () =>
+    document.querySelectorAll(".project__pin, .site-footer");
+
+  function allowed() {
+    return (
+      !root.classList.contains("is-simple-scroll") &&
+      !window.matchMedia("(prefers-reduced-motion: reduce)").matches &&
+      window.innerWidth > 900
+    );
+  }
+
+  function filterUrl() {
+    return `${location.href.split("#")[0]}#page-curve`;
+  }
+
+  function paintMap(width) {
+    const str = STRENGTH * -0.05;
+    const scale = Math.abs(str) * width * 2;
+    const image = ctx.createImageData(MAP_W, MAP_H);
+    const data = image.data;
+
+    for (let y = 0; y < MAP_H; y += 1) {
+      const falloff = Math.pow((y + 0.5) / MAP_H, DISTANCE);
+      for (let x = 0; x < MAP_W; x += 1) {
+        const u = (x + 0.5) / MAP_W;
+        const deltaU = (u * 2 - 1) * str * falloff;
+        const deltaX = deltaU * width;
+        const r = Math.max(0, Math.min(255, Math.round(128 + (deltaX / scale) * 255)));
+        const i = (y * MAP_W + x) * 4;
+        data[i] = r;
+        data[i + 1] = 128;
+        data[i + 2] = 128;
+        data[i + 3] = 255;
+      }
+    }
+
+    ctx.putImageData(image, 0, 0);
+    feMap.setAttribute("scale", String(scale));
+    const dataUrl = canvas.toDataURL();
+    feImage.setAttributeNS("http://www.w3.org/1999/xlink", "href", dataUrl);
+    feImage.setAttribute("href", dataUrl);
+  }
+
+  function clear() {
+    targets().forEach((el) => {
+      el.style.filter = "";
+    });
+    root.classList.remove("has-curve");
+  }
+
+  function apply() {
+    if (!allowed()) {
+      clear();
+      return;
+    }
+    const url = `url("${filterUrl()}")`;
+    targets().forEach((el) => {
+      el.style.filter = url;
+    });
+    root.classList.add("has-curve");
+    paintMap(window.innerWidth);
+  }
+
+  apply();
+  window.addEventListener("resize", apply);
+})();

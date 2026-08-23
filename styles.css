@@ -41,6 +41,7 @@
   --font-index: "Rene", "PP Editorial New", Georgia, serif;
   /* Project copy stays Figma width on wide screens — does not shrink as viewport grows */
   --copy-width: 720px;
+  --media-width: 1200px;
   --intro-pad-y: 118px;
   --intro-pad-x: 180px;
   --intro-gap: 59px;
@@ -591,7 +592,7 @@ html.js:not(.is-simple-scroll) .project__pin {
   gap: 0;
   column-gap: 0;
   row-gap: 0;
-  width: min(1440px, 100%);
+  width: min(var(--media-width), 100%);
   margin-inline: auto;
   overflow: hidden;
   background: #000;

@@ -619,20 +619,26 @@
 (() => {
   const root = document.documentElement;
   const filter = document.querySelector("#page-curve");
-  const feImage = filter && filter.querySelector("feImage");
+  const feMapImage = document.getElementById("page-curve-map");
+  const feFadeImage = document.getElementById("page-curve-fade");
   const feMap = filter && filter.querySelector("feDisplacementMap");
-  if (!filter || !feImage || !feMap) return;
+  const feBlur = filter && filter.querySelector("feGaussianBlur");
+  if (!filter || !feMapImage || !feFadeImage || !feMap || !feBlur) return;
 
-  const DISTANCE = 34;
-  const STRENGTH = 1;
-  const MAP_W = 256;
-  const MAP_H = 256;
+  const DISTANCE = 10;
+  const STRENGTH = 3.2;
+  const MAP_W = 512;
+  const MAP_H = 512;
 
-  const canvas = document.createElement("canvas");
-  canvas.width = MAP_W;
-  canvas.height = MAP_H;
-  const ctx = canvas.getContext("2d", { willReadFrequently: true });
-  if (!ctx) return;
+  const mapCanvas = document.createElement("canvas");
+  mapCanvas.width = MAP_W;
+  mapCanvas.height = MAP_H;
+  const mapCtx = mapCanvas.getContext("2d", { willReadFrequently: true });
+  const fadeCanvas = document.createElement("canvas");
+  fadeCanvas.width = 16;
+  fadeCanvas.height = MAP_H;
+  const fadeCtx = fadeCanvas.getContext("2d", { willReadFrequently: true });
+  if (!mapCtx || !fadeCtx) return;
 
   const targets = () =>
     document.querySelectorAll(".project__pin, .site-footer");
@@ -649,10 +655,15 @@
     return `${location.href.split("#")[0]}#page-curve`;
   }
 
-  function paintMap(width) {
+  function setHref(node, dataUrl) {
+    node.setAttributeNS("http://www.w3.org/1999/xlink", "href", dataUrl);
+    node.setAttribute("href", dataUrl);
+  }
+
+  function paintMaps(width) {
     const str = STRENGTH * -0.05;
     const scale = Math.abs(str) * width * 2;
-    const image = ctx.createImageData(MAP_W, MAP_H);
+    const image = mapCtx.createImageData(MAP_W, MAP_H);
     const data = image.data;
 
     for (let y = 0; y < MAP_H; y += 1) {
@@ -670,11 +681,27 @@
       }
     }
 
-    ctx.putImageData(image, 0, 0);
+    mapCtx.putImageData(image, 0, 0);
     feMap.setAttribute("scale", String(scale));
-    const dataUrl = canvas.toDataURL();
-    feImage.setAttributeNS("http://www.w3.org/1999/xlink", "href", dataUrl);
-    feImage.setAttribute("href", dataUrl);
+    feBlur.setAttribute("stdDeviation", String(Math.max(14, width * 0.014)));
+    setHref(feMapImage, mapCanvas.toDataURL());
+
+    const fade = fadeCtx.createImageData(16, MAP_H);
+    const fadeData = fade.data;
+    for (let y = 0; y < MAP_H; y += 1) {
+      const v = (y + 0.5) / MAP_H;
+      const a = Math.pow(Math.max(0, (v - 0.48) / 0.52), 1.15);
+      const gray = Math.round(a * 255);
+      for (let x = 0; x < 16; x += 1) {
+        const i = (y * 16 + x) * 4;
+        fadeData[i] = gray;
+        fadeData[i + 1] = gray;
+        fadeData[i + 2] = gray;
+        fadeData[i + 3] = 255;
+      }
+    }
+    fadeCtx.putImageData(fade, 0, 0);
+    setHref(feFadeImage, fadeCanvas.toDataURL());
   }
 
   function clear() {
@@ -694,7 +721,7 @@
       el.style.filter = url;
     });
     root.classList.add("has-curve");
-    paintMap(window.innerWidth);
+    paintMaps(window.innerWidth);
   }
 
   apply();

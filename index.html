@@ -47,7 +47,7 @@
   />
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
   <link rel="stylesheet" href="https://use.typekit.net/cte3nym.css" />
-  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="styles.css?v=240826b" />
   <script>
     /* Reveal once webfonts are ready (or after a short timeout). */
     (function () {
@@ -480,19 +480,30 @@
     </footer>
   </div>
 
+  <div class="page-curve-veil" aria-hidden="true"></div>
   <svg class="page-curve-svg" aria-hidden="true" focusable="false">
-    <filter id="page-curve" color-interpolation-filters="sRGB" x="-4%" y="0" width="108%" height="108%">
-      <feImage result="map" preserveAspectRatio="none"></feImage>
+    <filter id="page-curve" color-interpolation-filters="sRGB" x="-10%" y="0" width="120%" height="120%">
+      <feImage id="page-curve-map" result="map" preserveAspectRatio="none"></feImage>
       <feDisplacementMap
         in="SourceGraphic"
         in2="map"
         xChannelSelector="R"
         yChannelSelector="G"
         scale="0"
+        result="displaced"
       ></feDisplacementMap>
+      <feGaussianBlur in="displaced" stdDeviation="16" result="blurred"></feGaussianBlur>
+      <feImage id="page-curve-fade" result="fade" preserveAspectRatio="none"></feImage>
+      <feColorMatrix
+        in="fade"
+        type="luminanceToAlpha"
+        result="fade-alpha"
+      ></feColorMatrix>
+      <feComposite in="blurred" in2="fade-alpha" operator="in" result="blur-bottom"></feComposite>
+      <feComposite in="blur-bottom" in2="displaced" operator="over"></feComposite>
     </filter>
   </svg>
 
-  <script src="main.js?v=230826c"></script>
+  <script src="main.js?v=240826b"></script>
 </body>
 </html>

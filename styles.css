@@ -591,7 +591,8 @@ html.js:not(.is-simple-scroll) .project__pin {
   gap: 0;
   column-gap: 0;
   row-gap: 0;
-  width: 100%;
+  width: min(1440px, 100%);
+  margin-inline: auto;
   overflow: hidden;
   background: #000;
   font-size: 0;

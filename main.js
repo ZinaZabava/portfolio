@@ -413,7 +413,7 @@
   });
 
   const videos = Array.from(
-    document.querySelectorAll(".project:not([hidden]) video")
+    document.querySelectorAll(".project:not([hidden]) .media:not([hidden]) video")
   );
   const videosOnScreen = new Set();
 
@@ -504,7 +504,7 @@
   // stable, but we still refresh after decode for exact sizes.
   const media = Array.from(
     document.querySelectorAll(
-      ".project:not([hidden]) img, .project:not([hidden]) video"
+      ".project:not([hidden]) .media:not([hidden]) img, .project:not([hidden]) .media:not([hidden]) video"
     )
   );
   let measureScheduled = false;

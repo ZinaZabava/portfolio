@@ -274,8 +274,8 @@ button {
   width: 200vw;
   height: 60vh;
   object-fit: fill;
-  /* Center on the bottom edge; top of the oval stays inside the bottom third. */
-  transform: translate(-50%, 50%);
+  /* Center on the bottom edge, then 120px lower. */
+  transform: translate(-50%, calc(50% + 120px));
   filter: blur(300px);
 }
 
@@ -283,7 +283,7 @@ button {
   .page-glow__shape {
     width: 220vw;
     height: 60vh;
-    transform: translate(-50%, 50%);
+    transform: translate(-50%, calc(50% + 120px));
     filter: blur(120px);
   }
 }

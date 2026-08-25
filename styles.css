@@ -595,6 +595,10 @@ button {
   text-decoration-thickness: 1px;
 }
 
+.site-footer__file + .site-footer__file {
+  margin-left: 0.75em;
+}
+
 .site-footer__up {
   position: absolute;
   right: 36px;

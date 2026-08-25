@@ -388,6 +388,24 @@
       stripeList.appendChild(item);
     });
 
+    if (about) {
+      const item = document.createElement("li");
+      const link = document.createElement("a");
+      const name = document.createElement("span");
+      link.href = "#about";
+      link.dataset.project = "about";
+      name.className = "stripe__list-name";
+      name.textContent = "About";
+      link.append(name);
+      link.addEventListener("click", (event) => {
+        event.preventDefault();
+        setNavOpen(false);
+        requestAnimationFrame(() => goToAbout());
+      });
+      item.appendChild(link);
+      stripeList.appendChild(item);
+    }
+
     if (stripeMenu) {
       stripeMenu.addEventListener("click", (event) => {
         event.preventDefault();

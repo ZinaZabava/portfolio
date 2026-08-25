@@ -250,7 +250,7 @@
         item.track.style.transform = "";
       }
 
-      // Bio-based 3.1 → 3.2 opacity fade
+      // Bio-based 3.2 → 3.1 opacity fade
       if (item.overlay && item.stack) {
         if (pinned) {
           const stackHeight = Math.max(

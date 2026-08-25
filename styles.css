@@ -296,7 +296,7 @@ button {
   background: transparent;
 }
 
-/* ——— Top stripe: name + current project on a black fade ——— */
+/* ——— Top stripe: name + current project ——— */
 .stripe {
   display: flex;
   flex-direction: column;
@@ -311,15 +311,7 @@ button {
   padding: 12px 36px 0;
   color: var(--accent);
   pointer-events: none;
-  background: linear-gradient(
-    to bottom,
-    #000000 0%,
-    rgba(0, 0, 0, 0.92) 16%,
-    rgba(0, 0, 0, 0.72) 34%,
-    rgba(0, 0, 0, 0.46) 54%,
-    rgba(0, 0, 0, 0.22) 74%,
-    rgba(0, 0, 0, 0) 100%
-  );
+  background: transparent;
 }
 
 .stripe__row {
@@ -391,12 +383,6 @@ button {
   padding: 0 0 20px 48px;
   list-style: none;
   z-index: 1;
-  background: linear-gradient(
-    to left,
-    rgba(0, 0, 0, 0.78) 0%,
-    rgba(0, 0, 0, 0.4) 62%,
-    rgba(0, 0, 0, 0) 100%
-  );
 }
 
 .stripe__list a {

@@ -583,6 +583,40 @@ html.js:not(.is-simple-scroll) .project__pin {
   transform: translateZ(0);
 }
 
+html.js.is-simple-scroll .project__pin {
+  position: relative;
+  top: auto;
+  height: auto;
+  overflow: visible;
+  transform: none;
+}
+
+html.js.is-simple-scroll .project {
+  height: auto !important;
+}
+
+html.js.is-simple-scroll .project__track {
+  transform: none !important;
+  will-change: auto;
+}
+
+html.js.is-simple-scroll .media img,
+html.js.is-simple-scroll .media video {
+  opacity: 1 !important;
+}
+
+html.js.is-simple-scroll .media img {
+  position: static;
+  inset: auto;
+  width: 100% !important;
+  height: auto !important;
+}
+
+html.js.is-simple-scroll .media:not(:has(> video)) {
+  aspect-ratio: auto;
+  height: auto;
+}
+
 .project__track {
   will-change: transform;
   backface-visibility: hidden;
@@ -835,8 +869,9 @@ html.js:not(.is-simple-scroll) .media video.is-ready {
   }
 
   /* Mobile: normal flow so every image is reachable by scrolling.
-     The sticky pin + overflow:hidden was clipping media below each intro. */
-  html.js .project__pin {
+     Beat the desktop sticky pin even if is-simple-scroll was missed. */
+  html.js .project__pin,
+  html.js:not(.is-simple-scroll) .project__pin {
     position: relative;
     top: auto;
     height: auto;
@@ -844,13 +879,31 @@ html.js:not(.is-simple-scroll) .media video.is-ready {
     transform: none;
   }
 
+  html.js .project,
+  html.js:not(.is-simple-scroll) .project {
+    height: auto !important;
+  }
+
   .project__track {
     transform: none !important;
     will-change: auto;
   }
 
-  .project {
+  .media img,
+  .media video {
+    opacity: 1 !important;
+  }
+
+  .media img {
+    position: static;
+    inset: auto;
+    width: 100% !important;
     height: auto !important;
+  }
+
+  .media:not(:has(> video)) {
+    aspect-ratio: auto;
+    height: auto;
   }
 
   .project__intro {

@@ -130,9 +130,10 @@
     "(prefers-reduced-motion: reduce)"
   ).matches;
   const narrowMq = window.matchMedia("(max-width: 900px)");
+  const coarseMq = window.matchMedia("(hover: none) and (pointer: coarse)");
 
   function usePinnedScroll() {
-    return !reducedMotion && !narrowMq.matches;
+    return !reducedMotion && !narrowMq.matches && !coarseMq.matches;
   }
 
   function syncScrollMode() {
@@ -176,9 +177,8 @@
   function measure() {
     // Heights taken while html was overflow-clipped are viewport-tall in
     // Safari, which is what hides each project's images under its intro.
-    if (document.documentElement.classList.contains("is-loading")) return;
-
     syncScrollMode();
+    if (document.documentElement.classList.contains("is-loading")) return;
     const vh = viewportHeight();
 
     state.forEach((item) => {
@@ -464,6 +464,11 @@
   narrowMq.addEventListener("change", () => {
     measure();
   });
+  if (coarseMq.addEventListener) {
+    coarseMq.addEventListener("change", () => {
+      measure();
+    });
+  }
 
   const videos = Array.from(
     document.querySelectorAll(".project:not([hidden]) .media:not([hidden]) video")

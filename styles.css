@@ -651,6 +651,10 @@ html.js:not(.is-simple-scroll) .project__pin {
   aspect-ratio: 3 / 2;
 }
 
+.project[data-project="haiide"] .media.full:has(> img) {
+  aspect-ratio: 1568 / 1003;
+}
+
 .project[data-project="bio-based"] .media.half {
   aspect-ratio: 4 / 5;
 }

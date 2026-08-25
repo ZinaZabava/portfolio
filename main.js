@@ -330,15 +330,35 @@
   }
 
   const stripeAbout = document.getElementById("stripe-about");
+  const stripeNav = document.getElementById("stripe-nav");
+  const stripeList = document.getElementById("stripe-projects");
+  const hoverNav = window.matchMedia("(hover: hover) and (pointer: fine)");
+
+  function isOverlayNav() {
+    return narrowMq.matches || coarseMq.matches;
+  }
+
+  const setNavOpen = (open) => {
+    if (!stripeNav || !stripeProject) return;
+    stripeNav.classList.toggle("is-open", open);
+    document.documentElement.classList.toggle(
+      "is-nav-open",
+      open && isOverlayNav()
+    );
+    stripeProject.setAttribute("aria-expanded", open ? "true" : "false");
+  };
+
   if (stripeAbout) {
     stripeAbout.addEventListener("click", (event) => {
       event.preventDefault();
+      if (stripeNav && stripeNav.classList.contains("is-open")) {
+        setNavOpen(false);
+        return;
+      }
       goToAbout();
     });
   }
 
-  const stripeNav = document.getElementById("stripe-nav");
-  const stripeList = document.getElementById("stripe-projects");
   if (stripeNav && stripeList && stripeProject) {
     projects.forEach((section) => {
       const item = document.createElement("li");
@@ -356,37 +376,33 @@
       link.append(name, meta);
       link.addEventListener("click", (event) => {
         event.preventDefault();
-        goToProject(section.dataset.project);
-        stripeNav.classList.remove("is-open");
-        stripeProject.setAttribute("aria-expanded", "false");
+        setNavOpen(false);
+        requestAnimationFrame(() => goToProject(section.dataset.project));
       });
       item.appendChild(link);
       stripeList.appendChild(item);
     });
 
-    const hoverNav = window.matchMedia("(hover: hover) and (pointer: fine)");
-    const setOpen = (open) => {
-      stripeNav.classList.toggle("is-open", open);
-      stripeProject.setAttribute("aria-expanded", open ? "true" : "false");
-    };
-
     stripeProject.addEventListener("click", (event) => {
       event.preventDefault();
-      if (hoverNav.matches) return;
-      setOpen(!stripeNav.classList.contains("is-open"));
+      if (!isOverlayNav()) return;
+      setNavOpen(!stripeNav.classList.contains("is-open"));
     });
 
-    if (hoverNav.matches) {
-      stripeNav.addEventListener("mouseenter", () => setOpen(true));
-      stripeNav.addEventListener("mouseleave", () => setOpen(false));
+    if (hoverNav.matches && !isOverlayNav()) {
+      stripeNav.addEventListener("mouseenter", () => setNavOpen(true));
+      stripeNav.addEventListener("mouseleave", () => setNavOpen(false));
     } else {
       document.addEventListener("click", (event) => {
-        if (!stripeNav.contains(event.target)) setOpen(false);
+        if (!stripeNav.contains(event.target)) setNavOpen(false);
+      });
+      stripeList.addEventListener("click", (event) => {
+        if (event.target === stripeList) setNavOpen(false);
       });
     }
 
     document.addEventListener("keydown", (event) => {
-      if (event.key === "Escape") setOpen(false);
+      if (event.key === "Escape") setNavOpen(false);
     });
   }
 

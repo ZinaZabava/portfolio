@@ -317,11 +317,12 @@ button {
 .stripe__row {
   display: flex;
   flex-direction: row;
-  align-items: flex-end;
+  align-items: baseline;
   justify-content: space-between;
   gap: 24px;
   width: 100%;
   min-width: 0;
+  position: relative;
 }
 
 .stripe__name {
@@ -342,8 +343,8 @@ button {
 .stripe__nav {
   position: relative;
   display: flex;
-  flex-direction: column;
-  align-items: flex-end;
+  align-items: baseline;
+  justify-content: flex-end;
   flex: 1 1 auto;
   min-width: 0;
   margin: 0;
@@ -353,17 +354,19 @@ button {
 
 .stripe__current-text {
   display: block;
-  width: 100%;
-  margin: 0;
+  flex: 1 1 auto;
+  width: auto;
+  min-width: 0;
+  max-width: 58%;
+  margin: 0 0 0 auto;
   padding: 0;
   border: 0;
   background: none;
   appearance: none;
   -webkit-appearance: none;
   cursor: pointer;
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  min-height: 0;
+  overflow: visible;
   white-space: nowrap;
   font-family: var(--font-index);
   font-weight: 400;
@@ -372,8 +375,28 @@ button {
   letter-spacing: -0.12em;
   color: inherit;
   text-align: right;
-  /* Rene's em sits a hair lower than Editorial; lift to a shared bottom line */
-  transform: translateY(-0.05em);
+  pointer-events: auto;
+}
+
+/* Editorial strut so Rene sits on the same alphabetic line as the name */
+.stripe__current-text::before {
+  content: "y";
+  font-family: var(--font-display);
+  font-weight: 200;
+  font-size: 28px;
+  letter-spacing: 0;
+  line-height: 1;
+  visibility: hidden;
+  display: inline-block;
+  width: 0;
+  overflow: hidden;
+  vertical-align: baseline;
+  pointer-events: none;
+}
+
+.stripe__current-label {
+  display: inline;
+  vertical-align: baseline;
 }
 
 .stripe__list {
@@ -385,9 +408,11 @@ button {
   align-items: flex-end;
   gap: 0.38em;
   margin: 0;
-  padding: 0 0 20px 48px;
+  padding: 10px 20px 24px 40px;
   list-style: none;
   z-index: 1;
+  background: rgba(0, 0, 0, 0.82);
+  pointer-events: auto;
 }
 
 .stripe__list a {
@@ -885,14 +910,18 @@ html.js:not(.is-simple-scroll) .media video.is-ready {
   }
 
   .stripe__name,
-  .stripe__current-text,
-  .stripe__list a {
+  .stripe__current-text {
+    font-size: 28px;
+    line-height: 1;
+  }
+
+  .stripe__current-text::before {
     font-size: 28px;
   }
 
-  .stripe__name,
-  .stripe__current-text {
-    line-height: 1;
+  .stripe__nav.is-open .stripe__list a {
+    font-size: calc(28px * 2 / 3);
+    line-height: 1.2;
   }
 
   html.is-nav-open {
@@ -934,7 +963,7 @@ html.js:not(.is-simple-scroll) .media video.is-ready {
     flex-direction: column;
     justify-content: flex-start;
     align-items: flex-start;
-    gap: 16px;
+    gap: 11px;
     margin: 0;
     padding: 72px 20px 40px;
     background: var(--accent);

@@ -285,7 +285,9 @@
     }
 
     if (stripeProject) {
-      stripeProject.textContent =
+      const label =
+        stripeProject.querySelector(".stripe__current-label") || stripeProject;
+      label.textContent =
         activeId === "about" ? "About" : activeId ? labels[activeId] || "" : "";
     }
     document.querySelectorAll("#stripe-projects a[data-project]").forEach((link) => {

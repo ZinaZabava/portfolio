@@ -145,6 +145,13 @@
 
   syncScrollMode();
 
+  const labels = Object.fromEntries(
+    projects.map((section) => [
+      section.dataset.project,
+      section.dataset.label || section.dataset.project,
+    ])
+  );
+
   const state = projects.map((section) => {
     const pin = section.querySelector(".project__pin");
     const track = section.querySelector(".project__track");
@@ -277,6 +284,12 @@
       }
     }
 
+    if (stripeProject) {
+      const label =
+        stripeProject.querySelector(".stripe__current-label") || stripeProject;
+      label.textContent =
+        activeId === "about" ? "About" : activeId ? labels[activeId] || "" : "";
+    }
     document.querySelectorAll("#stripe-projects a[data-project]").forEach((link) => {
       link.classList.toggle("is-current", link.dataset.project === activeId);
     });
@@ -321,6 +334,7 @@
   const stripeAbout = document.getElementById("stripe-about");
   const stripeNav = document.getElementById("stripe-nav");
   const stripeList = document.getElementById("stripe-projects");
+  const stripeMenu = document.getElementById("stripe-menu");
   const hoverNav = window.matchMedia("(hover: hover) and (pointer: fine)");
 
   function isOverlayNav() {
@@ -328,13 +342,15 @@
   }
 
   const setNavOpen = (open) => {
-    if (!stripeNav || !stripeProject) return;
+    if (!stripeNav) return;
     stripeNav.classList.toggle("is-open", open);
     document.documentElement.classList.toggle(
       "is-nav-open",
       open && isOverlayNav()
     );
-    stripeProject.setAttribute("aria-expanded", open ? "true" : "false");
+    const expanded = open ? "true" : "false";
+    if (stripeProject) stripeProject.setAttribute("aria-expanded", expanded);
+    if (stripeMenu) stripeMenu.setAttribute("aria-expanded", expanded);
   };
 
   if (stripeAbout) {
@@ -348,7 +364,7 @@
     });
   }
 
-  if (stripeNav && stripeList && stripeProject) {
+  if (stripeNav && stripeList) {
     projects.forEach((section) => {
       const item = document.createElement("li");
       const link = document.createElement("a");
@@ -372,11 +388,19 @@
       stripeList.appendChild(item);
     });
 
-    stripeProject.addEventListener("click", (event) => {
-      event.preventDefault();
-      if (!isOverlayNav()) return;
-      setNavOpen(!stripeNav.classList.contains("is-open"));
-    });
+    if (stripeMenu) {
+      stripeMenu.addEventListener("click", (event) => {
+        event.preventDefault();
+        if (!isOverlayNav()) return;
+        setNavOpen(!stripeNav.classList.contains("is-open"));
+      });
+    }
+
+    if (stripeProject) {
+      stripeProject.addEventListener("click", (event) => {
+        event.preventDefault();
+      });
+    }
 
     if (hoverNav.matches && !isOverlayNav()) {
       stripeNav.addEventListener("mouseenter", () => setNavOpen(true));

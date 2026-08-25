@@ -34,6 +34,7 @@
     void root.offsetHeight;
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
+        window.scrollTo(0, 0);
         window.dispatchEvent(new Event("resize"));
       });
     });
@@ -116,6 +117,9 @@
 
 (() => {
   document.documentElement.classList.add("js");
+  window.addEventListener("pageshow", () => {
+    window.scrollTo(0, 0);
+  });
 
   const projects = Array.from(
     document.querySelectorAll(".project:not([hidden])")
@@ -284,6 +288,9 @@
       stripeProject.textContent =
         activeId === "about" ? "About" : activeId ? labels[activeId] || "" : "";
     }
+    document.querySelectorAll("#stripe-projects a[data-project]").forEach((link) => {
+      link.classList.toggle("is-current", link.dataset.project === activeId);
+    });
   }
 
   let ticking = false;
@@ -303,6 +310,16 @@
     });
   }
 
+  function goToProject(id) {
+    const item = state.find((entry) => entry.id === id);
+    if (!item) return;
+    const top = item.section.getBoundingClientRect().top + window.scrollY;
+    window.scrollTo({
+      top: Math.max(0, top),
+      behavior: reducedMotion ? "auto" : "smooth",
+    });
+  }
+
   function goToAbout() {
     if (!about) return;
     const top = window.scrollY + about.getBoundingClientRect().top;
@@ -317,6 +334,51 @@
     stripeAbout.addEventListener("click", (event) => {
       event.preventDefault();
       goToAbout();
+    });
+  }
+
+  const stripeNav = document.getElementById("stripe-nav");
+  const stripeList = document.getElementById("stripe-projects");
+  if (stripeNav && stripeList && stripeProject) {
+    projects.forEach((section) => {
+      const item = document.createElement("li");
+      const link = document.createElement("a");
+      link.href = `#${section.id}`;
+      link.dataset.project = section.dataset.project;
+      link.textContent = section.dataset.label || section.dataset.project;
+      link.addEventListener("click", (event) => {
+        event.preventDefault();
+        goToProject(section.dataset.project);
+        stripeNav.classList.remove("is-open");
+        stripeProject.setAttribute("aria-expanded", "false");
+      });
+      item.appendChild(link);
+      stripeList.appendChild(item);
+    });
+
+    const hoverNav = window.matchMedia("(hover: hover) and (pointer: fine)");
+    const setOpen = (open) => {
+      stripeNav.classList.toggle("is-open", open);
+      stripeProject.setAttribute("aria-expanded", open ? "true" : "false");
+    };
+
+    stripeProject.addEventListener("click", (event) => {
+      event.preventDefault();
+      if (hoverNav.matches) return;
+      setOpen(!stripeNav.classList.contains("is-open"));
+    });
+
+    if (hoverNav.matches) {
+      stripeNav.addEventListener("mouseenter", () => setOpen(true));
+      stripeNav.addEventListener("mouseleave", () => setOpen(false));
+    } else {
+      document.addEventListener("click", (event) => {
+        if (!stripeNav.contains(event.target)) setOpen(false);
+      });
+    }
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") setOpen(false);
     });
   }
 

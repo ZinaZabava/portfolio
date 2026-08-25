@@ -20,6 +20,13 @@
         window.dispatchEvent(new Event("resize"));
       }, 18000);
       try {
+        if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+        if (location.hash) {
+          history.replaceState(null, "", location.pathname + location.search);
+        }
+        window.scrollTo(0, 0);
+      } catch (e) {}
+      try {
         if (
           window.matchMedia("(max-width: 900px)").matches ||
           window.matchMedia("(prefers-reduced-motion: reduce)").matches
@@ -47,7 +54,7 @@
   />
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
   <link rel="stylesheet" href="https://use.typekit.net/cte3nym.css" />
-  <link rel="stylesheet" href="styles.css?v=250826a" />
+  <link rel="stylesheet" href="styles.css?v=250826b" />
   <script>
     /* Reveal once webfonts are ready (or after a short timeout). */
     (function () {
@@ -102,9 +109,16 @@
     <header class="stripe" id="stripe">
       <div class="stripe__row">
         <a href="#about" class="stripe__name" id="stripe-about">Zinaida Rykova</a>
-        <span class="stripe__current">
-          <span class="stripe__current-text" id="stripe-project">HAIIDE</span>
-        </span>
+        <nav class="stripe__nav" id="stripe-nav" aria-label="Projects">
+          <button
+            type="button"
+            class="stripe__current-text"
+            id="stripe-project"
+            aria-expanded="false"
+            aria-controls="stripe-projects"
+          >HAIIDE</button>
+          <ul class="stripe__list" id="stripe-projects"></ul>
+        </nav>
       </div>
     </header>
 
@@ -550,6 +564,6 @@
     </footer>
   </div>
 
-  <script src="main.js?v=250826a"></script>
+  <script src="main.js?v=250826b"></script>
 </body>
 </html>

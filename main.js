@@ -343,9 +343,17 @@
     projects.forEach((section) => {
       const item = document.createElement("li");
       const link = document.createElement("a");
+      const name = document.createElement("span");
+      const meta = document.createElement("span");
+      const type =
+        section.querySelector(".project__tags span")?.textContent.trim() || "";
       link.href = `#${section.id}`;
       link.dataset.project = section.dataset.project;
-      link.textContent = section.dataset.label || section.dataset.project;
+      name.className = "stripe__list-name";
+      name.textContent = section.dataset.label || section.dataset.project;
+      meta.className = "stripe__list-meta";
+      if (type) meta.textContent = ` | ${type}`;
+      link.append(name, meta);
       link.addEventListener("click", (event) => {
         event.preventDefault();
         goToProject(section.dataset.project);

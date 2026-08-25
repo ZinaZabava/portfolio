@@ -306,27 +306,20 @@ button {
   left: 0;
   right: 0;
   z-index: 300;
-  height: 22vh;
-  min-height: 128px;
+  height: var(--stripe-height);
+  min-height: 2.5em;
   padding: 12px 36px 0;
   color: var(--accent);
   pointer-events: none;
   background: linear-gradient(
     to bottom,
     #000000 0%,
-    rgba(0, 0, 0, 0.96) 10%,
-    rgba(0, 0, 0, 0.82) 28%,
-    rgba(0, 0, 0, 0.58) 48%,
-    rgba(0, 0, 0, 0.32) 68%,
-    rgba(0, 0, 0, 0.12) 84%,
+    rgba(0, 0, 0, 0.92) 16%,
+    rgba(0, 0, 0, 0.72) 34%,
+    rgba(0, 0, 0, 0.46) 54%,
+    rgba(0, 0, 0, 0.22) 74%,
     rgba(0, 0, 0, 0) 100%
   );
-}
-
-.stripe:has(.stripe__nav:hover),
-.stripe:has(.stripe__nav:focus-within),
-.stripe:has(.stripe__nav.is-open) {
-  height: min(58vh, 460px);
 }
 
 .stripe__row {
@@ -395,9 +388,15 @@ button {
   align-items: flex-end;
   gap: 0.38em;
   margin: 0;
-  padding: 0;
+  padding: 0 0 20px 48px;
   list-style: none;
   z-index: 1;
+  background: linear-gradient(
+    to left,
+    rgba(0, 0, 0, 0.78) 0%,
+    rgba(0, 0, 0, 0.4) 62%,
+    rgba(0, 0, 0, 0) 100%
+  );
 }
 
 .stripe__list a {
@@ -824,8 +823,6 @@ html.js:not(.is-simple-scroll) .media video.is-ready {
   }
 
   .stripe {
-    height: 18vh;
-    min-height: 104px;
     padding: 10px 20px 0;
   }
 

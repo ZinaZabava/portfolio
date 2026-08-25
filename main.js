@@ -461,40 +461,72 @@
     document.querySelectorAll(".project:not([hidden]) .media:not([hidden]) video")
   );
   const videosOnScreen = new Set();
+  const playHoldTimers = new WeakMap();
 
-  const ensurePlay = (video) => {
+  const playHoldMs = (video) => {
+    const n = Number(video.dataset.playDelay);
+    return Number.isFinite(n) && n > 0 ? Math.round(n * 1000) : 0;
+  };
+
+  const clearPlayHold = (video) => {
+    const timer = playHoldTimers.get(video);
+    if (timer) {
+      window.clearTimeout(timer);
+      playHoldTimers.delete(video);
+    }
+  };
+
+  const ensurePlay = (video, holdStart = false) => {
     if (document.hidden) return;
     if (!videosOnScreen.has(video)) return;
     video.muted = true;
     video.defaultMuted = true;
-    if (
-      video.ended ||
-      (Number.isFinite(video.duration) &&
-        video.duration > 0 &&
-        video.currentTime >= video.duration - 0.08)
-    ) {
-      try {
-        video.currentTime = 0;
-      } catch (_) {
-        /* ignore seek errors before metadata */
+
+    const start = () => {
+      if (document.hidden || !videosOnScreen.has(video)) return;
+      if (
+        video.ended ||
+        (Number.isFinite(video.duration) &&
+          video.duration > 0 &&
+          video.currentTime >= video.duration - 0.08)
+      ) {
+        try {
+          video.currentTime = 0;
+        } catch (_) {
+          /* ignore seek errors before metadata */
+        }
       }
+      const playAttempt = video.play();
+      if (playAttempt && typeof playAttempt.catch === "function") {
+        playAttempt.catch(() => {});
+      }
+    };
+
+    const delay = holdStart ? playHoldMs(video) : 0;
+    if (delay) {
+      clearPlayHold(video);
+      try {
+        video.pause();
+      } catch (_) {}
+      playHoldTimers.set(video, window.setTimeout(start, delay));
+      return;
     }
-    const playAttempt = video.play();
-    if (playAttempt && typeof playAttempt.catch === "function") {
-      playAttempt.catch(() => {});
-    }
+
+    start();
   };
 
   const armVideo = (video) => {
-    video.loop = true;
+    const hold = playHoldMs(video);
+    video.loop = hold ? false : true;
     video.muted = true;
     video.defaultMuted = true;
-    video.autoplay = true;
+    video.autoplay = !hold;
     video.playsInline = true;
     video.controls = false;
     video.disablePictureInPicture = true;
     video.setAttribute("muted", "");
-    video.setAttribute("autoplay", "");
+    if (hold) video.removeAttribute("autoplay");
+    else video.setAttribute("autoplay", "");
     video.setAttribute("playsinline", "");
     video.setAttribute("webkit-playsinline", "");
     video.setAttribute("disablepictureinpicture", "");
@@ -505,18 +537,19 @@
       try {
         video.currentTime = 0;
       } catch (_) {}
-      ensurePlay(video);
+      ensurePlay(video, hold > 0);
     });
 
     // iOS often pauses muted inline videos; nudge them back if still on screen
     video.addEventListener("pause", () => {
+      if (playHoldTimers.has(video)) return;
       if (videosOnScreen.has(video) && !document.hidden) {
         requestAnimationFrame(() => ensurePlay(video));
       }
     });
 
-    video.addEventListener("loadeddata", () => ensurePlay(video));
-    video.addEventListener("canplay", () => ensurePlay(video));
+    video.addEventListener("loadeddata", () => ensurePlay(video, hold > 0));
+    video.addEventListener("canplay", () => ensurePlay(video, hold > 0));
   };
 
   videos.forEach(armVideo);
@@ -528,9 +561,10 @@
           const video = entry.target;
           if (entry.isIntersecting && entry.intersectionRatio > 0) {
             videosOnScreen.add(video);
-            ensurePlay(video);
+            ensurePlay(video, playHoldMs(video) > 0);
           } else {
             videosOnScreen.delete(video);
+            clearPlayHold(video);
             video.pause();
           }
         });

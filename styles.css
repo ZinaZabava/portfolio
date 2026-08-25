@@ -1091,6 +1091,46 @@ html.js:not(.is-simple-scroll) .media video.is-ready {
     height: auto;
   }
 
+  /* Crop landscape stills to 540×720 (3:4) so they match the vertical frames. */
+  html.js.is-simple-scroll .media.full:not(:has(> video)),
+  .media.full:not(:has(> video)),
+  html.js.is-simple-scroll .project[data-project="haiide"] .media.full:has(> img[src*="haiide%202"]),
+  .project[data-project="haiide"] .media.full:has(> img[src*="haiide%202"]),
+  html.js.is-simple-scroll .project[data-project="bio-based"] .media.full:has(img[src*="3.2"]),
+  .project[data-project="bio-based"] .media.full:has(img[src*="3.2"]),
+  html.js.is-simple-scroll .project[data-project="bio-based"] .media.full:has(img[src*="4.webp"]),
+  .project[data-project="bio-based"] .media.full:has(img[src*="4.webp"]) {
+    aspect-ratio: 3 / 4;
+    height: auto;
+  }
+
+  html.js.is-simple-scroll .media.full:not(:has(> video)) img,
+  .media.full:not(:has(> video)) img {
+    position: absolute !important;
+    inset: -1px;
+    width: calc(100% + 2px) !important;
+    height: calc(100% + 2px) !important;
+    object-fit: cover;
+    object-position: center;
+  }
+
+  html.js.is-simple-scroll .project[data-project="urban-vibes"] .media.full,
+  .project[data-project="urban-vibes"] .media.full,
+  html.js.is-simple-scroll .project[data-project="spark"] .media.full:last-child,
+  .project[data-project="spark"] .media.full:last-child {
+    aspect-ratio: auto;
+  }
+
+  html.js.is-simple-scroll .project[data-project="urban-vibes"] .media.full img,
+  .project[data-project="urban-vibes"] .media.full img,
+  html.js.is-simple-scroll .project[data-project="spark"] .media.full:last-child img,
+  .project[data-project="spark"] .media.full:last-child img {
+    position: static !important;
+    inset: auto;
+    width: 100% !important;
+    height: auto !important;
+  }
+
   .project__intro {
     align-items: flex-start;
     gap: var(--intro-gap);

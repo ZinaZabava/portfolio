@@ -606,7 +606,7 @@ html.js.is-simple-scroll .project__track {
 }
 
 html.js.is-simple-scroll .media img,
-html.js.is-simple-scroll .media video {
+html.js.is-simple-scroll .media video.is-playing {
   opacity: 1 !important;
 }
 
@@ -615,6 +615,13 @@ html.js.is-simple-scroll .media img {
   inset: auto;
   width: 100% !important;
   height: auto !important;
+}
+
+html.js.is-simple-scroll .media img.media__poster {
+  position: absolute !important;
+  inset: -1px;
+  width: calc(100% + 2px) !important;
+  height: calc(100% + 2px) !important;
 }
 
 html.js.is-simple-scroll .media:not(:has(> video)) {
@@ -794,6 +801,22 @@ html.js.is-simple-scroll .media:not(:has(> video)) {
   pointer-events: none;
   width: calc(100% + 2px) !important;
   height: calc(100% + 2px) !important;
+  z-index: 1;
+}
+
+.media__poster {
+  position: absolute !important;
+  inset: -1px;
+  z-index: 0;
+  width: calc(100% + 2px) !important;
+  height: calc(100% + 2px) !important;
+  opacity: 1 !important;
+}
+
+/* Keep the still visible until the video is actually painting.
+   iOS Reduce Motion blocks autoplay and never draws a frame. */
+.media video:not(.is-playing) {
+  opacity: 0 !important;
 }
 
 /* Hide iOS/WebKit big play button overlay */
@@ -965,7 +988,7 @@ html.js:not(.is-simple-scroll) .media video.is-ready {
   }
 
   .media img,
-  .media video {
+  .media video.is-playing {
     opacity: 1 !important;
   }
 
@@ -974,6 +997,13 @@ html.js:not(.is-simple-scroll) .media video.is-ready {
     inset: auto;
     width: 100% !important;
     height: auto !important;
+  }
+
+  .media img.media__poster {
+    position: absolute !important;
+    inset: -1px;
+    width: calc(100% + 2px) !important;
+    height: calc(100% + 2px) !important;
   }
 
   .media:not(:has(> video)) {
@@ -1096,9 +1126,13 @@ html.js:not(.is-simple-scroll) .media video.is-ready {
   }
 
   .media img,
-  .media video {
+  .media video.is-playing {
     opacity: 1;
     transition: none;
+  }
+
+  .media video:not(.is-playing) {
+    opacity: 0;
   }
 
   .loader__role-line {

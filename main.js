@@ -491,6 +491,8 @@
   );
   const videosOnScreen = new Set();
   const playHoldTimers = new WeakMap();
+  const holding = new WeakSet();
+  const holdDone = new WeakSet();
 
   const playHoldMs = (video) => {
     const n = Number(video.dataset.playDelay);
@@ -503,16 +505,36 @@
       window.clearTimeout(timer);
       playHoldTimers.delete(video);
     }
+    holding.delete(video);
   };
 
-  const ensurePlay = (video, holdStart = false) => {
+  const isAtStart = (video) => {
+    if (video.ended) return true;
+    const t = video.currentTime;
+    if (!Number.isFinite(t) || t <= 0.05) return true;
+    return (
+      Number.isFinite(video.duration) &&
+      video.duration > 0 &&
+      t >= video.duration - 0.08
+    );
+  };
+
+  const setPlaying = (video, on) => {
+    video.classList.toggle("is-playing", on);
+  };
+
+  const ensurePlay = (video, loopHold = false) => {
     if (document.hidden) return;
     if (!videosOnScreen.has(video)) return;
+    if (holding.has(video)) return;
     video.muted = true;
     video.defaultMuted = true;
 
     const start = () => {
       if (document.hidden || !videosOnScreen.has(video)) return;
+      holding.delete(video);
+      playHoldTimers.delete(video);
+      holdDone.add(video);
       if (
         video.ended ||
         (Number.isFinite(video.duration) &&
@@ -526,17 +548,26 @@
         }
       }
       const playAttempt = video.play();
-      if (playAttempt && typeof playAttempt.catch === "function") {
-        playAttempt.catch(() => {});
+      if (playAttempt && typeof playAttempt.then === "function") {
+        playAttempt
+          .then(() => setPlaying(video, true))
+          .catch(() => setPlaying(video, false));
       }
     };
 
-    const delay = holdStart ? playHoldMs(video) : 0;
-    if (delay) {
-      clearPlayHold(video);
+    const delay = playHoldMs(video);
+    const shouldHold =
+      delay > 0 && (loopHold || (isAtStart(video) && !holdDone.has(video)));
+
+    if (shouldHold) {
+      holding.add(video);
       try {
         video.pause();
       } catch (_) {}
+      try {
+        if (video.currentTime > 0.05) video.currentTime = 0;
+      } catch (_) {}
+      setPlaying(video, false);
       playHoldTimers.set(video, window.setTimeout(start, delay));
       return;
     }
@@ -549,36 +580,54 @@
     video.loop = hold ? false : true;
     video.muted = true;
     video.defaultMuted = true;
-    video.autoplay = !hold;
     video.playsInline = true;
     video.controls = false;
     video.disablePictureInPicture = true;
     video.setAttribute("muted", "");
-    if (hold) video.removeAttribute("autoplay");
-    else video.setAttribute("autoplay", "");
     video.setAttribute("playsinline", "");
     video.setAttribute("webkit-playsinline", "");
     video.setAttribute("disablepictureinpicture", "");
     video.removeAttribute("controls");
     video.preload = "auto";
+    // Reduce Motion: iOS treats autoplay muted videos as background
+    // motion and never paints a frame. JS starts them after a gesture.
+    if (reducedMotion || hold) {
+      video.autoplay = false;
+      video.removeAttribute("autoplay");
+    } else {
+      video.autoplay = true;
+      video.setAttribute("autoplay", "");
+    }
 
+    video.addEventListener("playing", () => setPlaying(video, true));
     video.addEventListener("ended", () => {
+      setPlaying(video, false);
+      holdDone.delete(video);
       try {
         video.currentTime = 0;
       } catch (_) {}
-      ensurePlay(video, hold > 0);
+      ensurePlay(video, true);
     });
 
-    // iOS often pauses muted inline videos; nudge them back if still on screen
     video.addEventListener("pause", () => {
-      if (playHoldTimers.has(video)) return;
+      if (holding.has(video)) return;
+      setPlaying(video, false);
       if (videosOnScreen.has(video) && !document.hidden) {
         requestAnimationFrame(() => ensurePlay(video));
       }
     });
 
-    video.addEventListener("loadeddata", () => ensurePlay(video, hold > 0));
-    video.addEventListener("canplay", () => ensurePlay(video, hold > 0));
+    video.addEventListener("loadeddata", () => ensurePlay(video));
+    video.addEventListener("canplay", () => ensurePlay(video));
+
+    const frame = video.closest(".media");
+    if (frame) {
+      frame.addEventListener("click", () => {
+        videosOnScreen.add(video);
+        holdDone.add(video);
+        ensurePlay(video);
+      });
+    }
   };
 
   videos.forEach(armVideo);
@@ -590,10 +639,12 @@
           const video = entry.target;
           if (entry.isIntersecting && entry.intersectionRatio > 0) {
             videosOnScreen.add(video);
-            ensurePlay(video, playHoldMs(video) > 0);
+            ensurePlay(video);
           } else {
             videosOnScreen.delete(video);
             clearPlayHold(video);
+            holdDone.delete(video);
+            setPlaying(video, false);
             video.pause();
           }
         });

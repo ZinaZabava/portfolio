@@ -750,7 +750,7 @@ html.js.is-simple-scroll .media:not(:has(> video)) {
   aspect-ratio: 3 / 2;
 }
 
-.project[data-project="haiide"] .media.full:has(> img) {
+.project[data-project="haiide"] .media.full:has(> img[src*="haiide%202"]) {
   aspect-ratio: 1568 / 1003;
 }
 

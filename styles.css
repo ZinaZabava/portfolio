@@ -1091,37 +1091,6 @@ html.js:not(.is-simple-scroll) .media video.is-ready {
     height: auto;
   }
 
-  /* Beat per-project landscape ratios so the figure can grow with the 3:4 img. */
-  html.js.is-simple-scroll .project[data-project="haiide"] .media.full:has(> img[src*="haiide%202"]),
-  .project[data-project="haiide"] .media.full:has(> img[src*="haiide%202"]),
-  html.js.is-simple-scroll .project[data-project="bio-based"] .media.full:has(img[src*="3.2"]),
-  .project[data-project="bio-based"] .media.full:has(img[src*="3.2"]),
-  html.js.is-simple-scroll .project[data-project="bio-based"] .media.full:has(img[src*="4.webp"]),
-  .project[data-project="bio-based"] .media.full:has(img[src*="4.webp"]) {
-    aspect-ratio: auto;
-    height: auto;
-  }
-
-  /* Crop landscape stills to 540×720 (3:4) in-flow. Absolute images collapse
-     to 0 height on iOS when they are the figure's only child. */
-  html.js.is-simple-scroll .media.full:not(:has(> video)) img,
-  .media.full:not(:has(> video)) img {
-    position: static !important;
-    inset: auto;
-    width: 100% !important;
-    height: auto !important;
-    aspect-ratio: 3 / 4;
-    object-fit: cover;
-    object-position: center;
-  }
-
-  html.js.is-simple-scroll .project[data-project="urban-vibes"] .media.full img,
-  .project[data-project="urban-vibes"] .media.full img,
-  html.js.is-simple-scroll .project[data-project="spark"] .media.full:last-child img,
-  .project[data-project="spark"] .media.full:last-child img {
-    aspect-ratio: auto;
-  }
-
   /* Video frames: poster in-flow gives the box height; video fills on top. */
   html.js.is-simple-scroll .media:has(> video),
   .media:has(> video) {
@@ -1211,15 +1180,6 @@ html.js:not(.is-simple-scroll) .media video.is-ready {
 @media (max-width: 560px) {
   :root {
     --stripe-height: 8vh;
-  }
-
-  .project__media {
-    grid-template-columns: 1fr;
-  }
-
-  .media.half,
-  .media.full {
-    grid-column: 1 / -1;
   }
 
   .stripe {

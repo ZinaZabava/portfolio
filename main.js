@@ -145,13 +145,6 @@
 
   syncScrollMode();
 
-  const labels = Object.fromEntries(
-    projects.map((section) => [
-      section.dataset.project,
-      section.dataset.label || section.dataset.project,
-    ])
-  );
-
   const state = projects.map((section) => {
     const pin = section.querySelector(".project__pin");
     const track = section.querySelector(".project__track");
@@ -284,12 +277,6 @@
       }
     }
 
-    if (stripeProject) {
-      const label =
-        stripeProject.querySelector(".stripe__current-label") || stripeProject;
-      label.textContent =
-        activeId === "about" ? "About" : activeId ? labels[activeId] || "" : "";
-    }
     document.querySelectorAll("#stripe-projects a[data-project]").forEach((link) => {
       link.classList.toggle("is-current", link.dataset.project === activeId);
     });

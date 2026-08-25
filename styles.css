@@ -659,7 +659,11 @@ html.js:not(.is-simple-scroll) .project__pin {
   aspect-ratio: 4 / 5;
 }
 
-.project[data-project="bio-based"] .media.full:not(.media--stack):not([hidden]) {
+.project[data-project="bio-based"] .media.full:has(img[src*="3.2"]) {
+  aspect-ratio: 2160 / 1350;
+}
+
+.project[data-project="bio-based"] .media.full:has(img[src*="4.webp"]) {
   aspect-ratio: 3240 / 1800;
 }
 
@@ -717,7 +721,7 @@ html.js:not(.is-simple-scroll) .media video {
   transition: opacity 0.35s ease;
 }
 
-html.js:not(.is-simple-scroll) .media img.is-ready:not(.stack-overlay),
+html.js:not(.is-simple-scroll) .media img.is-ready,
 html.js:not(.is-simple-scroll) .media video.is-ready {
   opacity: 1;
 }
@@ -725,17 +729,6 @@ html.js:not(.is-simple-scroll) .media video.is-ready {
 .media--video-end {
   /* last media: natural size; scroll padding is handled in JS */
   min-height: 0;
-}
-
-/* bio-based stacked opacity pair — assets are 2160×1350 */
-.media.full.media--stack {
-  aspect-ratio: 2160 / 1350;
-  background: #daf7a6;
-}
-
-.media--stack .stack-overlay {
-  opacity: 0;
-  will-change: opacity;
 }
 
 /* ——— Mid widths: only project column adapts ——— */

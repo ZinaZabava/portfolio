@@ -150,18 +150,12 @@
   const state = projects.map((section) => {
     const pin = section.querySelector(".project__pin");
     const track = section.querySelector(".project__track");
-    const stack = section.querySelector("[data-opacity-scroll]");
-    const overlay = stack ? stack.querySelector(".stack-overlay") : null;
     return {
       section,
       pin,
       track,
-      stack,
-      overlay,
       id: section.dataset.project,
       scrollRange: 0,
-      stackTop: 0,
-      stackHeight: 0,
     };
   });
 
@@ -191,21 +185,12 @@
         // Mobile / reduced-motion: natural document height, all media visible
         item.section.style.height = "";
         item.scrollRange = 0;
-        if (item.stack) {
-          item.stackTop = item.stack.offsetTop;
-          item.stackHeight = item.stack.offsetHeight;
-        }
         return;
       }
 
       const contentHeight = item.track.scrollHeight;
       item.scrollRange = Math.max(0, contentHeight - vh);
       item.section.style.height = `${vh + item.scrollRange + 1}px`;
-
-      if (item.stack) {
-        item.stackTop = item.stack.offsetTop;
-        item.stackHeight = item.stack.offsetHeight;
-      }
     });
 
     update();
@@ -248,29 +233,6 @@
         item.track.style.transform = `translate3d(0, ${-scrolled}px, 0)`;
       } else {
         item.track.style.transform = "";
-      }
-
-      // Bio-based 3.2 → 3.1 opacity fade
-      if (item.overlay && item.stack) {
-        if (pinned) {
-          const stackHeight = Math.max(
-            1,
-            item.stackHeight || item.stack.offsetHeight
-          );
-          const start = item.stackTop - vh * 0.08;
-          const end = item.stackTop + Math.min(vh * 0.28, stackHeight * 0.22);
-          const t = end <= start ? 1 : (scrolled - start) / (end - start);
-          item.overlay.style.opacity = String(Math.min(1, Math.max(0, t)));
-        } else {
-          // Mobile (simple scroll): fade as the stack moves up through the viewport
-          const stackRect = item.stack.getBoundingClientRect();
-          const viewBottom = window.innerHeight;
-          const viewTop = offset;
-          const start = viewBottom - 40;
-          const end = viewTop + Math.min(160, window.innerHeight * 0.22);
-          const t = (start - stackRect.top) / Math.max(1, start - end);
-          item.overlay.style.opacity = String(Math.min(1, Math.max(0, t)));
-        }
       }
 
       if (rect.top <= focusY) {

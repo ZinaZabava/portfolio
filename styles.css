@@ -433,10 +433,10 @@ button {
   align-items: flex-end;
   gap: 0.38em;
   margin: 0;
-  padding: 10px 20px 24px 40px;
+  padding: 0 0 20px 0;
   list-style: none;
   z-index: 1;
-  background: rgba(0, 0, 0, 0.82);
+  background: transparent;
   pointer-events: auto;
 }
 
@@ -452,6 +452,10 @@ button {
   white-space: nowrap;
   opacity: 0.5;
   transition: opacity 160ms ease;
+  text-shadow:
+    0 0 8px #000000,
+    0 0 16px rgba(0, 0, 0, 0.9),
+    0 1px 3px rgba(0, 0, 0, 0.85);
 }
 
 .stripe__list-name {
@@ -964,6 +968,7 @@ html.js:not(.is-simple-scroll) .media video.is-ready {
   .stripe__nav.is-open .stripe__list a {
     font-size: calc(28px * 2 / 3);
     line-height: 1.2;
+    text-shadow: none;
   }
 
   html.is-nav-open {

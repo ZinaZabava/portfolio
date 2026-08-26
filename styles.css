@@ -600,7 +600,7 @@ button {
   margin-left: 0.75em;
 }
 
-.site-footer__up {
+.site-footer a.site-footer__up {
   position: absolute;
   right: 36px;
   bottom: 36px;
@@ -609,7 +609,7 @@ button {
   justify-content: center;
   margin: 0;
   padding: 8px;
-  color: #fff;
+  color: var(--accent);
 }
 
 .site-footer__up svg {

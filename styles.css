@@ -816,7 +816,7 @@ html.js.is-simple-scroll .media:not(:has(> video)) {
 }
 
 .project[data-project="haiide"] .media.full:has(> img[src*="haiide%209"]) {
-  aspect-ratio: 3240 / 2689;
+  aspect-ratio: 4320 / 2700;
 }
 
 .project[data-project="bio-based"] .media.half {

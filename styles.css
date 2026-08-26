@@ -819,6 +819,10 @@ html.js.is-simple-scroll .media:not(:has(> video)) {
   aspect-ratio: 4320 / 2700;
 }
 
+.project[data-project="haiide"] .media.full:has(> video[src*="process"]) {
+  aspect-ratio: 3106 / 2432;
+}
+
 .project[data-project="bio-based"] .media.half {
   aspect-ratio: 4 / 5;
 }

@@ -10,10 +10,11 @@
 }
 
 @font-face {
-  font-family: "General Sans";
+  font-family: "Rene";
   src:
-    url("assets/fonts/GeneralSans-Regular.woff2") format("woff2"),
-    url("assets/fonts/GeneralSans-Regular.otf") format("opentype");
+    url("assets/fonts/Rene-Regular.woff2") format("woff2"),
+    url("assets/fonts/Rene-Regular.woff") format("woff"),
+    url("assets/fonts/FATRene-Regular.otf") format("opentype");
   font-weight: 400;
   font-style: normal;
   font-display: block;
@@ -35,19 +36,17 @@
   --text-muted: rgba(255, 255, 255, 0.72);
   --accent: #d2f096;
   --about-bg: #000000;
-  --font-sans: "General Sans", system-ui, sans-serif;
-  --font-mono: var(--font-sans);
+  --font-mono: "forma-djr-mono", ui-monospace, monospace;
   --font-display: "PP Editorial New", Georgia, serif;
-  --font-index: var(--font-sans);
+  --font-index: "Rene", "PP Editorial New", Georgia, serif;
   /* Project copy stays Figma width on wide screens — does not shrink as viewport grows */
   --copy-width: 720px;
   --media-width: 1000px;
   --intro-pad-y: 118px;
   --intro-pad-x: 180px;
   --intro-gap: 59px;
-  --mono-weight: 400;
-  --copy-size: 22px;
-  --mono-size: var(--copy-size);
+  --mono-weight: 400; /* Forma DJR Mono Regular */
+  --mono-size: 18px; /* match project tags (Commercial, Academic, …) */
 }
 
 *,
@@ -399,7 +398,7 @@ button {
   font-weight: 400;
   font-size: 28px;
   line-height: 1;
-  letter-spacing: 0;
+  letter-spacing: -0.12em;
   color: inherit;
   text-align: right;
   pointer-events: auto;
@@ -447,7 +446,7 @@ button {
   font-weight: 400;
   font-size: 28px;
   line-height: 1;
-  letter-spacing: 0;
+  letter-spacing: -0.12em;
   color: var(--accent);
   text-decoration: none;
   white-space: nowrap;
@@ -526,9 +525,9 @@ button {
   width: 100%;
   font-family: var(--font-index);
   font-weight: 400;
-  font-size: var(--copy-size);
+  font-size: 22px;
   line-height: 1.5;
-  letter-spacing: 0;
+  letter-spacing: -0.12em;
   color: var(--text-muted);
   text-align: justify;
 }
@@ -575,9 +574,9 @@ button {
 .about-table td {
   font-family: var(--font-index);
   font-weight: 400;
-  font-size: var(--copy-size);
+  font-size: 22px;
   line-height: var(--index-leading);
-  letter-spacing: 0;
+  letter-spacing: -0.12em;
   color: var(--text-muted);
 }
 
@@ -743,9 +742,9 @@ html.js.is-simple-scroll .media:not(:has(> video)) {
   max-width: 100%;
   font-family: var(--font-index);
   font-weight: 400;
-  font-size: var(--copy-size);
+  font-size: 22px;
   line-height: 1.5;
-  letter-spacing: 0;
+  letter-spacing: -0.12em;
   color: var(--text-muted);
   text-align: justify;
 }
@@ -921,11 +920,15 @@ html.js:not(.is-simple-scroll) .media video.is-ready {
   :root {
     --intro-pad-y: 80px;
     --intro-gap: 40px;
-    --copy-size: 18px;
   }
 
   .project__title {
     font-size: 26px;
+  }
+
+  .project__copy {
+    font-size: 18px;
+    line-height: 1.5;
   }
 }
 
@@ -940,7 +943,6 @@ html.js:not(.is-simple-scroll) .media video.is-ready {
     --intro-gap: 32px;
     --copy-width: 100%;
     --index-size: 16px;
-    --copy-size: 16px;
   }
 
   .stripe {
@@ -1170,11 +1172,17 @@ html.js:not(.is-simple-scroll) .media video.is-ready {
   }
 
   .site-footer__copy {
+    font-size: 16px;
     text-align: left;
   }
 
   .about-table th {
     width: 34%;
+    font-size: 14px;
+  }
+
+  .about-table td {
+    font-size: 16px;
   }
 
   .site-footer__up {

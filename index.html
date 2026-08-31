@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Zinaida Rykova — Portfolio</title>
+  <meta name="theme-color" content="#ffffff" />
   <script>
     /* Resolve CSS/JS/media correctly on subdirectory hosts; mark scroll mode early. */
     (function () {
@@ -29,8 +30,7 @@
       try {
         if (
           window.matchMedia("(max-width: 900px)").matches ||
-          window.matchMedia("(prefers-reduced-motion: reduce)").matches ||
-          window.matchMedia("(hover: none) and (pointer: coarse)").matches
+          window.matchMedia("(prefers-reduced-motion: reduce)").matches
         ) {
           html.className += " is-simple-scroll";
         }
@@ -49,16 +49,9 @@
     type="font/woff2"
     crossorigin
   />
-  <link
-    rel="preload"
-    href="assets/fonts/Rene-Regular.woff2"
-    as="font"
-    type="font/woff2"
-    crossorigin
-  />
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
   <link rel="stylesheet" href="https://use.typekit.net/cte3nym.css" />
-  <link rel="stylesheet" href="styles.css?v=250826ac" />
+  <link rel="stylesheet" href="styles.css?v=250831cvu" />
   <script>
     /* Reveal once webfonts are ready (or after a short timeout). */
     (function () {
@@ -90,6 +83,7 @@
         width="1024"
         height="1024"
         alt=""
+        hidden
       />
     </div>
     <div class="loader__col">
@@ -118,7 +112,7 @@
             type="button"
             class="stripe__menu"
             id="stripe-menu"
-            aria-label="Projects"
+            aria-label="Open menu"
             aria-expanded="false"
             aria-controls="stripe-projects"
           >
@@ -126,13 +120,6 @@
             <span class="stripe__menu-bar"></span>
             <span class="stripe__menu-bar"></span>
           </button>
-          <button
-            type="button"
-            class="stripe__current-text"
-            id="stripe-project"
-            aria-expanded="false"
-            aria-controls="stripe-projects"
-          ><span class="stripe__current-label">HAIIDE</span></button>
           <ul class="stripe__list" id="stripe-projects"></ul>
         </nav>
       </div>
@@ -143,16 +130,15 @@
         class="project"
         id="project-haiide"
         data-project="haiide"
-        data-label="HAIIDE"
-        style="--project-bg: #000000; --z: 1"
+        data-label="Haiide"
+        style="--project-bg: #ffffff; --z: 1"
       >
         <div class="project__pin">
-          <div class="project__track">
-            <header class="project__intro">
-              <h2 class="project__title">HAIIDE</h2>
+          <header class="project__intro">
+              <h2 class="project__title">Haiide</h2>
               <div class="project__copy">
                 <p>
-                  HAIIDE is a kitchen brand that brings clarity, calmness, and harmony into everyday life by optimising space and embracing simplicity. The brand's values are reflected in its visual identity through minimalist design and the metaphor of a calming water surface in motion, expressed through both the pattern and the colour palette.
+                  Haiide is a kitchen brand that brings clarity, calmness, and harmony into everyday life by optimising space and embracing simplicity. The brand's values are reflected in its visual identity through minimalist design and the metaphor of a calming water surface in motion, expressed through both the pattern and the colour palette.
                 </p>
               </div>
               <div class="project__tags">
@@ -160,6 +146,7 @@
                 <span>Self-initiated</span>
               </div>
             </header>
+          <div class="project__track">
             <div class="project__media">
               <figure class="media full" hidden>
                 <img class="media__poster" width="2160" height="1440" src="assets/media/haiide%201.poster.webp" alt="" />
@@ -173,7 +160,7 @@
                 ></video>
               </figure>
               <figure class="media full">
-                <img width="1568" height="1003" src="assets/media/haiide%202.webp" alt="HAIIDE website on a kitchen counter" loading="eager" />
+                <img width="1568" height="1003" src="assets/media/haiide%202.webp" alt="Haiide website on a kitchen counter" loading="eager" />
               </figure>
               <figure class="media full" hidden>
                 <img class="media__poster" width="1920" height="1080" src="assets/media/haiide%203.poster.webp" alt="" />
@@ -187,19 +174,19 @@
                 ></video>
               </figure>
               <figure class="media half" hidden>
-                <img width="1080" height="1440" src="assets/media/haiide%204.webp" alt="HAIIDE storefront poster" loading="eager" />
+                <img width="1080" height="1440" src="assets/media/haiide%204.webp" alt="Haiide storefront poster" loading="eager" />
               </figure>
               <figure class="media half">
-                <img width="1080" height="1441" src="assets/media/haiide%205.webp" alt="HAIIDE packaging" loading="eager" />
+                <img width="1080" height="1441" src="assets/media/haiide%205.webp" alt="Haiide packaging" loading="eager" />
               </figure>
               <figure class="media half">
-                <img width="1700" height="2267" src="assets/media/haiide%206.webp" alt="HAIIDE social media grid" loading="eager" />
+                <img width="1700" height="2267" src="assets/media/haiide%206.webp" alt="Haiide social media grid" loading="eager" />
               </figure>
               <figure class="media half" hidden>
-                <img width="1080" height="1440" src="assets/media/haiide%207.webp" alt="HAIIDE opening invitation" loading="eager" />
+                <img width="1080" height="1440" src="assets/media/haiide%207.webp" alt="Haiide opening invitation" loading="eager" />
               </figure>
               <figure class="media full">
-                <img width="4320" height="2700" src="assets/media/haiide%209.webp?v=250826h7" alt="HAIIDE social media tiles" loading="eager" />
+                <img width="4320" height="2700" src="assets/media/haiide%209.webp?v=250826h7" alt="Haiide social media tiles" loading="eager" />
               </figure>
               <figure class="media full" hidden>
                 <video webkit-playsinline width="1920" height="1080"
@@ -232,11 +219,10 @@
         id="project-whispers-in-my-ear"
         data-project="whispers-in-my-ear"
         data-label="Whispers in My Ear"
-        style="--project-bg: #000000; --z: 2"
+        style="--project-bg: #ffffff; --z: 2"
       >
         <div class="project__pin">
-          <div class="project__track">
-            <header class="project__intro">
+          <header class="project__intro">
               <h2 class="project__title">Whispers in My Ear</h2>
               <div class="project__copy">
                 <p>
@@ -248,6 +234,7 @@
                 <span>Commercial</span>
               </div>
             </header>
+          <div class="project__track">
             <div class="project__media">
               <figure class="media half">
                 <img width="1080" height="1441" src="assets/media/whispers%20in%20my%20ear%201.webp" alt="Whispers in My Ear page 1" loading="eager" />
@@ -268,15 +255,14 @@
         id="project-special-style"
         data-project="special-style"
         data-label="Special-Style"
-        style="--project-bg: #000000; --z: 3"
+        style="--project-bg: #ffffff; --z: 3"
       >
         <div class="project__pin">
-          <div class="project__track">
-            <header class="project__intro">
+          <header class="project__intro">
               <h2 class="project__title">Special-Style</h2>
               <div class="project__copy">
                 <p>
-                  Special-Style is an award-winning interior design studio with 20&nbsp;years of experience. The studio works on every stage of a project: from the first moodboards and technical drawings to 3D visuals, furniture selection and construction supervision. The studio's visual identity comes from the world of technical drawings: the logo references a symbol typically used to mark walls on construction plans, while the pattern resembles a schematic grid. Layouts and typography were inspired by influential interior magazines and were adapted to remain harmonious in both Latin and Cyrillic.
+                  Special-Style is an award-winning interior design studio with 20&nbsp;years of experience. The studio works on every stage of a project: from the first moodboards to construction supervision. The studio's visual identity comes from the world of technical drawings and inspired by influential interior magazines.
                 </p>
               </div>
               <div class="project__tags">
@@ -284,6 +270,7 @@
                 <span>Commercial</span>
               </div>
             </header>
+          <div class="project__track">
             <div class="project__media">
               <figure class="media half">
                 <img class="media__poster" width="540" height="720" src="assets/media/special-style%201.poster.webp" alt="" />
@@ -321,11 +308,10 @@
         id="project-un-bar-meneghino"
         data-project="un-bar-meneghino"
         data-label="(un) Bar Meneghino"
-        style="--project-bg: #000000; --z: 4"
+        style="--project-bg: #ffffff; --z: 4"
       >
         <div class="project__pin">
-          <div class="project__track">
-            <header class="project__intro">
+          <header class="project__intro">
               <h2 class="project__title">(un) Bar Meneghino</h2>
               <div class="project__copy">
                 <p>
@@ -337,6 +323,7 @@
                 <span>Self-initiated</span>
               </div>
             </header>
+          <div class="project__track">
             <div class="project__media">
               <figure class="media half">
                 <img width="1620" height="2160" src="assets/media/un%20bar%20meneghino%201.webp" alt="un Bar Meneghino 1" loading="eager" />
@@ -357,15 +344,14 @@
         id="project-bio-based"
         data-project="bio-based"
         data-label="Bio-based Alternative for Ceramics"
-        style="--project-bg: #000000; --z: 5"
+        style="--project-bg: #ffffff; --z: 5"
       >
         <div class="project__pin">
-          <div class="project__track">
-            <header class="project__intro">
+          <header class="project__intro">
               <h2 class="project__title">Bio-based Alternative for Ceramics</h2>
               <div class="project__copy">
                 <p>
-                  This book presents an experimental thesis investigating shell-based sustainable alternatives to ceramics. The design had to hold both the theoretical and the experimental halves of the research comfortably within one volume. The layout is built to meet the demands of academic text, accommodating footnotes, citations and referencing. The overall system stays deliberately neutral, carrying a faint scientific tone that reflects the material investigation at its core.
+                  This book presents an experimental thesis investigating shell-based sustainable alternatives to ceramics. The design had to hold both the theoretical and the experimental halves of the research comfortably within one volume. The layout is built to meet the demands of academic text, accommodating footnotes, citations and referencing.
                 </p>
               </div>
               <div class="project__tags">
@@ -373,6 +359,7 @@
                 <span>Academic</span>
               </div>
             </header>
+          <div class="project__track">
             <div class="project__media">
               <figure class="media half">
                 <img width="1080" height="1350" src="assets/media/bio-based%201.webp" alt="Bio-based cover 1" loading="eager" />
@@ -407,11 +394,10 @@
         id="project-urban-vibes"
         data-project="urban-vibes"
         data-label="Urban Vibes"
-        style="--project-bg: #000000; --z: 6"
+        style="--project-bg: #ffffff; --z: 6"
       >
         <div class="project__pin">
-          <div class="project__track">
-            <header class="project__intro">
+          <header class="project__intro">
               <h2 class="project__title">Urban Vibes</h2>
               <div class="project__copy">
                 <p>
@@ -423,6 +409,7 @@
                 <span>Commercial</span>
               </div>
             </header>
+          <div class="project__track">
             <div class="project__media">
               <figure class="media full">
                 <img width="3240" height="4080" src="assets/media/urban%20vibes%201.webp" alt="Urban Vibes social media visuals" loading="eager" />
@@ -437,11 +424,10 @@
         id="project-spark"
         data-project="spark"
         data-label="Spark"
-        style="--project-bg: #000000; --z: 7"
+        style="--project-bg: #ffffff; --z: 7"
       >
         <div class="project__pin">
-          <div class="project__track">
-            <header class="project__intro">
+          <header class="project__intro">
               <h2 class="project__title">Spark</h2>
               <div class="project__copy">
                 <p>
@@ -453,6 +439,7 @@
                 <span>Academic</span>
               </div>
             </header>
+          <div class="project__track">
             <div class="project__media">
               <figure class="media full">
                 <img width="2160" height="1440" src="assets/media/spark%201.webp" alt="Spark 1" loading="eager" />
@@ -484,11 +471,10 @@
         id="project-hosta"
         data-project="hosta"
         data-label="Hosta"
-        style="--project-bg: #000000; --z: 8"
+        style="--project-bg: #ffffff; --z: 8"
       >
         <div class="project__pin">
-          <div class="project__track">
-            <header class="project__intro">
+          <header class="project__intro">
               <h2 class="project__title">Hosta</h2>
               <div class="project__copy">
                 <p>
@@ -500,6 +486,7 @@
                 <span>Academic</span>
               </div>
             </header>
+          <div class="project__track">
             <div class="project__media">
               <figure class="media half">
                 <img class="media__poster" width="540" height="720" src="assets/media/hosta%201.poster.webp" alt="" />
@@ -584,12 +571,12 @@
         </table>
       </div>
       <a href="#top" class="site-footer__up" id="footer-top" aria-label="Back to top">
-        <svg viewBox="0 0 24 24" width="28" height="28" aria-hidden="true" focusable="false">
+        <svg viewBox="0 0 26 26" width="26" height="26" aria-hidden="true" focusable="false">
           <path
-            d="M12 4.5v15M5.5 11 12 4.5 18.5 11"
+            d="M13 1.25v23.5M1.25 10.5 13 1.25 24.75 10.5"
             fill="none"
             stroke="currentColor"
-            stroke-width="1.25"
+            stroke-width="2"
             stroke-linecap="square"
             stroke-linejoin="miter"
           />
@@ -598,6 +585,6 @@
     </footer>
   </div>
 
-  <script src="main.js?v=250826r"></script>
+  <script src="main.js?v=250829end"></script>
 </body>
 </html>

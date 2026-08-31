@@ -15,9 +15,8 @@
     "Graphic designer",
     "Visual Identity",
     "Book Design",
-    "Printed Matter",
     "Social Media",
-    "Simple Animations",
+    "Motion",
     "Exhibition Materials",
   ];
   const HOLD = 420; // time each phrase stays put

@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Zinaida Rykova — Portfolio</title>
+  <meta name="theme-color" content="#ffffff" />
+  <script>
+    /* Resolve CSS/JS/media correctly on subdirectory hosts; mark scroll mode early. */
+    (function () {
+      var path = location.pathname;
+      var dir = /\/$/.test(path) ? path : path.replace(/\/[^/]*$/, "/");
+      if (/\/portfolio$/i.test(path)) dir = path + "/";
+      if (!dir) dir = "/";
+      document.write('<base href="' + dir + '">');
+      var html = document.documentElement;
+      html.className += (html.className ? " " : "") + "js is-loading";
+      /* Safety net: if the loader script never runs, don't trap the page */
+      setTimeout(function () {
+        html.classList.remove("is-loading");
+        window.dispatchEvent(new Event("resize"));
+      }, 18000);
+      try {
+        if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+        if (location.hash) {
+          history.replaceState(null, "", location.pathname + location.search);
+        }
+        window.scrollTo(0, 0);
+      } catch (e) {}
+      try {
+        if (
+          window.matchMedia("(max-width: 900px)").matches ||
+          window.matchMedia("(prefers-reduced-motion: reduce)").matches
+        ) {
+          html.className += " is-simple-scroll";
+        }
+        if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+          html.className += " is-reduced-motion";
+        }
+      } catch (e) {}
+    })();
+  </script>
+  <link rel="preconnect" href="https://use.typekit.net" />
+  <link rel="preconnect" href="https://p.typekit.net" crossorigin />
+  <link
+    rel="preload"
+    href="assets/fonts/PPEditorialNew-Light.woff2"
+    as="font"
+    type="font/woff2"
+    crossorigin
+  />
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="https://use.typekit.net/cte3nym.css" />
+  <link rel="stylesheet" href="styles.css?v=250831abt5" />
+  <script>
+    /* Reveal once webfonts are ready (or after a short timeout). */
+    (function () {
+      var done = false;
+      function ready() {
+        if (done) return;
+        done = true;
+        document.documentElement.classList.add("fonts-loaded");
+      }
+      if (document.fonts && document.fonts.ready) {
+        document.fonts.ready.then(ready);
+      } else {
+        ready();
+      }
+      setTimeout(ready, 1200);
+    })();
+  </script>
+</head>
+<body>
+  <div class="loader" id="loader" aria-hidden="true">
+    <div class="loader__col">
+      <p class="loader__label">Zinaida Rykova</p>
+    </div>
+    <div class="loader__col loader__col--mark">
+      <img
+        class="loader__mark"
+        id="loader-mark"
+        src="assets/media/ZR_neon_on_black_square.jpg"
+        width="1024"
+        height="1024"
+        alt=""
+        hidden
+      />
+    </div>
+    <div class="loader__col">
+      <p class="loader__role" id="loader-role">
+        <span class="loader__role-line is-in">Graphic designer</span>
+      </p>
+    </div>
+  </div>
+
+  <div class="page-glow" aria-hidden="true">
+    <img
+      class="page-glow__shape"
+      src="assets/glow-solid.svg?v=240826o"
+      alt=""
+      width="1440"
+      height="400"
+    />
+  </div>
+
+  <div class="page" id="top">
+    <header class="stripe" id="stripe">
+      <div class="stripe__row">
+        <a href="#about" class="stripe__name" id="stripe-about">Zinaida Rykova</a>
+        <nav class="stripe__nav" id="stripe-nav" aria-label="Projects">
+          <button
+            type="button"
+            class="stripe__menu"
+            id="stripe-menu"
+            aria-label="Open menu"
+            aria-expanded="false"
+            aria-controls="stripe-projects"
+          >
+            <span class="stripe__menu-bar"></span>
+            <span class="stripe__menu-bar"></span>
+            <span class="stripe__menu-bar"></span>
+          </button>
+          <ul class="stripe__list" id="stripe-projects"></ul>
+        </nav>
+      </div>
+    </header>
+
+    <section class="site-footer" id="about">
+      <div class="site-footer__inner">
+        <h2 class="site-footer__title">About</h2>
+        <div class="site-footer__copy">
+          <p>
+            I am a graphic designer based in Milan, working across visual identity, book design, exhibition materials, and social media communication. With a background in Cultural Studies, Communication Design, and an MA in Product Design from NABA, I am particularly interested in projects connected to culture and creative industries.
+          </p>
+          <p>
+            My experience includes both agency and independent work. I have worked for clients from the field of retail, conferences, and cultural institutions.
+          </p>
+        </div>
+        <div class="site-footer__copy site-footer__copy--next">
+          <p>
+            I work confidently with Adobe InDesign, Illustrator, Photoshop, After Effects, and Premiere, as well as Figma, Rhino 3D, and KeyShot. I also use AI tools including Midjourney, Claude, Cursor and ChatGPT as part of my creative workflow and visual development process.
+          </p>
+          <p>
+            My experience is reflected in my CV, and I would be happy to share additional projects or answer any questions via email or WhatsApp.
+          </p>
+        </div>
+        <table class="about-table">
+          <tbody>
+            <tr>
+              <th scope="row">CV</th>
+              <td>
+                <a
+                  class="site-footer__file"
+                  href="assets/CV-IT.pdf?v=250826p"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >IT</a>
+                <a
+                  class="site-footer__file"
+                  href="assets/CV-ENG.pdf?v=250826p"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >ENG</a>
+              </td>
+            </tr>
+            <tr>
+              <th scope="row">Email</th>
+              <td>
+                <a href="mailto:3inarykova@gmail.com">3inarykova@gmail.com</a>
+              </td>
+            </tr>
+            <tr>
+              <th scope="row">WhatsApp</th>
+              <td>
+                <a href="https://wa.me/393922987619" target="_blank" rel="noopener noreferrer">+393922987619</a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <main class="projects-window" id="projects-window">
+      <section
+        class="project"
+        id="project-haiide"
+        data-project="haiide"
+        data-label="Haiide"
+        style="--project-bg: #ffffff; --z: 1"
+      >
+        <div class="project__pin">
+          <header class="project__intro">
+              <h2 class="project__title">Haiide</h2>
+              <div class="project__copy">
+                <p>
+                  Haiide is a kitchen brand that brings clarity, calmness, and harmony into everyday life by optimising space and embracing simplicity. The brand's values are reflected in its visual identity through minimalist design and the metaphor of a calming water surface in motion, expressed through both the pattern and the colour palette.
+                </p>
+              </div>
+              <div class="project__tags">
+                <span>Visual Identity</span>
+                <span>Self-initiated</span>
+              </div>
+            </header>
+          <div class="project__track">
+            <div class="project__media">
+              <figure class="media full" hidden>
+                <img class="media__poster" width="2160" height="1440" src="assets/media/haiide%201.poster.webp" alt="" />
+                <video webkit-playsinline width="2160" height="1440"
+                  src="assets/media/haiide%201.webm"
+                  poster="assets/media/haiide%201.poster.webp"
+                  muted
+                  loop
+                  playsinline
+                  preload="auto"
+                ></video>
+              </figure>
+              <figure class="media full">
+                <img width="1568" height="1003" src="assets/media/haiide%202.webp" alt="Haiide website on a kitchen counter" loading="eager" />
+              </figure>
+              <figure class="media full" hidden>
+                <img class="media__poster" width="1920" height="1080" src="assets/media/haiide%203.poster.webp" alt="" />
+                <video webkit-playsinline width="1920" height="1080"
+                  src="assets/media/haiide%203.webm"
+                  poster="assets/media/haiide%203.poster.webp"
+                  muted
+                  loop
+                  playsinline
+                  preload="auto"
+                ></video>
+              </figure>
+              <figure class="media half" hidden>
+                <img width="1080" height="1440" src="assets/media/haiide%204.webp" alt="Haiide storefront poster" loading="eager" />
+              </figure>
+              <figure class="media half">
+                <img width="1080" height="1441" src="assets/media/haiide%205.webp" alt="Haiide packaging" loading="eager" />
+              </figure>
+              <figure class="media half">
+                <img width="1700" height="2267" src="assets/media/haiide%206.webp" alt="Haiide social media grid" loading="eager" />
+              </figure>
+              <figure class="media half" hidden>
+                <img width="1080" height="1440" src="assets/media/haiide%207.webp" alt="Haiide opening invitation" loading="eager" />
+              </figure>
+              <figure class="media full">
+                <img width="4320" height="2700" src="assets/media/haiide%209.webp?v=250826h7" alt="Haiide social media tiles" loading="eager" />
+              </figure>
+              <figure class="media full" hidden>
+                <video webkit-playsinline width="1920" height="1080"
+                  src="assets/media/haiide%208.webm"
+                  poster="assets/media/haiide%208.poster.webp"
+                  muted
+                  loop
+                  playsinline
+                  preload="auto"
+                ></video>
+              </figure>
+              <figure class="media full">
+                <img class="media__poster" width="3106" height="2432" src="assets/media/haiide%20process.poster.webp?v=250827p5" alt="" />
+                <video webkit-playsinline width="3106" height="2432"
+                  src="assets/media/haiide%20process.webm?v=250827p5"
+                  poster="assets/media/haiide%20process.poster.webp?v=250827p5"
+                  muted
+                  loop
+                  playsinline
+                  preload="auto"
+                ></video>
+              </figure>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section
+        class="project"
+        id="project-whispers-in-my-ear"
+        data-project="whispers-in-my-ear"
+        data-label="Whispers in My Ear"
+        style="--project-bg: #ffffff; --z: 2"
+      >
+        <div class="project__pin">
+          <header class="project__intro">
+              <h2 class="project__title">Whispers in My Ear</h2>
+              <div class="project__copy">
+                <p>
+                  Whispers in My Ear is a group show organised by Osnova Gallery in Valencia, which commissioned the design of the printed materials for the exhibition. The goal was to follow the logic of the white cube gallery space and remain neutral, so the design would not compete for attention with the artists' works.
+                </p>
+              </div>
+              <div class="project__tags">
+                <span>Exhibition Materials</span>
+                <span>Commercial</span>
+              </div>
+            </header>
+          <div class="project__track">
+            <div class="project__media">
+              <figure class="media half">
+                <img width="1080" height="1441" src="assets/media/whispers%20in%20my%20ear%201.webp" alt="Whispers in My Ear page 1" loading="eager" />
+              </figure>
+              <figure class="media half">
+                <img width="1080" height="1441" src="assets/media/whispers%20in%20my%20ear%202.webp" alt="Whispers in My Ear page 2" loading="eager" />
+              </figure>
+              <figure class="media full">
+                <img width="2160" height="1441" src="assets/media/whispers%20in%20my%20ear%203.webp" alt="Whispers in My Ear spread" loading="eager" />
+              </figure>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section
+        class="project"
+        id="project-special-style"
+        data-project="special-style"
+        data-label="Special-Style"
+        style="--project-bg: #ffffff; --z: 3"
+      >
+        <div class="project__pin">
+          <header class="project__intro">
+              <h2 class="project__title">Special-Style</h2>
+              <div class="project__copy">
+                <p>
+                  Special-Style is an award-winning interior design studio with 20&nbsp;years of experience. The studio works on every stage of a project: from the first moodboards to construction supervision. The studio's visual identity comes from the world of technical drawings and inspired by influential interior magazines.
+                </p>
+              </div>
+              <div class="project__tags">
+                <span>Visual Identity</span>
+                <span>Commercial</span>
+              </div>
+            </header>
+          <div class="project__track">
+            <div class="project__media">
+              <figure class="media half">
+                <img class="media__poster" width="540" height="720" src="assets/media/special-style%201.poster.webp" alt="" />
+                <video webkit-playsinline width="540" height="720"
+                  src="assets/media/special-style%201.webm"
+                  poster="assets/media/special-style%201.poster.webp"
+                  muted
+                  loop
+                  playsinline
+                  preload="auto"
+                ></video>
+              </figure>
+              <figure class="media half">
+                <img width="1080" height="1440" src="assets/media/special-style%202.webp" alt="Special-Style stationery detail" loading="eager" />
+              </figure>
+              <figure class="media full">
+                <img width="2160" height="1440" src="assets/media/special-style%203.webp" alt="Special-Style book spread" loading="eager" />
+              </figure>
+              <figure class="media half">
+                <img width="1080" height="1440" src="assets/media/special-style%204.webp" alt="Special-Style detail 4" loading="eager" />
+              </figure>
+              <figure class="media half">
+                <img width="540" height="720" src="assets/media/special-style%205.webp" alt="Special-Style detail 5" loading="eager" />
+              </figure>
+              <figure class="media full">
+                <img width="1815" height="1210" src="assets/media/special-style%206.webp" alt="Special-Style detail 6" loading="eager" />
+              </figure>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section
+        class="project"
+        id="project-un-bar-meneghino"
+        data-project="un-bar-meneghino"
+        data-label="(un) Bar Meneghino"
+        style="--project-bg: #ffffff; --z: 4"
+      >
+        <div class="project__pin">
+          <header class="project__intro">
+              <h2 class="project__title">(un) Bar Meneghino</h2>
+              <div class="project__copy">
+                <p>
+                  Bar Meneghino is a self-initiated research project that explores a visual language shared by the bars across Milan. Through repeated fieldwork and photographic documentation, it collects the recurring fragments that together compose the recognisable identity of the Italian bar. The format of the zine resembles a menu, while the caption on the cover references the look of a bar's signboard.
+                </p>
+              </div>
+              <div class="project__tags">
+                <span>Zine</span>
+                <span>Self-initiated</span>
+              </div>
+            </header>
+          <div class="project__track">
+            <div class="project__media">
+              <figure class="media half">
+                <img width="1620" height="2160" src="assets/media/un%20bar%20meneghino%201.webp" alt="un Bar Meneghino 1" loading="eager" />
+              </figure>
+              <figure class="media half">
+                <img width="540" height="720" src="assets/media/un%20bar%20meneghino%202.gif" alt="un Bar Meneghino 2" loading="eager" />
+              </figure>
+              <figure class="media full">
+                <img width="3240" height="2160" src="assets/media/un%20bar%20meneghino%203.webp" alt="un Bar Meneghino 3" loading="eager" />
+              </figure>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section
+        class="project"
+        id="project-bio-based"
+        data-project="bio-based"
+        data-label="Bio-based Alternative for Ceramics"
+        style="--project-bg: #ffffff; --z: 5"
+      >
+        <div class="project__pin">
+          <header class="project__intro">
+              <h2 class="project__title">Bio-based Alternative for Ceramics</h2>
+              <div class="project__copy">
+                <p>
+                  This book presents an experimental thesis investigating shell-based sustainable alternatives to ceramics. The design had to hold both the theoretical and the experimental halves of the research comfortably within one volume. The layout is built to meet the demands of academic text, accommodating footnotes, citations and referencing.
+                </p>
+              </div>
+              <div class="project__tags">
+                <span>Book Design</span>
+                <span>Academic</span>
+              </div>
+            </header>
+          <div class="project__track">
+            <div class="project__media">
+              <figure class="media half">
+                <img width="1080" height="1350" src="assets/media/bio-based%201.webp" alt="Bio-based cover 1" loading="eager" />
+              </figure>
+              <figure class="media half">
+                <img width="1080" height="1350" src="assets/media/bio-based%202.webp" alt="Bio-based cover 2" loading="eager" />
+              </figure>
+              <figure class="media full">
+                <img width="2160" height="1350" src="assets/media/bio-based%203.2.webp" alt="Bio-based layout wireframe" loading="eager" />
+              </figure>
+              <figure class="media full">
+                <img width="3240" height="1800" src="assets/media/bio-based%204.webp" alt="Bio-based process" loading="eager" />
+              </figure>
+              <figure class="media full" hidden>
+                <video webkit-playsinline width="1920" height="1080"
+                  class="video-loop"
+                  src="assets/media/bio-based%205.webm"
+                  muted
+                  loop
+                  playsinline
+                  autoplay
+                  preload="auto"
+                ></video>
+              </figure>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section
+        class="project"
+        id="project-urban-vibes"
+        data-project="urban-vibes"
+        data-label="Urban Vibes"
+        style="--project-bg: #ffffff; --z: 6"
+      >
+        <div class="project__pin">
+          <header class="project__intro">
+              <h2 class="project__title">Urban Vibes</h2>
+              <div class="project__copy">
+                <p>
+                  While working at communication agency MONSTARS, I created a series of social media visuals for Urban Vibes (a sneaker store rooted in street style and rap culture) following the brand guidelines and the specific visual styles of their advertising campaigns.
+                </p>
+              </div>
+              <div class="project__tags">
+                <span>Social Media Visuals</span>
+                <span>Commercial</span>
+              </div>
+            </header>
+          <div class="project__track">
+            <div class="project__media">
+              <figure class="media full">
+                <img width="3240" height="4080" src="assets/media/urban%20vibes%201.webp" alt="Urban Vibes social media visuals" loading="eager" />
+              </figure>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section
+        class="project"
+        id="project-spark"
+        data-project="spark"
+        data-label="Spark"
+        style="--project-bg: #ffffff; --z: 7"
+      >
+        <div class="project__pin">
+          <header class="project__intro">
+              <h2 class="project__title">Spark</h2>
+              <div class="project__copy">
+                <p>
+                  Spark is a non-alcoholic carbonated drink created to give people a place at the bar without alcohol: an invitation to explore unexpected flavour combinations while sharing the same social ritual. To belong in that setting, Spark shifts away from the vivid visual language typical of lemonade branding and adopts a darker, stricter tone of voice. Spark is not sweet; it is tasteful.
+                </p>
+              </div>
+              <div class="project__tags">
+                <span>Visual Identity</span>
+                <span>Academic</span>
+              </div>
+            </header>
+          <div class="project__track">
+            <div class="project__media">
+              <figure class="media full">
+                <img width="2160" height="1440" src="assets/media/spark%201.webp" alt="Spark 1" loading="eager" />
+              </figure>
+              <figure class="media half">
+                <img width="1080" height="1440" src="assets/media/spark%202.webp" alt="Spark 2" loading="eager" />
+              </figure>
+              <figure class="media half">
+                <img class="media__poster" width="540" height="720" src="assets/media/spark%203.poster.webp" alt="" />
+                <video webkit-playsinline width="540" height="720"
+                  src="assets/media/spark%203.webm"
+                  poster="assets/media/spark%203.poster.webp"
+                  muted
+                  loop
+                  playsinline
+                  preload="auto"
+                ></video>
+              </figure>
+              <figure class="media full">
+                <img width="2160" height="2779" src="assets/media/spark%204.webp" alt="Spark 4" loading="eager" />
+              </figure>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section
+        class="project"
+        id="project-hosta"
+        data-project="hosta"
+        data-label="Hosta"
+        style="--project-bg: #ffffff; --z: 8"
+      >
+        <div class="project__pin">
+          <header class="project__intro">
+              <h2 class="project__title">Hosta</h2>
+              <div class="project__copy">
+                <p>
+                  Hosta is a cosmetics brand built on science and simplicity, offering effective, safe formulations with clean, balanced compositions. Initiated within a typography course at Bang Bang Education, the identity is deliberately type-led. It pairs the exactitude of laboratory precision with a softness that speaks to the gentleness of the formulations. The visual system communicates that the brand's attention to the ingredients and composition is a sign of care.
+                </p>
+              </div>
+              <div class="project__tags">
+                <span>Visual Identity</span>
+                <span>Academic</span>
+              </div>
+            </header>
+          <div class="project__track">
+            <div class="project__media">
+              <figure class="media half">
+                <img class="media__poster" width="540" height="720" src="assets/media/hosta%201.poster.webp?v=250831c" alt="" />
+                <video webkit-playsinline width="540" height="720"
+                  src="assets/media/hosta%201.webm"
+                  poster="assets/media/hosta%201.poster.webp?v=250831c"
+                  data-play-delay="1"
+                  muted
+                  loop
+                  playsinline
+                  preload="auto"
+                ></video>
+              </figure>
+              <figure class="media half">
+                <img width="1080" height="1440" src="assets/media/hosta%202.webp" alt="Hosta 2" loading="eager" />
+              </figure>
+              <figure class="media full">
+                <img width="1024" height="682" src="assets/media/hosta%203.webp?v=230826" alt="Hosta 3" loading="eager" />
+              </figure>
+              <figure class="media half">
+                <img width="1080" height="1440" src="assets/media/hosta%204.webp" alt="Hosta 4" loading="eager" />
+              </figure>
+              <figure class="media half">
+                <img width="1080" height="1440" src="assets/media/hosta%205.webp" alt="Hosta 5" loading="eager" />
+              </figure>
+              <figure class="media full">
+                <img width="2160" height="1440" src="assets/media/hosta%206.webp" alt="Hosta 6" loading="eager" />
+              </figure>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <a href="#top" class="site-footer__up" id="footer-top" aria-label="Back to top">
+      <svg viewBox="0 0 26 26" width="26" height="26" aria-hidden="true" focusable="false">
+        <path
+          d="M13 1.25v23.5M1.25 10.5 13 1.25 24.75 10.5"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="square"
+          stroke-linejoin="miter"
+        />
+      </svg>
+    </a>
+  </div>
+
+  <script src="main.js?v=250831abt3"></script>
+</body>
+</html>

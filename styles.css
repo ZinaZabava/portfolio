@@ -681,7 +681,8 @@ html.js:not(.is-simple-scroll).is-ready .site-footer + .projects-window {
   margin-top: calc(-1 * var(--cover-pull, 100dvh) + var(--topbar-height));
 }
 
-html.js.is-simple-scroll:not(.is-reduced-motion).is-ready .project + .project {
+html.js.is-simple-scroll:not(.is-reduced-motion).is-ready .project + .project,
+html.js.is-simple-scroll:not(.is-reduced-motion).is-ready .site-footer + .projects-window {
   margin-top: calc(-1 * var(--cover-pull, 100vh) + var(--topbar-height));
   margin-top: calc(-1 * var(--cover-pull, 100dvh) + var(--topbar-height));
 }
@@ -1107,6 +1108,12 @@ html.js:not(.is-simple-scroll) .media video.is-ready {
     transition:
       border-top-left-radius 0.55s ease,
       border-top-right-radius 0.55s ease;
+  }
+
+  html.js.is-simple-scroll:not(.is-reduced-motion).is-ready .site-footer__inner {
+    position: sticky;
+    top: var(--about-stick-top, 0px);
+    background: var(--about-bg);
   }
 
   html.js.is-simple-scroll .project__pin.is-arriving {

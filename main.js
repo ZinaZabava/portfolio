@@ -220,6 +220,20 @@
       item.section.style.height = `${item.scrollRange + (isLast ? 1 : 2) * vh}px`;
     });
 
+    if (about) {
+      about.style.height = "";
+      about.style.removeProperty("--about-stick-top");
+      if (useCoverScroll() && !usePinnedScroll()) {
+        const inner = about.querySelector(".site-footer__inner");
+        const contentHeight = inner ? inner.offsetHeight : about.offsetHeight;
+        const stickTop = Math.min(0, vh - contentHeight);
+        about.style.setProperty("--about-stick-top", `${stickTop}px`);
+        const hold = Math.round(vh * 0.85);
+        const coverDist = Math.round(vh * 1.4);
+        about.style.height = `${contentHeight + hold + coverDist}px`;
+      }
+    }
+
     document.documentElement.classList.add("is-ready");
     update();
   }

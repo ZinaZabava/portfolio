@@ -623,6 +623,12 @@ a.site-footer__up:hover {
   text-decoration-thickness: 1px;
 }
 
+.about-table a[href*="instagram"] {
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+  text-decoration-thickness: 1px;
+}
+
 .site-footer__file + .site-footer__file {
   margin-left: 0.75em;
 }
@@ -1177,7 +1183,7 @@ html.js:not(.is-simple-scroll) .media video.is-ready {
   .project__intro {
     align-items: flex-start;
     gap: var(--intro-gap);
-    padding-top: calc(var(--stripe-height) + 8px);
+    padding-top: calc(var(--stripe-height) + 8px - 20px);
     padding-bottom: 24px;
     padding-left: 20px;
     padding-right: 20px;
@@ -1187,7 +1193,7 @@ html.js:not(.is-simple-scroll) .media video.is-ready {
   }
 
   html.js.is-simple-scroll .projects-window > .project:first-child .project__intro {
-    padding-top: calc(var(--stripe-height) + 8px);
+    padding-top: calc(var(--stripe-height) + 8px - 20px);
   }
 
   .project__title {
@@ -1281,7 +1287,7 @@ html.js:not(.is-simple-scroll) .media video.is-ready {
   }
 
   .project__intro {
-    padding-top: calc(var(--stripe-height) + 8px);
+    padding-top: calc(var(--stripe-height) + 8px - 20px);
     padding-left: 16px;
     padding-right: 16px;
   }

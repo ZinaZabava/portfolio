@@ -134,6 +134,10 @@
   const narrowMq = window.matchMedia("(max-width: 900px)");
   const coarseMq = window.matchMedia("(hover: none) and (pointer: coarse)");
 
+  // Fraction of a viewport each project rests, fully arrived, before the next
+  // one starts covering it. Raise for a longer pause, 0 for none.
+  const DESKTOP_HOLD = 0.2;
+
   function usePinnedScroll() {
     return !reducedMotion && !narrowMq.matches;
   }
@@ -217,7 +221,11 @@
       const contentHeight = item.track.scrollHeight;
       const viewH = item.track.clientHeight || vh;
       item.scrollRange = Math.max(0, contentHeight - viewH);
-      item.section.style.height = `${item.scrollRange + (isLast ? 1 : 2) * vh}px`;
+      // Without this the next project starts covering on the pixel after the
+      // media finishes. The hold is a beat where the project sits fully
+      // arrived — the mobile branch above does the same thing.
+      const hold = isLast ? 0 : Math.round(vh * DESKTOP_HOLD);
+      item.section.style.height = `${item.scrollRange + hold + (isLast ? 1 : 2) * vh}px`;
     });
 
     if (about) {
@@ -294,8 +302,12 @@
           1,
           Math.max(0, (vh - (nextTop - offset)) / vh)
         );
-        item.pin.style.filter =
-          coverAmt > 0 ? `blur(${(coverAmt * 12).toFixed(2)}px)` : "";
+        // Quantised to half a pixel: a full-viewport blur re-rasterises on
+        // every distinct value, and stepping it per scroll pixel was ~100
+        // rasterisations per transition instead of ~24.
+        const blur =
+          coverAmt > 0 ? `blur(${(Math.round(coverAmt * 24) / 2).toFixed(1)}px)` : "";
+        if (item.pin.style.filter !== blur) item.pin.style.filter = blur;
 
         const pinTop = item.pin.getBoundingClientRect().top - offset;
         item.pin.classList.toggle("is-arriving", pinTop > 1);
@@ -303,8 +315,9 @@
       if (about && state[0]) {
         const firstTop = state[0].section.getBoundingClientRect().top - offset;
         const coverAmt = Math.min(1, Math.max(0, (vh - firstTop) / vh));
-        about.style.filter =
-          coverAmt > 0 ? `blur(${(coverAmt * 12).toFixed(2)}px)` : "";
+        const blur =
+          coverAmt > 0 ? `blur(${(Math.round(coverAmt * 24) / 2).toFixed(1)}px)` : "";
+        if (about.style.filter !== blur) about.style.filter = blur;
       }
     } else {
       state.forEach((item) => {
@@ -348,6 +361,10 @@
     ticking = true;
     requestAnimationFrame(() => {
       update();
+      // Keep-alive for iOS, which pauses muted video on its own. Once per
+      // frame and only for what is actually on screen — this used to run for
+      // every video on every scroll event.
+      videosOnScreen.forEach((video) => ensurePlay(video));
       ticking = false;
     });
   }
@@ -781,15 +798,8 @@
     });
   }
 
-  window.addEventListener(
-    "scroll",
-    () => {
-      onScroll();
-      videos.forEach((video) => ensurePlay(video));
-    },
-    { passive: true }
-  );
-  window.addEventListener("resize", measure);
+  window.addEventListener("scroll", onScroll, { passive: true });
+  window.addEventListener("resize", scheduleMeasure);
 
   const markReady = (el) => {
     el.classList.add("is-ready");

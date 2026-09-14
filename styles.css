@@ -741,7 +741,9 @@ html.js:not(.is-simple-scroll) .project__track {
 html.js:not(.is-simple-scroll) .project__intro {
   height: 100%;
   overflow-y: auto;
-  overscroll-behavior: contain;
+  /* No overscroll-behavior: contain here. On a short viewport the intro column
+     overflows, and containing it meant a wheel over the text swallowed the
+     scroll instead of moving the page. */
 }
 
 html.js.is-simple-scroll .project__pin {
@@ -967,6 +969,10 @@ html.js.is-simple-scroll .media:not(:has(> video)) {
 
 .project[data-project="urban-vibes"] .media.full {
   aspect-ratio: 4 / 5;
+}
+
+.project[data-project="special-style"] .media.full:has(> video[src*="special%20style%20last"]) {
+  aspect-ratio: 1080 / 638;
 }
 
 .project[data-project="spark"] .media.full:last-child {

@@ -659,16 +659,12 @@
     video.setAttribute("webkit-playsinline", "");
     video.setAttribute("disablepictureinpicture", "");
     video.removeAttribute("controls");
-    video.preload = "auto";
-    // Reduce Motion: iOS treats autoplay muted videos as background
-    // motion and never paints a frame. JS starts them after a gesture.
-    if (reducedMotion || hold) {
-      video.autoplay = false;
-      video.removeAttribute("autoplay");
-    } else {
-      video.autoplay = true;
-      video.setAttribute("autoplay", "");
-    }
+    // Nothing is fetched or started by the browser on its own. The observers
+    // below warm a clip up as it approaches and start it once it is actually
+    // on screen; before that a video costs nothing but its poster.
+    video.preload = "none";
+    video.autoplay = false;
+    video.removeAttribute("autoplay");
 
     video.addEventListener("playing", () => setPlaying(video, true));
     video.addEventListener("ended", () => {
@@ -704,14 +700,39 @@
   videos.forEach(armVideo);
 
   if ("IntersectionObserver" in window) {
+    // Stage one: a screen out, start buffering so the clip is ready by the
+    // time it arrives. Runs once per video.
+    const warmed = new WeakSet();
+    const preloader = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          const video = entry.target;
+          preloader.unobserve(video);
+          if (warmed.has(video)) return;
+          warmed.add(video);
+          video.preload = "auto";
+          try {
+            video.load();
+          } catch (_) {
+            /* ignore */
+          }
+        });
+      },
+      { threshold: 0, rootMargin: "100% 0px" }
+    );
+
+    // Stage two: play only once the video is genuinely on screen. Starting at
+    // 20% and stopping at 0% leaves a dead band between, so a video parked at
+    // the edge of the viewport cannot flicker between play and pause.
     const io = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           const video = entry.target;
-          if (entry.isIntersecting && entry.intersectionRatio > 0) {
+          if (entry.isIntersecting && entry.intersectionRatio >= 0.2) {
             videosOnScreen.add(video);
             ensurePlay(video);
-          } else {
+          } else if (!entry.isIntersecting) {
             videosOnScreen.delete(video);
             clearPlayHold(video);
             holdDone.delete(video);
@@ -720,9 +741,12 @@
           }
         });
       },
-      { threshold: [0, 0.05, 0.25], rootMargin: "80px 0px" }
+      { threshold: [0, 0.2, 0.5], rootMargin: "0px" }
     );
-    videos.forEach((video) => io.observe(video));
+    videos.forEach((video) => {
+      preloader.observe(video);
+      io.observe(video);
+    });
   } else {
     videos.forEach((video) => {
       videosOnScreen.add(video);

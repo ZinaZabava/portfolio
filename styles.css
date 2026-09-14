@@ -1157,11 +1157,14 @@ html.js:not(.is-simple-scroll) .media video.is-ready {
     height: auto;
   }
 
-  /* Video frames: poster in-flow gives the box height; video fills on top. */
+  /* Video frames: poster in-flow gives the box height; video fills on top.
+     !important so per-project aspect-ratio overrides (e.g. the Haiide process
+     frame) cannot re-impose a ratio that disagrees with the poster and leave a
+     white sliver inside the frame. */
   html.js.is-simple-scroll .media:has(> video),
   .media:has(> video) {
-    aspect-ratio: auto;
-    height: auto;
+    aspect-ratio: auto !important;
+    height: auto !important;
   }
 
   html.js.is-simple-scroll .media:has(> video) .media__poster,
@@ -1172,12 +1175,15 @@ html.js:not(.is-simple-scroll) .media video.is-ready {
     height: auto !important;
   }
 
+  /* Bleed 1px past the frame, same trick as desktop. Fractional frame heights
+     round independently of the video box, and without the bleed the page
+     background shows through as a hairline above the video. */
   html.js.is-simple-scroll .media:has(> video) video,
   .media:has(> video) video {
     position: absolute;
-    inset: 0;
-    width: 100% !important;
-    height: 100% !important;
+    inset: -1px;
+    width: calc(100% + 2px) !important;
+    height: calc(100% + 2px) !important;
   }
 
   .project__intro {

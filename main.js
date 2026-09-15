@@ -83,11 +83,45 @@
       ? document.fonts.ready
       : Promise.resolve();
 
+  /* The loader holds until the first screens can actually be painted: the
+     About block and the first project, video posters included. Not the whole
+     site — that is 57 MB of images, and waiting on it would mean staring at
+     the loader for a minute. Videos are not waited on either; their poster is
+     what the viewer sees and the clip streams in once reached.
+     A failed image resolves like a loaded one, so a single 404 can never
+     strand the loader, and MAX_WAIT below is the final backstop. */
+  const firstProject = document.querySelector(".project:not([hidden])");
+  const criticalImages = [
+    ...document.querySelectorAll("#about img"),
+    ...(firstProject ? firstProject.querySelectorAll("img") : []),
+  ];
+
+  const imageReady = (img) => {
+    const loaded =
+      img.complete && img.naturalWidth > 0
+        ? Promise.resolve()
+        : new Promise((resolve) => {
+            img.addEventListener("load", resolve, { once: true });
+            img.addEventListener("error", resolve, { once: true });
+          });
+    // decode() means paintable, not merely downloaded.
+    return loaded.then(() =>
+      img.decode ? img.decode().catch(() => {}) : undefined
+    );
+  };
+
+  const mediaReady = Promise.all(criticalImages.map(imageReady));
+
   function lockRoleWidth() {
     const first = role.querySelector(".is-in");
     if (!first) return;
     role.style.width = `${Math.ceil(first.getBoundingClientRect().width)}px`;
   }
+
+  let mediaDone = false;
+  mediaReady.then(() => {
+    mediaDone = true;
+  });
 
   let scheduled = false;
   async function start() {
@@ -97,15 +131,26 @@
 
     if (reducedMotion) {
       await wait(HOLD);
+      await mediaReady;
       dismiss();
       return;
     }
 
-    for (let i = 1; i < PHRASES.length; i += 1) {
-      await wait(i === 1 ? HOLD + 1500 : HOLD);
+    let index = 1;
+    let firstPass = true;
+    while (true) {
+      await wait(index === 1 && firstPass ? HOLD + 1500 : HOLD);
       if (dismissed) return;
-      await shiftTo(PHRASES[i]);
+      if (index >= PHRASES.length) {
+        // Sequence done. Leave if the first screens are painted, otherwise
+        // cycle the phrases again rather than freezing on the last one.
+        if (mediaDone) break;
+        index = 0;
+        firstPass = false;
+      }
+      await shiftTo(PHRASES[index]);
       if (dismissed) return;
+      index += 1;
     }
     await wait(HOLD);
     if (!dismissed) dismiss();

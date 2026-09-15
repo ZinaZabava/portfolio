@@ -722,7 +722,6 @@ html.js:not(.is-simple-scroll) .project__pin {
   height: calc(100vh - var(--topbar-height));
   height: calc(100dvh - var(--topbar-height));
   overflow: hidden;
-  transform: translateZ(0);
   grid-template-rows: minmax(0, 1fr);
   align-items: stretch;
   background: var(--project-bg, var(--about-bg));
@@ -791,8 +790,20 @@ html.js.is-simple-scroll .media:not(:has(> video)) {
 }
 
 .project__track {
-  will-change: transform;
   backface-visibility: hidden;
+}
+
+/* Layers are promoted only around the viewport. Promoting all nine pins and
+   all nine tracks at once meant ~90 MB of compositor layers on top of the
+   decoded images, and past the browser's budget tiles get thrown away and
+   re-rastered — which is what draws the incoming project in horizontal bands
+   with the previous one showing through the gaps. */
+html.js:not(.is-simple-scroll) .project.is-near .project__track {
+  will-change: transform;
+}
+
+html.js:not(.is-simple-scroll) .project.is-near .project__pin {
+  transform: translateZ(0);
 }
 
 .project__intro {

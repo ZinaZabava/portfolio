@@ -309,6 +309,23 @@
     update();
   }
 
+  /* Decoding is the slow half of showing an image, and doing it while a
+     project is sliding into view is what makes it arrive in bands. Once a
+     project comes within a screen of the viewport its images are decoded off
+     the main thread, so by the time it covers there is nothing left to do but
+     paint. Runs once per image. */
+  const decodedImages = new WeakSet();
+  function warmProject(item) {
+    item.section.querySelectorAll("img").forEach((img) => {
+      if (decodedImages.has(img) || !img.decode) return;
+      decodedImages.add(img);
+      img.decode().catch(() => {
+        // Not yet downloaded, or failed — retry naturally on the next pass.
+        decodedImages.delete(img);
+      });
+    });
+  }
+
   function progressFor(item) {
     const rect = item.section.getBoundingClientRect();
     const topbar = parseFloat(
@@ -339,6 +356,8 @@
 
     let activeId = null;
 
+    const nearH = viewportHeight();
+
     state.forEach((item) => {
       const { scrolled, rect } = progressFor(item);
 
@@ -346,6 +365,16 @@
         item.track.style.transform = `translate3d(0, ${-scrolled}px, 0)`;
       } else {
         item.track.style.transform = "";
+      }
+
+      // A screen either side of the viewport. Only these get composited
+      // layers, and their images are decoded before they are needed rather
+      // than during the transition.
+      const near = rect.top < nearH * 2 && rect.bottom > -nearH;
+      if (near !== item.near) {
+        item.near = near;
+        item.section.classList.toggle("is-near", near);
+        if (near) warmProject(item);
       }
 
       if (rect.top <= focusY) {

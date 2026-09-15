@@ -15,7 +15,7 @@
   --stripe-height: 6vh;
   --stripe-green: #98b0f1;
   --gap: 0px;
-  --index-size: 22px;
+  --index-size: calc(var(--type-base) * 22 / 18);
   --index-leading: 1.5;
   /* Extra air between two lines of the same block (line-height minus the type) */
   --line-gap: calc(var(--index-size) * (var(--index-leading) - 1));
@@ -36,8 +36,13 @@
   --intro-gap: 59px;
   --mono-weight: 400; /* Forma DJR Mono Regular */
   --mono-light: 300; /* Forma DJR Mono Light */
-  --mono-size: 18px;
-  --name-size: 28px;
+  /* One fluid base drives the whole scale. Everything below is expressed as a
+     ratio of it, so the proportions set in Figma — 22 : 18 : 28 : 42 — hold at
+     every viewport instead of some sizes shrinking while others stay fixed.
+     18px from 1024px up, easing down to 14px at 360px. */
+  --type-base: clamp(14px, 11.83px + 0.6vw, 18px);
+  --mono-size: var(--type-base);
+  --name-size: calc(var(--type-base) * 28 / 18);
   --project-title-size: calc(var(--name-size) * 1.5);
   --stripe-pad-top: 12px;
   --icon-size: 26px;
@@ -147,8 +152,10 @@ html.js .loader {
 
 .loader__role {
   position: relative;
-  overflow-x: visible;
-  overflow-y: hidden;
+  /* Both axes, and hidden rather than clip: overflow-x: visible next to a
+     non-visible overflow-y computes to auto, which is where the scrollbar
+     under the loader text came from. hidden never shows one. */
+  overflow: hidden;
   flex: 0 0 auto;
   width: auto;
   min-width: 0;
@@ -678,7 +685,7 @@ html.js:not(.is-simple-scroll) .site-footer__inner {
   height: 100vh;
   height: 100dvh;
   min-height: 0;
-  overflow: auto;
+  overflow: hidden;
 }
 
 html.js:not(.is-simple-scroll).is-ready .project + .project,
@@ -740,10 +747,9 @@ html.js:not(.is-simple-scroll) .project__track {
 
 html.js:not(.is-simple-scroll) .project__intro {
   height: 100%;
-  overflow-y: auto;
-  /* No overscroll-behavior: contain here. On a short viewport the intro column
-     overflows, and containing it meant a wheel over the text swallowed the
-     scroll instead of moving the page. */
+  /* Nothing scrolls inside a project. The fluid type scale and the
+     max-height padding steps keep the column inside one screen. */
+  overflow: hidden;
 }
 
 html.js.is-simple-scroll .project__pin {
@@ -1069,7 +1075,6 @@ html.js:not(.is-simple-scroll) .media video.is-ready {
     --intro-pad-x: 20px;
     --intro-gap: 32px;
     --copy-width: 100%;
-    --index-size: 16px;
   }
 
   .stripe {

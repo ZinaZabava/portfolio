@@ -115,7 +115,25 @@
   function lockRoleWidth() {
     const first = role.querySelector(".is-in");
     if (!first) return;
-    role.style.width = `${Math.ceil(first.getBoundingClientRect().width)}px`;
+    // Measure every phrase and reserve the widest. Locking to the first one
+    // meant the longer phrases overflowed a box sized for "Graphic designer".
+    const probe = document.createElement("span");
+    probe.className = "loader__role-line";
+    probe.style.position = "absolute";
+    probe.style.visibility = "hidden";
+    probe.style.whiteSpace = "nowrap";
+    probe.style.width = "max-content";
+    role.appendChild(probe);
+    let widest = first.getBoundingClientRect().width;
+    PHRASES.forEach((phrase) => {
+      probe.textContent = phrase;
+      widest = Math.max(widest, probe.getBoundingClientRect().width);
+    });
+    probe.remove();
+    role.style.width = `${Math.ceil(widest)}px`;
+    // On a narrow screen the widest phrase can be wider than the column, and a
+    // fixed width would push the loader sideways. Cap it and let it shrink.
+    role.style.maxWidth = "100%";
   }
 
   let mediaDone = false;

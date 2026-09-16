@@ -671,6 +671,9 @@ a.site-footer__up {
   position: relative;
   z-index: var(--z, 1);
   isolation: isolate;
+  /* Opaque from the section down, so anything not yet rastered or decoded
+     shows this project's own white rather than the project underneath. */
+  background: var(--project-bg, var(--about-bg));
 }
 
 html.js:not(.is-simple-scroll) .site-footer {
@@ -727,9 +730,10 @@ html.js:not(.is-simple-scroll) .project__pin {
   background: var(--project-bg, var(--about-bg));
   border-top-left-radius: 0;
   border-top-right-radius: 0;
-  transition:
-    border-top-left-radius 0.55s ease,
-    border-top-right-radius 0.55s ease;
+  /* No transition on the radius. A rounded corner on an overflow:hidden box
+     makes the browser mask the whole subtree, and animating it repeats that
+     work every frame of the 0.55s — exactly while the project is arriving and
+     the compositor is already busy rastering it. It snaps now. */
 }
 
 html.js:not(.is-simple-scroll) .project__pin.is-arriving {
@@ -935,7 +939,7 @@ html.js:not(.is-simple-scroll) .project.is-near .project__pin {
   width: 100%;
   margin-inline: 0;
   overflow: hidden;
-  background: transparent;
+  background: var(--project-bg, var(--about-bg));
   font-size: 0;
   line-height: 0;
 }
@@ -946,7 +950,7 @@ html.js:not(.is-simple-scroll) .project.is-near .project__pin {
   margin: 0;
   padding: 0;
   border: 0;
-  background: transparent;
+  background: var(--project-bg, var(--about-bg));
 }
 
 .media.half {

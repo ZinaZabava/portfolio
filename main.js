@@ -112,6 +112,32 @@
 
   const mediaReady = Promise.all(criticalImages.map(imageReady));
 
+  /* Once the first screens are ready, quietly pull the rest of the site's
+     images into the HTTP cache while the loader is still up. Total download is
+     only a few MB, so by the time anyone scrolls there is no network left to
+     wait for. Deliberately a fetch and not a decode: decoding everything would
+     pin hundreds of MB of bitmaps, which is the opposite of what we want.
+     Decoding stays where it belongs, a screen ahead of the viewport. */
+  function prefetchRest() {
+    const rest = [...document.querySelectorAll(".project img")].filter(
+      (img) => !criticalImages.includes(img)
+    );
+    let i = 0;
+    const step = () => {
+      if (i >= rest.length) return;
+      const img = rest[i++];
+      const done = () => {
+        if (window.requestIdleCallback) window.requestIdleCallback(step);
+        else setTimeout(step, 32);
+      };
+      if (img.complete && img.naturalWidth > 0) return done();
+      img.addEventListener("load", done, { once: true });
+      img.addEventListener("error", done, { once: true });
+    };
+    step();
+  }
+  mediaReady.then(prefetchRest);
+
   function lockRoleWidth() {
     const first = role.querySelector(".is-in");
     if (!first) return;
@@ -326,14 +352,11 @@
     });
   }
 
-  function progressFor(item) {
-    const rect = item.section.getBoundingClientRect();
-    const topbar = parseFloat(
-      getComputedStyle(document.documentElement).getPropertyValue(
-        "--topbar-height"
-      )
-    );
-    const offset = Number.isFinite(topbar) ? topbar : 0;
+  function progressFor(item, offset) {
+    // Reuses the rect cached at the top of the frame. This used to take its
+    // own measurement AND a getComputedStyle on the root element, both of
+    // which force a style/layout recalculation — nine times over, every frame.
+    const rect = item.frameRect || item.section.getBoundingClientRect();
     const scrolled = Math.min(
       Math.max(-(rect.top - offset), 0),
       item.scrollRange || 0
@@ -358,8 +381,15 @@
 
     const nearH = viewportHeight();
 
+    // Every rect this frame needs is read here, before a single style is
+    // written. Reading geometry after a write forces the browser to redo
+    // layout on the spot, and the old code did that nine times a frame.
     state.forEach((item) => {
-      const { scrolled, rect } = progressFor(item);
+      item.frameRect = item.section.getBoundingClientRect();
+    });
+
+    state.forEach((item) => {
+      const { scrolled, rect } = progressFor(item, offset);
 
       if (pinned) {
         item.track.style.transform = `translate3d(0, ${-scrolled}px, 0)`;
@@ -387,9 +417,7 @@
       state.forEach((item, i) => {
         if (!item.pin) return;
         const next = state[i + 1];
-        const nextTop = next
-          ? next.section.getBoundingClientRect().top
-          : Infinity;
+        const nextTop = next ? next.frameRect.top : Infinity;
         const coverAmt = Math.min(
           1,
           Math.max(0, (vh - (nextTop - offset)) / vh)
@@ -401,8 +429,9 @@
           coverAmt > 0 ? `blur(${(Math.round(coverAmt * 24) / 2).toFixed(1)}px)` : "";
         if (item.pin.style.filter !== blur) item.pin.style.filter = blur;
 
-        const pinTop = item.pin.getBoundingClientRect().top - offset;
-        item.pin.classList.toggle("is-arriving", pinTop > 1);
+        // The pin is sticky at `offset` inside its section, so the section's
+        // own top tells us whether it has stuck yet — no second layout read.
+        item.pin.classList.toggle("is-arriving", item.frameRect.top - offset > 1);
       });
       if (about && state[0]) {
         const firstTop = state[0].section.getBoundingClientRect().top - offset;

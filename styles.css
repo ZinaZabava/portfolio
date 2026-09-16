@@ -671,9 +671,9 @@ a.site-footer__up {
   position: relative;
   z-index: var(--z, 1);
   isolation: isolate;
-  /* Opaque from the section down, so anything not yet rastered or decoded
-     shows this project's own white rather than the project underneath. */
-  background: var(--project-bg, var(--about-bg));
+  /* Deliberately transparent. The pin is the opaque surface; the section
+     behind it has to stay see-through or the pin's rounded top corners reveal
+     white instead of the project underneath. */
 }
 
 html.js:not(.is-simple-scroll) .site-footer {
@@ -730,10 +730,9 @@ html.js:not(.is-simple-scroll) .project__pin {
   background: var(--project-bg, var(--about-bg));
   border-top-left-radius: 0;
   border-top-right-radius: 0;
-  /* No transition on the radius. A rounded corner on an overflow:hidden box
-     makes the browser mask the whole subtree, and animating it repeats that
-     work every frame of the 0.55s — exactly while the project is arriving and
-     the compositor is already busy rastering it. It snaps now. */
+  transition:
+    border-top-left-radius 0.55s ease,
+    border-top-right-radius 0.55s ease;
 }
 
 html.js:not(.is-simple-scroll) .project__pin.is-arriving {

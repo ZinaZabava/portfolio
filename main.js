@@ -657,9 +657,14 @@
   const holding = new WeakSet();
   const holdDone = new WeakSet();
 
+  // Beat between a video arriving on screen and starting. data-play-delay on a
+  // single video overrides it; 0 starts immediately.
+  const PLAY_DELAY = 0.7;
+
   const playHoldMs = (video) => {
     const n = Number(video.dataset.playDelay);
-    return Number.isFinite(n) && n > 0 ? Math.round(n * 1000) : 0;
+    const seconds = Number.isFinite(n) && n >= 0 ? n : PLAY_DELAY;
+    return seconds > 0 ? Math.round(seconds * 1000) : 0;
   };
 
   const clearPlayHold = (video) => {
@@ -671,22 +676,11 @@
     holding.delete(video);
   };
 
-  const isAtStart = (video) => {
-    if (video.ended) return true;
-    const t = video.currentTime;
-    if (!Number.isFinite(t) || t <= 0.05) return true;
-    return (
-      Number.isFinite(video.duration) &&
-      video.duration > 0 &&
-      t >= video.duration - 0.08
-    );
-  };
-
   const setPlaying = (video, on) => {
     video.classList.toggle("is-playing", on);
   };
 
-  const ensurePlay = (video, loopHold = false) => {
+  const ensurePlay = (video) => {
     if (document.hidden) return;
     if (!videosOnScreen.has(video)) return;
     if (holding.has(video)) return;
@@ -719,8 +713,10 @@
     };
 
     const delay = playHoldMs(video);
-    const shouldHold =
-      delay > 0 && (loopHold || (isAtStart(video) && !holdDone.has(video)));
+    // The hold applies once per appearance. holdDone is cleared when a video
+    // leaves the viewport, so it waits again next time it comes back — but the
+    // loop itself stays native and seamless, with no pause between passes.
+    const shouldHold = delay > 0 && !holdDone.has(video);
 
     if (shouldHold) {
       holding.add(video);
@@ -739,8 +735,9 @@
   };
 
   const armVideo = (video) => {
-    const hold = playHoldMs(video);
-    video.loop = hold ? false : true;
+    // Native looping stays on even with a delay: the wait is for arriving on
+    // screen, not something to repeat between passes.
+    video.loop = true;
     video.muted = true;
     video.defaultMuted = true;
     video.playsInline = true;
@@ -765,7 +762,7 @@
       try {
         video.currentTime = 0;
       } catch (_) {}
-      ensurePlay(video, true);
+      ensurePlay(video);
     });
 
     video.addEventListener("pause", () => {

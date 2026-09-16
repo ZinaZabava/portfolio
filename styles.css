@@ -40,8 +40,16 @@
      ratio of it, so the proportions set in Figma — 22 : 18 : 28 : 42 — hold at
      every viewport instead of some sizes shrinking while others stay fixed.
      18px from 1024px up, easing down to 14px at 360px. */
-  --type-base: clamp(14px, 11.83px + 0.6vw, 18px);
+  /* One knob for the whole scale. 0.8 means every size below is exactly 80%
+     of what it was: mono 18 -> 14.4, index 22 -> 17.6, name 28 -> 22.4,
+     title 42 -> 33.6, copy 19 -> 15.2. Set it to 1 to go back. */
+  --type-scale: 0.8;
+  --type-fluid: clamp(14px, 11.83px + 0.6vw, 18px);
+  --type-base: calc(var(--type-fluid) * var(--type-scale));
   --mono-size: var(--type-base);
+  /* Body copy was hard-coded at 19px in four places, outside the scale. Now
+     its 19:18 relationship to the mono text holds wherever the scale goes. */
+  --copy-size: calc(var(--type-base) * 19 / 18);
   --name-size: calc(var(--type-base) * 28 / 18);
   --project-title-size: calc(var(--name-size) * 1.5);
   --stripe-pad-top: 12px;
@@ -549,7 +557,7 @@ html.is-nav-open .stripe__menu {
   width: 100%;
   font-family: var(--font-mono);
   font-weight: 400;
-  font-size: 19px;
+  font-size: var(--copy-size);
   line-height: 1.5;
   letter-spacing: 0;
   color: var(--text);
@@ -596,7 +604,7 @@ html.is-nav-open .stripe__menu {
   padding-right: 24px;
   font-family: var(--font-mono);
   font-weight: 500;
-  font-size: 19px;
+  font-size: var(--copy-size);
   line-height: var(--index-leading);
   letter-spacing: 0;
   text-transform: uppercase;
@@ -606,7 +614,7 @@ html.is-nav-open .stripe__menu {
 .about-table td {
   font-family: var(--font-mono);
   font-weight: 400;
-  font-size: 19px;
+  font-size: var(--copy-size);
   line-height: var(--index-leading);
   letter-spacing: 0;
   color: var(--text);
@@ -890,12 +898,18 @@ html.js:not(.is-simple-scroll) .project.is-near .project__pin {
 }
 
 .project__copy {
+  /* min-height lets the copy give way in a cramped column. Without it a flex
+     item will not shrink below its content, so the copy pushed the tags past
+     the bottom of the frame where overflow:hidden cut them off. If anything
+     has to be clipped now it is the end of a paragraph, never the tags. */
+  min-height: 0;
+  overflow: hidden;
   margin: 0;
   width: 100%;
   max-width: 100%;
   font-family: var(--font-mono);
   font-weight: 400;
-  font-size: 19px;
+  font-size: var(--copy-size);
   line-height: 1.5;
   letter-spacing: 0;
   color: var(--text);
@@ -911,6 +925,7 @@ html.js:not(.is-simple-scroll) .project.is-near .project__pin {
 }
 
 .project__tags {
+  flex: 0 0 auto;
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;

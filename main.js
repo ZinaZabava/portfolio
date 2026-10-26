@@ -798,16 +798,19 @@
 
   media.forEach((el) => {
     if (el.tagName === "IMG") {
-      if (el.complete && el.naturalWidth > 0) markReady(el);
+      if (el.complete) markReady(el);
       else {
-        el.addEventListener("load", () => markReady(el));
-        el.addEventListener("error", () => markReady(el));
+        el.addEventListener("load", () => markReady(el), { once: true });
+        el.addEventListener("error", () => markReady(el), { once: true });
+      }
+      if (typeof el.decode === "function") {
+        el.decode().then(() => markReady(el)).catch(() => markReady(el));
       }
     } else {
       if (el.readyState >= 2) markReady(el);
       else {
-        el.addEventListener("loadeddata", () => markReady(el));
-        el.addEventListener("error", () => markReady(el));
+        el.addEventListener("loadeddata", () => markReady(el), { once: true });
+        el.addEventListener("error", () => markReady(el), { once: true });
       }
     }
   });

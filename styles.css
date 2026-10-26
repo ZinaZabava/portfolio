@@ -1027,16 +1027,19 @@ html.js.is-simple-scroll .media:not(:has(> video)) {
   height: 0;
 }
 
-/* Fade-in only when JS is enhancing on pinned (desktop) scroll.
-   On mobile, keep media fully visible immediately. */
-html.js:not(.is-simple-scroll) .media img,
+/* Stills must paint without waiting on load events. Safari often
+   finishes cached images before JS attaches `load`, so opacity 0
+   left empty frames. Videos still wait until they are actually playing. */
+html.js:not(.is-simple-scroll) .media img {
+  opacity: 1;
+}
+
 html.js:not(.is-simple-scroll) .media video {
   opacity: 0;
   transition: opacity 0.35s ease;
 }
 
-html.js:not(.is-simple-scroll) .media img.is-ready,
-html.js:not(.is-simple-scroll) .media video.is-ready {
+html.js:not(.is-simple-scroll) .media video.is-playing {
   opacity: 1;
 }
 

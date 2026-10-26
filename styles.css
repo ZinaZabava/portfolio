@@ -789,10 +789,10 @@ html.js.is-simple-scroll .media img {
 }
 
 html.js.is-simple-scroll .media img.media__poster {
-  position: absolute !important;
-  inset: -1px;
-  width: calc(100% + 2px) !important;
-  height: calc(100% + 2px) !important;
+  position: static !important;
+  inset: auto;
+  width: 100% !important;
+  height: auto !important;
 }
 
 html.js.is-simple-scroll .media:not(:has(> video)) {
@@ -801,7 +801,7 @@ html.js.is-simple-scroll .media:not(:has(> video)) {
 }
 
 .project__track {
-  backface-visibility: hidden;
+  backface-visibility: visible;
 }
 
 /* Layers are promoted only around the viewport. Promoting all nine pins and
@@ -1039,12 +1039,12 @@ html.js:not(.is-simple-scroll) .project.is-near .project__pin {
 
 .media img,
 .media video {
-  position: absolute;
-  inset: -1px;
+  position: static;
+  inset: auto;
   display: block;
-  width: calc(100% + 2px);
-  height: calc(100% + 2px);
-  max-width: none;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
   margin: 0;
   padding: 0;
   border: 0;
@@ -1052,6 +1052,11 @@ html.js:not(.is-simple-scroll) .project.is-near .project__pin {
   object-fit: cover;
   object-position: center;
   background: transparent;
+}
+
+.media:not(:has(> video)) {
+  aspect-ratio: auto;
+  height: auto;
 }
 
 .media video {
@@ -1062,12 +1067,30 @@ html.js:not(.is-simple-scroll) .project.is-near .project__pin {
 }
 
 .media__poster {
-  position: absolute !important;
-  inset: -1px;
+  position: static;
+  inset: auto;
   z-index: 0;
+  width: 100%;
+  height: auto;
+  opacity: 1 !important;
+}
+
+.media:has(> video) {
+  aspect-ratio: auto !important;
+  height: auto !important;
+}
+
+.media:has(> video) .media__poster {
+  position: static !important;
+  width: 100% !important;
+  height: auto !important;
+}
+
+.media:has(> video) video {
+  position: absolute;
+  inset: -1px;
   width: calc(100% + 2px) !important;
   height: calc(100% + 2px) !important;
-  opacity: 1 !important;
 }
 
 /* Keep the still visible until the video is actually painting.
@@ -1091,7 +1114,7 @@ html.js:not(.is-simple-scroll) .project.is-near .project__pin {
    finishes cached images before JS attaches `load`, so opacity 0
    left empty frames. Videos still wait until they are actually playing. */
 html.js:not(.is-simple-scroll) .media img {
-  opacity: 1;
+  opacity: 1 !important;
 }
 
 html.js:not(.is-simple-scroll) .media video {

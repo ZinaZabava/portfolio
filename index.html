@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Zinaida Rykova — Portfolio</title>
   <meta name="theme-color" content="#ffffff" />
+  <base href="./" />
   <script>
     /* Resolve CSS/JS/media correctly on subdirectory hosts; mark scroll mode early. */
     (function () {
@@ -12,7 +13,8 @@
       var dir = /\/$/.test(path) ? path : path.replace(/\/[^/]*$/, "/");
       if (/\/portfolio$/i.test(path)) dir = path + "/";
       if (!dir) dir = "/";
-      document.write('<base href="' + dir + '">');
+      var base = document.querySelector("base");
+      if (base) base.setAttribute("href", dir);
       var html = document.documentElement;
       html.className += (html.className ? " " : "") + "js is-loading";
       /* Safety net: if the loader script never runs, don't trap the page */
@@ -51,7 +53,7 @@
   />
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
   <link rel="stylesheet" href="https://use.typekit.net/cte3nym.css" />
-  <link rel="stylesheet" href="styles.css?v=251026s" />
+  <link rel="stylesheet" href="styles.css?v=251026t" />
   <script>
     /* Reveal once webfonts are ready (or after a short timeout). */
     (function () {

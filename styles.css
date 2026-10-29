@@ -813,10 +813,6 @@ html.js:not(.is-simple-scroll) .project.is-near .project__track {
   will-change: transform;
 }
 
-html.js:not(.is-simple-scroll) .project.is-near .project__pin {
-  transform: translateZ(0);
-}
-
 .project__intro {
   display: flex;
   flex-direction: column;
@@ -1094,9 +1090,10 @@ html.js:not(.is-simple-scroll) .project.is-near .project__pin {
 }
 
 /* Keep the still visible until the video is actually painting.
-   iOS Reduce Motion blocks autoplay and never draws a frame. */
-.media video:not(.is-playing) {
-  opacity: 0 !important;
+   Opacity fades never composite on top of a transformed track in Safari:
+   the clip advances, but the frame stays invisible. visibility does not. */
+html.js .media video:not(.is-playing) {
+  visibility: hidden;
 }
 
 /* Hide iOS/WebKit big play button overlay */
@@ -1117,13 +1114,12 @@ html.js:not(.is-simple-scroll) .media img {
   opacity: 1 !important;
 }
 
-html.js:not(.is-simple-scroll) .media video {
-  opacity: 0;
-  transition: opacity 0.35s ease;
-}
-
 html.js:not(.is-simple-scroll) .media video.is-playing {
   opacity: 1;
+  visibility: visible;
+  transition: none;
+  /* Own layer, or Safari freezes the frame inside the moving track. */
+  transform: translateZ(0);
 }
 
 .media--video-end {
@@ -1413,11 +1409,12 @@ html.js:not(.is-simple-scroll) .media video.is-playing {
   .media img,
   .media video.is-playing {
     opacity: 1;
+    visibility: visible;
     transition: none;
   }
 
   .media video:not(.is-playing) {
-    opacity: 0;
+    visibility: hidden;
   }
 
   .loader__role-line {

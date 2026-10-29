@@ -351,6 +351,16 @@
     });
   }
 
+  function paintBlur(pin, blur) {
+    if (!pin) return;
+    const intro = pin.querySelector(".project__intro");
+    const track = pin.querySelector(".project__track");
+    [intro, track].forEach((el) => {
+      if (!el) return;
+      if (el.style.filter !== blur) el.style.filter = blur;
+    });
+  }
+
   function progressFor(item, offset) {
     // Reuses the rect cached at the top of the frame. This used to take its
     // own measurement AND a getComputedStyle on the root element, both of
@@ -426,7 +436,10 @@
         // rasterisations per transition instead of ~24.
         const blur =
           coverAmt > 0 ? `blur(${(Math.round(coverAmt * 24) / 2).toFixed(1)}px)` : "";
-        if (item.pin.style.filter !== blur) item.pin.style.filter = blur;
+        // Filter or transform on the sticky pin itself makes Safari drop
+        // position: sticky, so the project frame scrolls away instead of holding.
+        paintBlur(item.pin, blur);
+        if (item.pin.style.filter) item.pin.style.filter = "";
 
         // The pin is sticky at `offset` inside its section, so the section's
         // own top tells us whether it has stuck yet — no second layout read.
@@ -437,15 +450,22 @@
         const coverAmt = Math.min(1, Math.max(0, (vh - firstTop) / vh));
         const blur =
           coverAmt > 0 ? `blur(${(Math.round(coverAmt * 24) / 2).toFixed(1)}px)` : "";
-        if (about.style.filter !== blur) about.style.filter = blur;
+        const aboutInner = about.querySelector(".site-footer__inner") || about;
+        if (aboutInner.style.filter !== blur) aboutInner.style.filter = blur;
+        if (about !== aboutInner && about.style.filter) about.style.filter = "";
       }
     } else {
       state.forEach((item) => {
         if (!item.pin) return;
+        paintBlur(item.pin, "");
         item.pin.style.filter = "";
         item.pin.classList.remove("is-arriving");
       });
-      if (about) about.style.filter = "";
+      if (about) {
+        about.style.filter = "";
+        const aboutInner = about.querySelector(".site-footer__inner");
+        if (aboutInner) aboutInner.style.filter = "";
+      }
     }
 
     // Before the first project reaches the focus line, highlight nothing yet
@@ -473,18 +493,17 @@
     document.querySelectorAll("#stripe-projects a[data-project]").forEach((link) => {
       link.classList.toggle("is-current", link.dataset.project === activeId);
     });
+
+    syncVisibleVideos();
   }
 
   let ticking = false;
+  let syncVisibleVideos = () => {};
   function onScroll() {
     if (ticking) return;
     ticking = true;
     requestAnimationFrame(() => {
       update();
-      // Keep-alive for iOS, which pauses muted video on its own. Once per
-      // frame and only for what is actually on screen — this used to run for
-      // every video on every scroll event.
-      videosOnScreen.forEach((video) => ensurePlay(video));
       ticking = false;
     });
   }
@@ -720,12 +739,13 @@
       holding.delete(video);
       playHoldTimers.delete(video);
       holdDone.add(video);
-      if (
-        video.ended ||
-        (Number.isFinite(video.duration) &&
-          video.duration > 0 &&
-          video.currentTime >= video.duration - 0.08)
-      ) {
+      // Already painting. Seeking near the end restarts the loop on every
+      // scroll frame in Safari, which is the stutter.
+      if (!video.paused && !video.ended) {
+        setPlaying(video, true);
+        return;
+      }
+      if (video.ended) {
         try {
           video.currentTime = 0;
         } catch (_) {
@@ -785,6 +805,9 @@
 
     video.addEventListener("playing", () => setPlaying(video, true));
     video.addEventListener("ended", () => {
+      // Safari fires `ended` on a looping clip and the handler used to hide
+      // it and wait out the entrance delay again.
+      if (video.loop) return;
       setPlaying(video, false);
       holdDone.delete(video);
       try {
@@ -795,10 +818,11 @@
 
     video.addEventListener("pause", () => {
       if (holding.has(video)) return;
-      setPlaying(video, false);
       if (videosOnScreen.has(video) && !document.hidden) {
         requestAnimationFrame(() => ensurePlay(video));
+        return;
       }
+      setPlaying(video, false);
     });
 
     video.addEventListener("loadeddata", () => ensurePlay(video));
@@ -815,6 +839,50 @@
   };
 
   videos.forEach(armVideo);
+
+  const warmed = new WeakSet();
+  // Rects, not IntersectionObserver. WebKit reports no intersection for a
+  // clip that is only on screen because its track has been translated, so
+  // the video never leaves the poster.
+  syncVisibleVideos = () => {
+    const viewH = window.innerHeight;
+    videos.forEach((video) => {
+      const rect = video.getBoundingClientRect();
+      const overlap = Math.min(rect.bottom, viewH) - Math.max(rect.top, 0);
+      const on =
+        rect.height > 24 && overlap >= Math.min(rect.height, viewH) * 0.2;
+      // load() aborts a play() issued in the same turn, which Safari reports
+      // as a failure and leaves the poster up. Only buffer clips still off screen.
+      if (
+        !on &&
+        !warmed.has(video) &&
+        rect.top < viewH * 2 &&
+        rect.bottom > -viewH &&
+        rect.height > 0
+      ) {
+        warmed.add(video);
+        video.preload = "auto";
+        try {
+          video.load();
+        } catch (_) {
+          /* ignore */
+        }
+      }
+      if (on) {
+        warmed.add(video);
+        const was = videosOnScreen.has(video);
+        videosOnScreen.add(video);
+        if (!was || video.paused) ensurePlay(video);
+      } else if (rect.bottom <= 0 || rect.top >= viewH) {
+        if (!videosOnScreen.has(video)) return;
+        videosOnScreen.delete(video);
+        clearPlayHold(video);
+        holdDone.delete(video);
+        setPlaying(video, false);
+        video.pause();
+      }
+    });
+  };
 
   if ("IntersectionObserver" in window) {
     // Stage one: a screen out, start buffering so the clip is ready by the
@@ -839,30 +907,8 @@
       { threshold: 0, rootMargin: "100% 0px" }
     );
 
-    // Stage two: play only once the video is genuinely on screen. Starting at
-    // 20% and stopping at 0% leaves a dead band between, so a video parked at
-    // the edge of the viewport cannot flicker between play and pause.
-    const io = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          const video = entry.target;
-          if (entry.isIntersecting && entry.intersectionRatio >= 0.2) {
-            videosOnScreen.add(video);
-            ensurePlay(video);
-          } else if (!entry.isIntersecting) {
-            videosOnScreen.delete(video);
-            clearPlayHold(video);
-            holdDone.delete(video);
-            setPlaying(video, false);
-            video.pause();
-          }
-        });
-      },
-      { threshold: [0, 0.2, 0.5], rootMargin: "0px" }
-    );
     videos.forEach((video) => {
       preloader.observe(video);
-      io.observe(video);
     });
   } else {
     videos.forEach((video) => {

@@ -704,11 +704,13 @@
   const holding = new WeakSet();
   const holdDone = new WeakSet();
 
-  // Beat between a video arriving on screen and starting. data-play-delay on a
-  // single video overrides it; 0 starts immediately.
+  // Beat between a video arriving on screen and starting. Phone Safari
+  // cannot wait: a pause-then-play after the delay never starts, so the
+  // poster stays frozen. data-play-delay on a single video overrides it.
   const PLAY_DELAY = 0.7;
 
   const playHoldMs = (video) => {
+    if (narrowMq.matches) return 0;
     const n = Number(video.dataset.playDelay);
     const seconds = Number.isFinite(n) && n >= 0 ? n : PLAY_DELAY;
     return seconds > 0 ? Math.round(seconds * 1000) : 0;
@@ -756,7 +758,14 @@
       if (playAttempt && typeof playAttempt.then === "function") {
         playAttempt
           .then(() => setPlaying(video, true))
-          .catch(() => setPlaying(video, false));
+          .catch(() => {
+            setPlaying(video, false);
+            window.setTimeout(() => {
+              if (!videosOnScreen.has(video) || document.hidden) return;
+              video.muted = true;
+              video.play().then(() => setPlaying(video, true)).catch(() => {});
+            }, 250);
+          });
       }
     };
 
@@ -796,12 +805,17 @@
     video.setAttribute("webkit-playsinline", "");
     video.setAttribute("disablepictureinpicture", "");
     video.removeAttribute("controls");
-    // Nothing is fetched or started by the browser on its own. The observers
-    // below warm a clip up as it approaches and start it once it is actually
-    // on screen; before that a video costs nothing but its poster.
-    video.preload = "none";
-    video.autoplay = false;
-    video.removeAttribute("autoplay");
+    // Phone Safari will autoplay muted inline clips; preload so the first
+    // frame is ready to move as soon as the clip is on screen.
+    if (narrowMq.matches && !reducedMotion) {
+      video.preload = "auto";
+      video.autoplay = true;
+      video.setAttribute("autoplay", "");
+    } else {
+      video.preload = "none";
+      video.autoplay = false;
+      video.removeAttribute("autoplay");
+    }
 
     video.addEventListener("playing", () => setPlaying(video, true));
     video.addEventListener("ended", () => {
@@ -934,19 +948,20 @@
     });
   };
 
-  // First gesture unlocks autoplay on iOS Safari
+  // First gesture unlocks autoplay on iOS Safari. Do not play-then-pause
+  // off-screen clips: that spends the gesture and later play() stays rejected.
   const unlockVideos = () => {
     videos.forEach((video) => {
       video.muted = true;
-      if (videosOnScreen.has(video) || !("IntersectionObserver" in window)) {
-        ensurePlay(video);
-      } else {
-        // Prime decode even if off-screen
-        video.play().then(() => video.pause()).catch(() => {});
-      }
+      holdDone.add(video);
+      if (videosOnScreen.has(video)) ensurePlay(video);
     });
   };
   document.addEventListener("touchstart", unlockVideos, {
+    once: true,
+    passive: true,
+  });
+  document.addEventListener("touchend", unlockVideos, {
     once: true,
     passive: true,
   });
@@ -986,7 +1001,14 @@
   }
 
   window.addEventListener("scroll", onScroll, { passive: true });
-  window.addEventListener("resize", scheduleMeasure);
+  window.addEventListener("resize", () => {
+    scheduleMeasure();
+    syncVisibleVideos();
+  });
+
+  syncVisibleVideos();
+  window.setTimeout(syncVisibleVideos, 400);
+  window.setTimeout(syncVisibleVideos, 1200);
 
   const markReady = (el) => {
     el.classList.add("is-ready");

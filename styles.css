@@ -784,15 +784,19 @@ html.js.is-simple-scroll .media video.is-playing {
 html.js.is-simple-scroll .media img {
   position: static;
   inset: auto;
-  width: 100% !important;
+  width: calc(100% + 2px) !important;
+  max-width: none;
   height: auto !important;
+  margin: -1px 0 0 -1px;
 }
 
 html.js.is-simple-scroll .media img.media__poster {
   position: static !important;
   inset: auto;
-  width: 100% !important;
+  width: calc(100% + 2px) !important;
+  max-width: none;
   height: auto !important;
+  margin: -1px 0 0 -1px;
 }
 
 html.js.is-simple-scroll .media:not(:has(> video)) {
@@ -976,7 +980,9 @@ html.js:not(.is-simple-scroll) .project.is-near .project__track {
 .media {
   position: relative;
   overflow: hidden;
-  margin: 0;
+  /* Safari rounds grid tracks independently, so a 1px crack of page
+     background shows between stills. Overlap the frames to close it. */
+  margin: 0 -1px -1px 0;
   padding: 0;
   border: 0;
   background: var(--project-bg, var(--about-bg));
@@ -1038,10 +1044,10 @@ html.js:not(.is-simple-scroll) .project.is-near .project__track {
   position: static;
   inset: auto;
   display: block;
-  width: 100%;
+  width: calc(100% + 2px);
+  max-width: none;
   height: auto;
-  max-width: 100%;
-  margin: 0;
+  margin: -1px 0 0 -1px;
   padding: 0;
   border: 0;
   outline: 0;
@@ -1066,8 +1072,10 @@ html.js:not(.is-simple-scroll) .project.is-near .project__track {
   position: static;
   inset: auto;
   z-index: 0;
-  width: 100%;
+  width: calc(100% + 2px);
+  max-width: none;
   height: auto;
+  margin: -1px 0 0 -1px;
   opacity: 1 !important;
 }
 
@@ -1078,8 +1086,10 @@ html.js:not(.is-simple-scroll) .project.is-near .project__track {
 
 .media:has(> video) .media__poster {
   position: static !important;
-  width: 100% !important;
+  width: calc(100% + 2px) !important;
+  max-width: none;
   height: auto !important;
+  margin: -1px 0 0 -1px;
 }
 
 .media:has(> video) video {
@@ -1222,15 +1232,19 @@ html.js:not(.is-simple-scroll) .media video.is-playing {
   .media img {
     position: static;
     inset: auto;
-    width: 100% !important;
+    width: calc(100% + 2px) !important;
+    max-width: none;
     height: auto !important;
+    margin: -1px 0 0 -1px;
   }
 
   .media img.media__poster {
-    position: absolute !important;
-    inset: -1px;
+    position: static !important;
+    inset: auto;
     width: calc(100% + 2px) !important;
-    height: calc(100% + 2px) !important;
+    max-width: none;
+    height: auto !important;
+    margin: -1px 0 0 -1px;
   }
 
   .media:not(:has(> video)) {
@@ -1252,8 +1266,10 @@ html.js:not(.is-simple-scroll) .media video.is-playing {
   .media:has(> video) .media__poster {
     position: static !important;
     inset: auto;
-    width: 100% !important;
+    width: calc(100% + 2px) !important;
+    max-width: none;
     height: auto !important;
+    margin: -1px 0 0 -1px;
   }
 
   /* Bleed 1px past the frame, same trick as desktop. Fractional frame heights
